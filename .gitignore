@@ -199,3 +199,7 @@ media/
 # Local development
 .local
 .dev
+
+# Migration artifacts (contain production data/secrets)
+migration/
+deploy/vps/.env

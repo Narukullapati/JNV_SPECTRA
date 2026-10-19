@@ -1,0 +1,256 @@
+{
+  "info": {
+    "name": "Event Management API - Updated",
+    "description": "Updated API documentation for Event Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Gallery",
+      "item": [
+        {
+          "name": "Get All Galleries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/galleries",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "galleries"]
+            }
+          }
+        },
+        {
+          "name": "Get Single Gallery",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/galleries/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "galleries", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Gallery",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/galleries",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "galleries"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Wedding Gallery\",\n  \"description\": \"Beautiful wedding moments\",\n  \"images\": [\"https://example.com/image1.jpg\"],\n  \"status\": \"active\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Gallery",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/galleries/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "galleries", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Wedding Gallery\",\n  \"description\": \"Updated description\",\n  \"images\": [\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Gallery",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/galleries/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "galleries", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact Form",
+      "item": [
+        {
+          "name": "Submit Contact Form",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/contact/submit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "contact", "submit"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"subject\": \"Inquiry about services\",\n  \"message\": \"I would like to know more about your wedding planning services.\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Testimonials",
+      "item": [
+        {
+          "name": "Get All Testimonials",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials"]
+            }
+          }
+        },
+        {
+          "name": "Get Featured Testimonials",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/featured",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", "featured"]
+            }
+          }
+        },
+        {
+          "name": "Get Testimonial by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Testimonial",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Jane Smith\",\n  \"location\": \"New York\",\n  \"rating\": 5,\n  \"feedback\": \"Amazing service! The team was professional and made our wedding perfect.\",\n  \"featured_image_url\": \"https://example.com/client-photo.jpg\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Testimonial",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Jane Smith\",\n  \"location\": \"New York\",\n  \"rating\": 5,\n  \"feedback\": \"Updated feedback text\",\n  \"featured_image_url\": \"https://example.com/updated-photo.jpg\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Testimonial",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", ":id"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "token",
+      "value": "your_jwt_token_here"
+    }
+  ]
+} 

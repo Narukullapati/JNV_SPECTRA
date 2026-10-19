@@ -4,7 +4,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 
 // Base URL for API - would come from environment variables in a real app
-export const API_BASE_URL = "https://api.jnvspectra.com/api/v1";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL}/api/v1`
+  : "https://api.jnvspectra.com/api/v1";
 
 // API endpoints
 export const ENDPOINTS = {

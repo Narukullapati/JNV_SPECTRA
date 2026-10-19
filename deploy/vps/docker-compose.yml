@@ -1,0 +1,146 @@
+name: jnv-spectra
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: jnv-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - jnv-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  minio:
+    image: rustfs/rustfs:1.0.3
+    container_name: jnv-minio
+    command: server /data
+    environment:
+      RUSTFS_ACCESS_KEY: ${MINIO_ROOT_USER}
+      RUSTFS_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+    volumes:
+      - miniodata:/data
+    restart: unless-stopped
+    networks:
+      - jnv-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jnv-cdn.rule=Host(`cdn-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-cdn.priority=10"
+      - "traefik.http.routers.jnv-cdn.entrypoints=websecure"
+      - "traefik.http.routers.jnv-cdn.tls=true"
+      - "traefik.http.routers.jnv-cdn.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.jnv-cdn.service=jnv-cdn"
+      - "traefik.http.services.jnv-cdn.loadbalancer.server.port=9000"
+      - "traefik.http.routers.jnv-minio.rule=Host(`minio-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-minio.priority=10"
+      - "traefik.http.routers.jnv-minio.entrypoints=websecure"
+      - "traefik.http.routers.jnv-minio.tls=true"
+      - "traefik.http.routers.jnv-minio.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.jnv-minio.service=jnv-minio"
+      - "traefik.http.services.jnv-minio.loadbalancer.server.port=9001"
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jnv-api
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    volumes:
+      - api-uploads:/usr/src/app/uploads
+      - api-logs:/usr/src/app/logs
+    restart: unless-stopped
+    networks:
+      - jnv-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jnv-api.rule=Host(`api-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-api.priority=10"
+      - "traefik.http.routers.jnv-api.entrypoints=websecure"
+      - "traefik.http.routers.jnv-api.tls=true"
+      - "traefik.http.routers.jnv-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jnv-api.loadbalancer.server.port=3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --tries=1 --spider http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: jnv-web
+    restart: unless-stopped
+    networks:
+      - jnv-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jnv-web.rule=Host(`spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-web.priority=10"
+      - "traefik.http.routers.jnv-web.entrypoints=websecure"
+      - "traefik.http.routers.jnv-web.tls=true"
+      - "traefik.http.routers.jnv-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jnv-web.loadbalancer.server.port=80"
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: jnv-admin
+    restart: unless-stopped
+    networks:
+      - jnv-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jnv-admin.rule=Host(`admin-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-admin.priority=10"
+      - "traefik.http.routers.jnv-admin.entrypoints=websecure"
+      - "traefik.http.routers.jnv-admin.tls=true"
+      - "traefik.http.routers.jnv-admin.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jnv-admin.loadbalancer.server.port=80"
+
+  checkout:
+    build:
+      context: ./checkout
+      dockerfile: Dockerfile
+    container_name: jnv-checkout
+    restart: unless-stopped
+    networks:
+      - jnv-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jnv-checkout.rule=Host(`pay-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-checkout.priority=10"
+      - "traefik.http.routers.jnv-checkout.entrypoints=websecure"
+      - "traefik.http.routers.jnv-checkout.tls=true"
+      - "traefik.http.routers.jnv-checkout.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jnv-checkout.loadbalancer.server.port=80"
+
+networks:
+  jnv-net:
+    driver: bridge
+
+volumes:
+  pgdata:
+  miniodata:
+  api-uploads:
+  api-logs:

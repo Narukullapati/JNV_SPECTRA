@@ -1,0 +1,1294 @@
+{
+  "info": {
+    "name": "Event Management API",
+    "description": "API documentation for Event Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "profile"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/services",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "services"]
+            }
+          }
+        },
+        {
+          "name": "Get Service by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/services/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "services", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/services",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "services"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Wedding Planning\",\n  \"description\": \"Complete wedding planning service\",\n  \"price\": 5000,\n  \"category\": \"wedding\",\n  \"duration\": 8,\n  \"max_guests\": 200,\n  \"included_items\": [\"Venue\", \"Catering\", \"Decoration\"],\n  \"add_ons\": [\"Photography\", \"Videography\"],\n  \"status\": \"active\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Service",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/services/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "services", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Wedding Planning\",\n  \"description\": \"Updated description\",\n  \"price\": 6000\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Service",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/services/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "services", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Upload Service Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/services/:id/upload-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "services", ":id", "upload-image"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders?email=john@example.com&order_status=pending&service_type=wedding&payment_option=paid_offline&sort=created_at&order=desc&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "john@example.com"
+                },
+                {
+                  "key": "order_status",
+                  "value": "pending"
+                },
+                {
+                  "key": "service_type",
+                  "value": "wedding"
+                },
+                {
+                  "key": "payment_option",
+                  "value": "paid_offline"
+                },
+                {
+                  "key": "sort",
+                  "value": "created_at"
+                },
+                {
+                  "key": "order",
+                  "value": "desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Invoice",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/:id/invoice",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", ":id", "invoice"]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"service_type\": \"wedding\",\n  \"event_date\": \"2024-12-25\",\n  \"payment_option\": \"paid_offline\",\n  \"order_details\": {\n    \"venue\": \"Grand Hotel\",\n    \"guests\": 100,\n    \"budget\": 10000\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Generate Payment Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/:id/generate-payment-link",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", ":id", "generate-payment-link"]
+            }
+          }
+        },
+        {
+          "name": "Mark Order as Paid",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/:id/mark-as-paid",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", ":id", "mark-as-paid"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rentals",
+      "item": [
+        {
+          "name": "Get All Rentals",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/rentals?category=decor&status=active&page=1&limit=10&sortBy=created_at&sortOrder=desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rentals"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "decor"
+                },
+                {
+                  "key": "status",
+                  "value": "active"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Rental by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/rentals/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rentals", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Rental",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rentals",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rentals"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Wedding Decor Package\",\n  \"description\": \"Complete wedding decoration package\",\n  \"category\": \"decor\",\n  \"featured_image\": \"https://example.com/image.jpg\",\n  \"additional_images\": [\"https://example.com/image1.jpg\"],\n  \"bullet_points\": [\n    {\n      \"key\": \"Includes\",\n      \"value\": \"Stage decoration\"\n    }\n  ],\n  \"pricing\": 5000,\n  \"status\": \"active\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Rental",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rentals/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rentals", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Wedding Decor Package\",\n  \"description\": \"Updated description\",\n  \"pricing\": 6000\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Rental",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/rentals/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rentals", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Upload Rental Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/rentals/:id/upload-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rentals", ":id", "upload-image"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events Hosted",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/events-hosted",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events-hosted"]
+            }
+          }
+        },
+        {
+          "name": "Get Event by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/events-hosted/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events-hosted", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/events-hosted",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events-hosted"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Wedding Event\",\n  \"description\": \"Beautiful wedding event\",\n  \"event_date\": \"2024-12-25\",\n  \"venue\": \"Grand Hotel\",\n  \"status\": \"active\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/events-hosted/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events-hosted", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Wedding Event\",\n  \"description\": \"Updated description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/events-hosted/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events-hosted", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Upload Event Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/events/:id/upload-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events", ":id", "upload-image"]
+            }
+          }
+        },
+        {
+          "name": "Upload Event Featured Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/events-hosted/:id/upload-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events-hosted", ":id", "upload-image"]
+            }
+          }
+        },
+        {
+          "name": "Upload Event Gallery Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/events-hosted/:id/upload-gallery",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events-hosted", ":id", "upload-gallery"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Event Planning",
+      "item": [
+        {
+          "name": "Get All Event Planning Items",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/event-planning?status=active&page=1&limit=10&sortBy=created_at&sortOrder=desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "event-planning"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "active"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Event Planning Item by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/event-planning/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "event-planning", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Event Planning Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/event-planning",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "event-planning"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Wedding Planning Service\",\n  \"description\": \"Complete wedding planning service\",\n  \"vendor_details\": {\n    \"vendor_name\": \"ABC Events\",\n    \"vendor_contact\": \"+1234567890\",\n    \"vendor_email\": \"contact@abcevents.com\"\n  },\n  \"pricing\": 5000,\n  \"featured_image\": \"https://example.com/image.jpg\",\n  \"additional_images\": [\"https://example.com/image1.jpg\"],\n  \"bullet_points\": [\n    {\n      \"label\": \"Includes\",\n      \"value\": \"Complete planning\"\n    }\n  ],\n  \"status\": \"active\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Event Planning Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/event-planning/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "event-planning", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Wedding Planning Service\",\n  \"description\": \"Updated description\",\n  \"pricing\": 6000\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Event Planning Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/event-planning/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "event-planning", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Testimonials",
+      "item": [
+        {
+          "name": "Get All Testimonials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials"]
+            }
+          }
+        },
+        {
+          "name": "Get Featured Testimonials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/featured",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", "featured"]
+            }
+          }
+        },
+        {
+          "name": "Get Testimonial by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Testimonial",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Jane Smith\",\n  \"event_type\": \"wedding\",\n  \"source\": \"manual\",\n  \"designation_or_location\": \"New York\",\n  \"testimonial_text\": \"Amazing service!\",\n  \"client_photo\": \"https://example.com/photo.jpg\",\n  \"rating\": 5,\n  \"featured\": true,\n  \"related_object_type\": \"service\",\n  \"related_object_id\": \"57a687a9-7796-4b9d-8152-b949fdefb09b\",\n  \"status\": \"active\"\n}",
+              "description": "Note: source must be either 'manual' or 'post_event_email', status must be 'active' or 'inactive', and related_object_id must be a valid GUID"
+            }
+          }
+        },
+        {
+          "name": "Update Testimonial",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Jane Smith\",\n  \"event_type\": \"wedding\",\n  \"source\": \"manual\",\n  \"designation_or_location\": \"New York\",\n  \"testimonial_text\": \"Updated testimonial text\",\n  \"client_photo\": \"https://example.com/photo.jpg\",\n  \"rating\": 5,\n  \"featured\": true,\n  \"related_object_type\": \"service\",\n  \"related_object_id\": \"57a687a9-7796-4b9d-8152-b949fdefb09b\",\n  \"status\": \"active\"\n}",
+              "description": "Note: All fields are required for update. source must be either 'manual' or 'post_event_email', status must be 'active' or 'inactive', and related_object_id must be a valid GUID"
+            }
+          }
+        },
+        {
+          "name": "Delete Testimonial",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Trigger Review Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/testimonials/trigger-review-request",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "testimonials", "trigger-review-request"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"order-uuid\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sliders",
+      "item": [
+        {
+          "name": "Get Slider by Name",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/hero_slider",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", "hero_slider"]
+            }
+          }
+        },
+        {
+          "name": "Get Slide by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/slide/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", "slide", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Slider",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slider_name\": \"hero_slider\",\n  \"title\": \"Welcome to Our Services\",\n  \"subtitle\": \"Professional Event Management\",\n  \"content\": \"We provide the best event services...\",\n  \"image_url\": \"https://example.com/hero.jpg\",\n  \"cta_text\": \"Learn More\",\n  \"cta_link\": \"https://example.com/services\",\n  \"order\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Slider",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", ":id"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slider_name\": \"hero_slider\",\n  \"title\": \"Updated Welcome\",\n  \"subtitle\": \"Updated Subtitle\",\n  \"content\": \"Updated content...\",\n  \"image_url\": \"https://example.com/hero.jpg\",\n  \"cta_text\": \"Learn More\",\n  \"cta_link\": \"https://example.com/services\",\n  \"order\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Slider",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Reorder Slides",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/hero_slider/reorder",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", "hero_slider", "reorder"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slideIds\": [\"slide1-uuid\", \"slide2-uuid\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Upload Slider Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/slide/:id/upload-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", "slide", ":id", "upload-image"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "/path/to/image.jpg"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Multiple Slider Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/slide/:id/upload-images",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", "slide", ":id", "upload-images"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": ["/path/to/image1.jpg", "/path/to/image2.jpg"]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Slider Image",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sliders/slide/:id/image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sliders", "slide", ":id", "image"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Static Content",
+      "item": [
+        {
+          "name": "Get All Static Content",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/static",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "static"]
+            }
+          }
+        },
+        {
+          "name": "Get Static Content by Section",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/static/:section",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "static", ":section"]
+            }
+          }
+        },
+        {
+          "name": "Create Static Content",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/static",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "static"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"section\": \"about_us\",\n  \"title\": \"About Us\",\n  \"content\": \"Welcome to our event management services...\",\n  \"images\": [\"https://example.com/image1.jpg\"],\n  \"meta_data\": {\n    \"seo_title\": \"About Us - Event Management\"\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Static Content",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/static/:section",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "static", ":section"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated About Us\",\n  \"content\": \"Updated content...\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Upload Static Content Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/static/:section/upload-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "static", ":section", "upload-image"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "/path/to/image.jpg"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Multiple Static Content Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/static/:section/upload-images",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "static", ":section", "upload-images"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": ["/path/to/image1.jpg", "/path/to/image2.jpg"]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Static Content Image",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/static/:section/delete-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "static", ":section", "delete-image"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"image_url\": \"https://example.com/image.jpg\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "token",
+      "value": "your_jwt_token_here"
+    }
+  ]
+} 

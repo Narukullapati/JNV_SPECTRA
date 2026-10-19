@@ -1,0 +1,1 @@
+/Users/gunasundar/Downloads/event-admin/admin-image-flow-ui/src/api/rentals.ts

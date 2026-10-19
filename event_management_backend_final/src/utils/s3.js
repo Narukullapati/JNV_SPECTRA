@@ -4,9 +4,13 @@ const { setupLogger } = require('./logger');
 
 const logger = setupLogger();
 
-// Configure AWS S3 client
+// Configure AWS S3 client (S3_ENDPOINT enables S3-compatible stores like MinIO)
 const s3Client = new S3Client({
   region: process.env.AWS_REGION,
+  ...(process.env.S3_ENDPOINT && {
+    endpoint: process.env.S3_ENDPOINT,
+    forcePathStyle: true,
+  }),
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -43,6 +47,9 @@ const uploadToS3 = async (filePath, fileBuffer, contentType) => {
  * @returns {string} - The public URL of the file
  */
 const getS3PublicUrl = (filePath) => {
+  if (process.env.S3_PUBLIC_BASE_URL) {
+    return `${process.env.S3_PUBLIC_BASE_URL}/${filePath}`;
+  }
   return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${filePath}`;
 };
 
