@@ -197,18 +197,9 @@ export default function Index() {
         const onlineAmt = online.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const offlineAmt = offline.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const pending = Math.max(billed - (onlineAmt + offlineAmt), 0);
-        const byMonth = orders.reduce((acc: Record<string, number>, o: any) => {
-          const d = new Date(o.date || o.created_at || o.event_date);
-          if (isNaN(d.getTime())) return acc;
-          const k = d.toLocaleString('en-US', { month: 'short' });
-          acc[k] = (acc[k] || 0) + num(o.total_amount);
-          return acc;
-        }, {} as Record<string, number>);
-        const months = Object.entries(byMonth).slice(-6);
-        const maxM = Math.max(...months.map(([, v]) => v), 1);
         const card = 'bg-card border rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all';
         return (
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6 jnv-stagger">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 jnv-stagger">
             <div className={card}>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Total Billed</p>
               <p className="text-xl font-bold">{formatCurrency(billed)}</p>
@@ -229,21 +220,6 @@ export default function Index() {
               <p className="text-xl font-bold">{formatCurrency(offlineAmt)}</p>
               <p className="text-xs text-muted-foreground mt-1">{offline.length} orders</p>
             </div>
-            <div className={card}>
-              <p className="text-xs text-muted-foreground mb-2">Monthly Trend</p>
-              <div className="space-y-1.5">
-                {months.map(([m, v]) => (
-                  <div key={m} className="flex items-center gap-2">
-                    <span className="text-xs w-8">{m}</span>
-                    <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${(v / maxM) * 100}%`, background: 'linear-gradient(90deg,#6c2e70,#e0a422)' }} />
-                    </div>
-                  </div>
-                ))}
-                {!months.length && <p className="text-xs text-muted-foreground">No data</p>}
-              </div>
-            </div>
-          </div>
         );
       })() : null}
 
