@@ -189,7 +189,8 @@ export default function Index() {
         const nowM = new Date();
         const orders = (stats.recentOrders || []).filter((o: any) => {
           const d = new Date(o.date || o.created_at || o.event_date);
-          return !isNaN(d.getTime()) && d.getMonth() === nowM.getMonth() && d.getFullYear() === nowM.getFullYear();
+          return !isNaN(d.getTime()) && d.getMonth() === nowM.getMonth() && d.getFullYear() === nowM.getFullYear()
+            && (o.order_status || o.status || '').toLowerCase() !== 'cancelled';
         });
         const num = (v: any) => Number(v) || 0;
         const billed = orders.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
