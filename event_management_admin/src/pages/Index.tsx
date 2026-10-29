@@ -183,7 +183,7 @@ export default function Index() {
         </div>
       )}
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 jnv-stagger">
         {isLoading ? (
           <>
             {renderStatsCardSkeleton()}
@@ -229,7 +229,7 @@ export default function Index() {
         ) : null}
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 jnv-stagger">
         {isLoading ? (
           <>
             <div className="rounded-lg border p-6 space-y-4">
@@ -261,12 +261,53 @@ export default function Index() {
             <RecentOrders orders={stats.recentOrders} />
             
             {/* Orders Growth Card */}
-            <div className="bg-white border rounded-lg p-6 flex flex-col items-center justify-center">
-              <ShoppingBag size={48} className="text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-1">Orders Growth</h3>
-              <p className="text-sm text-muted-foreground">
+            <div className="jnv-grad-card border rounded-lg p-6 flex flex-col items-center justify-center shadow-lg">
+              <ShoppingBag size={48} className="mb-4 jnv-pulse-gold" />
+              <h3 className="text-lg font-semibold mb-1">Orders Growth</h3>
+              <p className="text-sm opacity-90">
                 {stats.newOrders.trend.isPositive ? '+' : ''}{stats.newOrders.trend.value}% from last period
               </p>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-card border rounded-lg p-6 flex flex-col justify-center">
+              <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" size="sm" onClick={() => navigate('/orders')}><ShoppingBag className="mr-2 h-4 w-4" />Orders</Button>
+                <Button variant="outline" size="sm" onClick={() => navigate('/venues')}>Venues</Button>
+                <Button variant="outline" size="sm" onClick={() => navigate('/services')}><Package className="mr-2 h-4 w-4" />Services</Button>
+                <Button variant="outline" size="sm" onClick={() => navigate('/rentals')}>Rentals</Button>
+              </div>
+            </div>
+
+            {/* Order Status Breakdown */}
+            <div className="bg-card border rounded-lg p-6 lg:col-span-2">
+              <h3 className="text-lg font-semibold mb-4">Recent Orders Status</h3>
+              {(() => {
+                const orders = stats.recentOrders || [];
+                const counts = orders.reduce((acc: Record<string, number>, o: any) => {
+                  const st = (o.order_status || o.status || 'pending').toLowerCase();
+                  acc[st] = (acc[st] || 0) + 1;
+                  return acc;
+                }, {} as Record<string, number>);
+                const colors: Record<string, string> = { pending: '#e0a422', confirmed: '#16a34a', paid: '#4b1248', cancelled: '#dc2626', completed: '#16a34a' };
+                const total = orders.length || 1;
+                const entries = Object.entries(counts);
+                if (!entries.length) return <p className="text-sm text-muted-foreground">No recent orders</p>;
+                return (
+                  <div className="space-y-3">
+                    {entries.map(([st, n]) => (
+                      <div key={st} className="flex items-center gap-3">
+                        <span className="text-sm capitalize w-24">{st}</span>
+                        <div className="flex-1 h-2.5 rounded-full bg-muted overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(n / total) * 100}%`, background: colors[st] || '#6c2e70' }} />
+                        </div>
+                        <span className="text-sm font-medium w-8 text-right">{n}</span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           </>
         ) : null}

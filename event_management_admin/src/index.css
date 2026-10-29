@@ -177,3 +177,18 @@
 /* Logo chip flip animation */
 @keyframes jnv-flip{0%,85%,100%{transform:rotateY(0)}45%{transform:rotateY(360deg)}}
 .jnv-logo-flip{animation:jnv-flip 6s ease-in-out infinite;transform-style:preserve-3d;backface-visibility:visible}
+
+/* Dashboard entrance animations */
+@keyframes jnv-fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.jnv-fade-up{animation:jnv-fade-up .55s cubic-bezier(.22,.9,.3,1) both}
+.jnv-card-hover{transition:transform .25s ease,box-shadow .25s ease}
+.jnv-card-hover:hover{transform:translateY(-4px);box-shadow:0 12px 28px -10px rgb(75 18 72 / .25)}
+.jnv-grad-card{background:linear-gradient(135deg,#4b1248 0%,#3d093d 60%,#6c2e70 100%);color:#f6e9c9}
+@keyframes jnv-pulse-gold{0%,100%{opacity:.9;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+.jnv-pulse-gold{animation:jnv-pulse-gold 2.4s ease-in-out infinite}
+.jnv-stagger>*{animation:jnv-fade-up .55s cubic-bezier(.22,.9,.3,1) both;transition:transform .25s ease,box-shadow .25s ease}
+.jnv-stagger>*:nth-child(2){animation-delay:.08s}
+.jnv-stagger>*:nth-child(3){animation-delay:.16s}
+.jnv-stagger>*:nth-child(4){animation-delay:.24s}
+.jnv-stagger>*:nth-child(5){animation-delay:.32s}
+.jnv-stagger>*:hover{transform:translateY(-4px);box-shadow:0 12px 28px -10px rgb(75 18 72 / .25)}
