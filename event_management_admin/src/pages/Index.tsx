@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -301,13 +302,23 @@ export default function Index() {
           <>
             <RecentOrders orders={stats.recentOrders} />
             
-            {/* Orders Growth Card */}
-            <div className="jnv-grad-card border rounded-lg p-6 flex flex-col items-center justify-center shadow-lg">
-              <ShoppingBag size={48} className="mb-4 jnv-pulse-gold" />
-              <h3 className="text-lg font-semibold mb-1">Orders Growth</h3>
-              <p className="text-sm opacity-90">
-                {stats.newOrders.trend.isPositive ? '+' : ''}{stats.newOrders.trend.value}% from last period
-              </p>
+            {/* Monthly Orders Chart */}
+            <div className="bg-card border rounded-lg p-5 shadow-sm">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Orders — Last 6 Months</h3>
+              <div className="h-52">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats.monthlyTrend || []} margin={{ top: 8, right: 8, left: -16, bottom: 0 }} barCategoryGap="35%">
+                    <XAxis dataKey="month" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <Tooltip formatter={(v: any) => [v, 'Orders']} />
+                    <Bar dataKey="orders" radius={[4, 4, 0, 0]} style={{ filter: 'drop-shadow(3px 3px 0 rgba(60,10,60,.35))' }}>
+                      {(stats.monthlyTrend || []).map((_: any, i: number) => (
+                        <Cell key={i} fill={i % 2 === 0 ? '#6c2e70' : '#e0a422'} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
           </>

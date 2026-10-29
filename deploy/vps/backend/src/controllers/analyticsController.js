@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const { pool } = require('../config/database');
 const EventsHosted = require('../models/EventsHosted');
 const Service = require('../models/Service');
 const EventPlanning = require('../models/EventPlanning');
@@ -157,6 +158,19 @@ const getDashboardStats = async (req, res, next) => {
       }
     }
     
+    // Last 6 months order aggregates for dashboard trend chart
+    const { rows: monthlyTrend } = await pool.query(`
+      SELECT to_char(date_trunc('month', created_at), 'Mon') AS month,
+             date_trunc('month', created_at) AS m,
+             COALESCE(SUM(total_amount), 0)::float AS billed,
+             COUNT(*)::int AS orders,
+             COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'online'), 0)::float AS online,
+             COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'paid_offline'), 0)::float AS offline
+      FROM orders
+      WHERE created_at >= date_trunc('month', now()) - interval '5 months'
+      GROUP BY 1, 2 ORDER BY 2
+    `);
+
     // Get recent orders for display
     const recentOrders = ordersResult.data
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -289,6 +303,7 @@ const getDashboardStats = async (req, res, next) => {
           },
         },
         recentOrders,
+        monthlyTrend,
       },
     });
   } catch (error) {
