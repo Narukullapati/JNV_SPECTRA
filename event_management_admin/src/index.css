@@ -103,3 +103,64 @@
 .jnv-logo-zoom{animation:jnv-zoom .9s cubic-bezier(.22,1.4,.36,1) both}
 @keyframes jnv-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .jnv-logo-float{animation:jnv-float 3.2s ease-in-out 1s infinite}
+
+/* JNV brand themes (purple #4b1248 / gold #e8c96a) */
+.theme-gold {
+  --background: 47 88% 96%;
+  --foreground: 300 30% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 300 30% 12%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 300 30% 12%;
+  --primary: 302 60% 18%;
+  --primary-foreground: 45 73% 66%;
+  --secondary: 46 60% 88%;
+  --secondary-foreground: 302 60% 18%;
+  --muted: 46 50% 90%;
+  --muted-foreground: 300 15% 35%;
+  --accent: 46 87% 73%;
+  --accent-foreground: 302 60% 18%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 46 40% 82%;
+  --input: 46 40% 82%;
+  --ring: 302 60% 30%;
+  --sidebar-background: 302 60% 14%;
+  --sidebar-foreground: 46 60% 88%;
+  --sidebar-primary: 45 73% 66%;
+  --sidebar-primary-foreground: 302 74% 12%;
+  --sidebar-accent: 302 45% 22%;
+  --sidebar-accent-foreground: 46 60% 88%;
+  --sidebar-border: 302 40% 25%;
+  --sidebar-ring: 45 73% 66%;
+}
+
+.theme-purple {
+  --background: 300 60% 10%;
+  --foreground: 46 60% 92%;
+  --card: 300 55% 14%;
+  --card-foreground: 46 60% 92%;
+  --popover: 300 55% 14%;
+  --popover-foreground: 46 60% 92%;
+  --primary: 45 73% 66%;
+  --primary-foreground: 300 74% 12%;
+  --secondary: 302 40% 20%;
+  --secondary-foreground: 46 60% 92%;
+  --muted: 302 40% 18%;
+  --muted-foreground: 46 30% 70%;
+  --accent: 42 75% 51%;
+  --accent-foreground: 300 74% 12%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 302 40% 24%;
+  --input: 302 40% 24%;
+  --ring: 45 73% 66%;
+  --sidebar-background: 300 65% 8%;
+  --sidebar-foreground: 46 60% 90%;
+  --sidebar-primary: 45 73% 66%;
+  --sidebar-primary-foreground: 300 74% 12%;
+  --sidebar-accent: 302 40% 20%;
+  --sidebar-accent-foreground: 46 60% 92%;
+  --sidebar-border: 302 40% 22%;
+  --sidebar-ring: 45 73% 66%;
+}
