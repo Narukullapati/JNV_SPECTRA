@@ -596,7 +596,7 @@ export default function Orders() {
     const withSeq = [...orders].sort((a: any, b: any) =>
       new Date(a.created_at || a.date || 0).getTime() - new Date(b.created_at || b.date || 0).getTime());
     withSeq.forEach((o: any, i: number) => { o.seq = i + 1; });
-    if (!sortKey) return withSeq;
+    if (!sortKey) return [...withSeq].reverse();
     return withSeq.sort((a: any, b: any) => {
       const k = sortKey as keyof typeof a;
       let av: any = a[k], bv: any = b[k];
@@ -617,30 +617,31 @@ export default function Orders() {
     const order = params.data;
     const busy = loadingAction?.id === order.id ? loadingAction?.action : null;
     const ic = 'h-4 w-4';
+    const ask = (msg: string, fn: () => void) => () => { if (window.confirm(msg)) fn(); };
     const btn = 'inline-flex items-center justify-center h-7 w-7 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground disabled:opacity-40';
     const spin = <Loader2 className={`${ic} animate-spin`} />;
     return (
       <div className="flex items-center gap-0.5" onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
         <button title="View Details" className={btn} onClick={() => setSelectedOrder(order)}><EyeIcon className={ic} /></button>
         {order.order_status === 'pending' && !order.deposit_paid_at && order.payment_option === 'online' && (
-          <button title="Pay Deposit" className={btn} disabled={!!busy} onClick={() => handlePaymentLinkGeneration(order, 'deposit')}>{busy === 'generate_deposit_link' ? spin : <CreditCard className={ic} />}</button>
+          <button title="Pay Deposit" className={btn} disabled={!!busy} onClick={ask('Generate deposit payment link for ' + order.customer_name + '?', () => handlePaymentLinkGeneration(order, 'deposit'))}>{busy === 'generate_deposit_link' ? spin : <CreditCard className={ic} />}</button>
         )}
         {order.order_status === 'pending' && !order.deposit_paid_at && (
-          <button title="Mark as Deposit Paid" className={btn} disabled={!!busy} onClick={() => handleMarkAsPaid(order.id, 'deposit')}>{busy === 'mark_deposit_paid' ? spin : <BadgeCheck className={ic} />}</button>
+          <button title="Mark as Deposit Paid" className={btn} disabled={!!busy} onClick={ask('Mark ' + order.customer_name + "'s deposit as paid?", () => handleMarkAsPaid(order.id, 'deposit'))}>{busy === 'mark_deposit_paid' ? spin : <BadgeCheck className={ic} />}</button>
         )}
         {order.order_status === 'confirmed' && !order.balance_paid_at && (
-          <button title="Mark as Paid" className={btn} disabled={!!busy} onClick={() => handleMarkAsPaid(order.id, 'full')}>{busy === 'mark_paid' ? spin : <BadgeCheck className={ic} />}</button>
+          <button title="Mark as Paid" className={btn} disabled={!!busy} onClick={ask('Mark ' + order.customer_name + "'s order as fully paid?", () => handleMarkAsPaid(order.id, 'full'))}>{busy === 'mark_paid' ? spin : <BadgeCheck className={ic} />}</button>
         )}
         {order.order_status === 'confirmed' && !order.balance_paid_at && order.payment_option === 'online' && (
-          <button title="Generate Balance Pay Link" className={btn} disabled={!!busy} onClick={() => handleGenerateBalancePayLink(order)}>{busy === 'generate_balance_link' ? spin : <Link2 className={ic} />}</button>
+          <button title="Generate Balance Pay Link" className={btn} disabled={!!busy} onClick={ask('Generate balance pay link for ' + order.customer_name + '?', () => handleGenerateBalancePayLink(order))}>{busy === 'generate_balance_link' ? spin : <Link2 className={ic} />}</button>
         )}
         {order.order_status === 'paid' && (
           <button title="Download Receipt" className={btn} disabled={!!busy} onClick={() => handleDownloadInvoice(order.id, order.order_status)}>{busy === 'download_invoice' ? spin : <Download className={ic} />}</button>
         )}
         {order.order_status !== 'cancelled' && (
-          <button title="Cancel Order" className={btn} disabled={!!busy} onClick={() => handleCancelOrder(order.id)}>{busy === 'cancel' ? spin : <Ban className={ic} />}</button>
+          <button title="Cancel Order" className={btn} disabled={!!busy} onClick={ask('Cancel order for ' + order.customer_name + '? This cannot be undone.', () => handleCancelOrder(order.id))}>{busy === 'cancel' ? spin : <Ban className={ic} />}</button>
         )}
-        <button title="Delete Order" className={`${btn} text-red-500`} disabled={busy === 'delete'} onClick={() => setOrderToDelete(order)}>{busy === 'delete' ? spin : <Trash2 className={ic} />}</button>
+        <button title="Delete Order" className={`${btn} text-red-500`} disabled={busy === 'delete'} onClick={ask('Delete order for ' + order.customer_name + '? This cannot be undone.', () => setOrderToDelete(order))}>{busy === 'delete' ? spin : <Trash2 className={ic} />}</button>
       </div>
     );
   };
