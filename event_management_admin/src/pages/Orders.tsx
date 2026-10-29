@@ -71,6 +71,8 @@ export default function Orders() {
   const [loadingAction, setLoadingAction] = useState<{id: string, action: string} | null>(null);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
@@ -586,6 +588,21 @@ export default function Orders() {
   }
 
   const orders = data?.data?.data || [];
+  const sortedOrders = [...orders].sort((a: any, b: any) => {
+    if (!sortKey) return 0;
+    const k = sortKey as keyof typeof a;
+    let av: any = a[k], bv: any = b[k];
+    if (k === 'total_amount') { av = Number(av) || 0; bv = Number(bv) || 0; }
+    else { av = String(av ?? '').toLowerCase(); bv = String(bv ?? '').toLowerCase(); }
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  const toggleSort = (key: string) => {
+    if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    else { setSortKey(key); setSortDir('asc'); }
+  };
+  const sortMark = (key: string) => (sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '');
   const pagination = data?.data?.pagination;
 
   return (
@@ -727,12 +744,12 @@ export default function Orders() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Customer</TableHead>
+                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('customer_name')}>Customer{sortMark('customer_name')}</button></TableHead>
                   <TableHead>Service Type</TableHead>
-                  <TableHead>Event Date</TableHead>
-                  <TableHead>Total</TableHead>
-                  <TableHead>Payment Option</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('event_date')}>Event Date{sortMark('event_date')}</button></TableHead>
+                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('total_amount')}>Total{sortMark('total_amount')}</button></TableHead>
+                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('payment_option')}>Payment Option{sortMark('payment_option')}</button></TableHead>
+                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('order_status')}>Status{sortMark('order_status')}</button></TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -748,7 +765,7 @@ export default function Orders() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  orders.map((order: Order) => (
+                  sortedOrders.map((order: Order) => (
                     <TableRow key={order.id}>
                       <TableCell>
                         <div>
