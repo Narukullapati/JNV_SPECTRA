@@ -220,6 +220,7 @@ export default function Index() {
               <p className="text-xl font-bold">{formatCurrency(offlineAmt)}</p>
               <p className="text-xs text-muted-foreground mt-1">{offline.length} orders</p>
             </div>
+          </div>
         );
       })() : null}
 
