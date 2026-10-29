@@ -229,7 +229,7 @@ export default function Index() {
         ) : null}
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 jnv-stagger">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 jnv-stagger items-start">
         {isLoading ? (
           <>
             <div className="rounded-lg border p-6 space-y-4">
@@ -272,11 +272,22 @@ export default function Index() {
             {/* Quick Actions */}
             <div className="bg-card border rounded-lg p-6 flex flex-col justify-center">
               <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" size="sm" onClick={() => navigate('/orders')}><ShoppingBag className="mr-2 h-4 w-4" />Orders</Button>
-                <Button variant="outline" size="sm" onClick={() => navigate('/venues')}>Venues</Button>
-                <Button variant="outline" size="sm" onClick={() => navigate('/services')}><Package className="mr-2 h-4 w-4" />Services</Button>
-                <Button variant="outline" size="sm" onClick={() => navigate('/rentals')}>Rentals</Button>
+              <div className="grid grid-cols-2 gap-2.5">
+                {[
+                  { label: 'Orders', path: '/orders', icon: <ShoppingBag className="h-4 w-4" /> },
+                  { label: 'Venues', path: '/venues', icon: <Calendar className="h-4 w-4" /> },
+                  { label: 'Services', path: '/services', icon: <Package className="h-4 w-4" /> },
+                  { label: 'Rentals', path: '/rentals', icon: <DollarSign className="h-4 w-4" /> },
+                ].map((a) => (
+                  <button
+                    key={a.path}
+                    onClick={() => navigate(a.path)}
+                    className="flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all hover:border-[#6c2e70] hover:bg-[#6c2e70] hover:text-white hover:shadow-md"
+                  >
+                    {a.icon}
+                    {a.label}
+                  </button>
+                ))}
               </div>
             </div>
 
