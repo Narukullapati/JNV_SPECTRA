@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
-import logo from "@/assets/images/logo.png";
+const LOGO_URL = "https://jnvspectra.com/jnvSpectraLogoBold.png";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -13,7 +13,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <main className="flex-1 overflow-auto bg-background p-4 md:p-6">
         <div className="sticky top-0 z-10 flex justify-end pb-2">
           <div className="rounded-lg bg-[linear-gradient(135deg,#4b1248,#3d093d)] px-2.5 py-1.5 shadow-sm">
-            <img src={logo} alt="JNV Spectra" className="h-10 w-auto object-contain" />
+            <img src={LOGO_URL} alt="JNV Spectra" className="h-10 w-auto object-contain" />
           </div>
         </div>
         <div className="max-w-full pb-20 md:pb-0">
