@@ -330,6 +330,7 @@ export default function Index() {
                   <BarChart
                     data={(stats.monthlyTrend || []).map((m: any) => ({
                       month: m.month,
+                      total: m.billed || 0,
                       online: m.online || 0,
                       offline: m.offline || 0,
                       pending: Math.max((m.billed || 0) - (m.online || 0) - (m.offline || 0), 0),
@@ -338,6 +339,7 @@ export default function Index() {
                     <XAxis dataKey="month" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
                     <Tooltip formatter={(v: any, name: any) => [formatCurrency(v), name]} />
+                    <Bar dataKey="total" name="Total" fill="#3d093d" radius={[3, 3, 0, 0]} style={{ filter: 'drop-shadow(2px 2px 0 rgba(30,5,30,.3))' }} />
                     <Bar dataKey="online" name="Online" fill="#6c2e70" radius={[3, 3, 0, 0]} style={{ filter: 'drop-shadow(2px 2px 0 rgba(60,10,60,.3))' }} />
                     <Bar dataKey="offline" name="Offline" fill="#e0a422" radius={[3, 3, 0, 0]} style={{ filter: 'drop-shadow(2px 2px 0 rgba(120,80,10,.3))' }} />
                     <Bar dataKey="pending" name="Pending" fill="#9ca3af" radius={[3, 3, 0, 0]} style={{ filter: 'drop-shadow(2px 2px 0 rgba(80,80,80,.25))' }} />
@@ -345,6 +347,7 @@ export default function Index() {
                 </ResponsiveContainer>
               </div>
               <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#3d093d'}} />Total</span>
                 <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#6c2e70'}} />Online</span>
                 <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#e0a422'}} />Offline</span>
                 <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#9ca3af'}} />Pending</span>

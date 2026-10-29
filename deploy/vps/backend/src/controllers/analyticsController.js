@@ -168,6 +168,7 @@ const getDashboardStats = async (req, res, next) => {
              COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'paid_offline'), 0)::float AS offline
       FROM orders
       WHERE created_at >= date_trunc('month', now()) - interval '5 months'
+        AND order_status <> 'cancelled'
       GROUP BY 1, 2 ORDER BY 2
     `);
 
