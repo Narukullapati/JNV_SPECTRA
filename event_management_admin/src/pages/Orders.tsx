@@ -762,11 +762,13 @@ export default function Orders() {
     );
   };
 
+  const [gridRows, setGridRows] = useState<any[] | null>(null);
+  const totRows = gridRows ?? sortedOrders;
   const numT = (v: any) => Number(v) || 0;
-  const tBilled = sortedOrders.reduce((a: number, o: any) => a + numT(o.total_amount), 0);
-  const tOnline = sortedOrders.filter((o: any) => o.payment_option === 'online').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
-  const tOffline = sortedOrders.filter((o: any) => o.payment_option === 'paid_offline').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
-  const tPaid = sortedOrders.filter((o: any) => o.order_status === 'paid' || o.order_status === 'completed').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tBilled = totRows.reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tOnline = totRows.filter((o: any) => o.payment_option === 'online').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tOffline = totRows.filter((o: any) => o.payment_option === 'paid_offline').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tPaid = totRows.filter((o: any) => o.order_status === 'paid' || o.order_status === 'completed').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
   const tPending = Math.max(tBilled - tPaid, 0);
 
   const gridHeight = Math.max(320, window.innerHeight - 300);
@@ -938,6 +940,11 @@ export default function Orders() {
                 pagination={true}
                 paginationPageSize={gridPageSize}
                 autoSizeStrategy={{ type: 'fitGridWidth' }}
+                onModelUpdated={(e: any) => {
+                  const r: any[] = [];
+                  e.api.forEachNodeAfterFilterAndSort((n: any) => r.push(n.data));
+                  setGridRows(r);
+                }}
               />
             </div>
           </div>
