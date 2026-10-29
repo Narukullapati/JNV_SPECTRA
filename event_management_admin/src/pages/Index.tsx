@@ -206,7 +206,7 @@ export default function Index() {
             </div>
             <div className={card}>
               <p className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Balance Pending</p>
-              <p className="text-xl font-bold text-[#e0a422]">{formatCurrency(pending)}</p>
+              <p className={`text-xl font-bold ${pending > 0 ? "text-red-600" : "text-green-600"}`}>{formatCurrency(pending)}</p>
               <p className="text-xs text-muted-foreground mt-1">unpaid balances</p>
             </div>
             <div className={card}>
