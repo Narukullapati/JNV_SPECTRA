@@ -165,7 +165,9 @@ const getDashboardStats = async (req, res, next) => {
              COALESCE(SUM(total_amount), 0)::float AS billed,
              COUNT(*)::int AS orders,
              COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'online'), 0)::float AS online,
-             COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'paid_offline'), 0)::float AS offline
+             COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'paid_offline'), 0)::float AS offline,
+             COUNT(*) FILTER (WHERE payment_option = 'online')::int AS online_orders,
+             COUNT(*) FILTER (WHERE payment_option = 'paid_offline')::int AS offline_orders
       FROM orders
       WHERE created_at >= date_trunc('month', $1::timestamp)
         AND created_at <= $2::timestamp

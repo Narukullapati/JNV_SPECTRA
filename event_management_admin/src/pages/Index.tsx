@@ -187,18 +187,15 @@ export default function Index() {
       {/* Financial + monthly trends */}
       {stats ? (() => {
         const nowM = new Date();
-        const orders = (stats.recentOrders || []).filter((o: any) => {
-          const d = new Date(o.date || o.created_at || o.event_date);
-          return !isNaN(d.getTime()) && d.getMonth() === nowM.getMonth() && d.getFullYear() === nowM.getFullYear()
-            && (o.order_status || o.status || '').toLowerCase() !== 'cancelled';
-        });
-        const num = (v: any) => Number(v) || 0;
-        const billed = orders.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
-        const online = orders.filter((o: any) => (o.payment_option === 'online' || o.payment === 'online'));
-        const offline = orders.filter((o: any) => (o.payment_option === 'paid_offline' || o.payment === 'paid_offline'));
-        const onlineAmt = online.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
-        const offlineAmt = offline.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
-        const pending = Math.max(billed - (onlineAmt + offlineAmt), 0);
+        const mon = nowM.toLocaleString('en-US', { month: 'short' });
+        const cur = (stats.monthlyTrend || []).find((m: any) => m.month === mon) || {};
+        const orders = { length: cur.orders || 0 };
+        const billed = cur.billed || 0;
+        const onlineAmt = cur.online || 0;
+        const offlineAmt = cur.offline || 0;
+        const pending = Math.max(billed - onlineAmt - offlineAmt, 0);
+        const online = { length: cur.online_orders || 0 };
+        const offline = { length: cur.offline_orders || 0 };
         const card = 'bg-card border rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all';
         return (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 jnv-stagger">
