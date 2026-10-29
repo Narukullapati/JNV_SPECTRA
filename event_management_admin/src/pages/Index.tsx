@@ -271,7 +271,7 @@ export default function Index() {
         ) : null}
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 jnv-stagger items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 jnv-stagger items-start">
         {isLoading ? (
           <>
             <div className="rounded-lg border p-6 space-y-4">
@@ -318,6 +318,35 @@ export default function Index() {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Payments — Last 6 Months */}
+            <div className="bg-card border rounded-lg p-5 shadow-sm">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Payments — Last 6 Months</h3>
+              <div className="h-52">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={(stats.monthlyTrend || []).map((m: any) => ({
+                      month: m.month,
+                      online: m.online || 0,
+                      offline: m.offline || 0,
+                      pending: Math.max((m.billed || 0) - (m.online || 0) - (m.offline || 0), 0),
+                    }))}
+                    margin={{ top: 8, right: 8, left: -8, bottom: 0 }} barCategoryGap="30%">
+                    <XAxis dataKey="month" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
+                    <Tooltip formatter={(v: any, name: any) => [formatCurrency(v), name]} />
+                    <Bar dataKey="online" name="Online" fill="#6c2e70" radius={[3, 3, 0, 0]} style={{ filter: 'drop-shadow(2px 2px 0 rgba(60,10,60,.3))' }} />
+                    <Bar dataKey="offline" name="Offline" fill="#e0a422" radius={[3, 3, 0, 0]} style={{ filter: 'drop-shadow(2px 2px 0 rgba(120,80,10,.3))' }} />
+                    <Bar dataKey="pending" name="Pending" fill="#9ca3af" radius={[3, 3, 0, 0]} style={{ filter: 'drop-shadow(2px 2px 0 rgba(80,80,80,.25))' }} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#6c2e70'}} />Online</span>
+                <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#e0a422'}} />Offline</span>
+                <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#9ca3af'}} />Pending</span>
               </div>
             </div>
 
