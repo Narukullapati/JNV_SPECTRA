@@ -229,7 +229,7 @@ export default function Index() {
         ) : null}
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 jnv-stagger items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 jnv-stagger items-start">
         {isLoading ? (
           <>
             <div className="rounded-lg border p-6 space-y-4">
@@ -267,29 +267,6 @@ export default function Index() {
               <p className="text-sm opacity-90">
                 {stats.newOrders.trend.isPositive ? '+' : ''}{stats.newOrders.trend.value}% from last period
               </p>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="rounded-lg p-1 flex flex-col justify-center">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Quick Actions</h3>
-              <div className="grid grid-cols-2 gap-2.5">
-                {[
-                  { label: 'Orders', path: '/orders', icon: <ShoppingBag className="h-4 w-4" /> },
-                  { label: 'Venues', path: '/venues', icon: <Calendar className="h-4 w-4" /> },
-                  { label: 'Services', path: '/services', icon: <Package className="h-4 w-4" /> },
-                  { label: 'Rentals', path: '/rentals', icon: <DollarSign className="h-4 w-4" /> },
-                ].map((a) => (
-                  <button
-                    key={a.path}
-                    onClick={() => navigate(a.path)}
-                    className="group flex flex-col items-start gap-2 rounded-xl border bg-card p-4 text-left transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-[#6c2e70]/40"
-                  >
-                    <span className="rounded-lg bg-[#6c2e70]/10 p-2.5 text-[#6c2e70] group-hover:bg-[#6c2e70] group-hover:text-[#e8c96a] transition-colors">{a.icon}</span>
-                    <span className="font-semibold text-sm">{a.label}</span>
-                    <span className="text-xs text-muted-foreground">Open {a.label.toLowerCase()}</span>
-                  </button>
-                ))}
-              </div>
             </div>
 
             {/* Order Status Breakdown */}
