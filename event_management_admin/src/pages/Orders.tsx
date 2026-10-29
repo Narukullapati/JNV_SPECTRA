@@ -592,7 +592,7 @@ export default function Orders() {
   }
 
   const orders = data?.data?.data || [];
-  const sortedOrders = [...orders].sort((a: any, b: any) => {
+  const sortedOrders = React.useMemo(() => [...orders].sort((a: any, b: any) => {
     if (!sortKey) return 0;
     const k = sortKey as keyof typeof a;
     let av: any = a[k], bv: any = b[k];
@@ -601,7 +601,7 @@ export default function Orders() {
     if (av < bv) return sortDir === 'asc' ? -1 : 1;
     if (av > bv) return sortDir === 'asc' ? 1 : -1;
     return 0;
-  });
+  }), [orders, sortKey, sortDir]);
   const toggleSort = (key: string) => {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
     else { setSortKey(key); setSortDir('asc'); }
@@ -822,9 +822,11 @@ export default function Orders() {
                 paginationPageSize={gridPageSize}
                 autoSizeStrategy={{ type: 'fitGridWidth' }}
                 onModelUpdated={(e: any) => {
+                  if (!e.api) return;
                   const r: any[] = [];
                   e.api.forEachNodeAfterFilterAndSort((n: any) => r.push(n.data));
-                  setGridRows(r);
+                  setGridRows((prev: any[] | null) =>
+                    prev && prev.length === r.length && prev.every((x: any, i: number) => x.id === r[i].id) ? prev : r);
                 }}
               />
             </div>
