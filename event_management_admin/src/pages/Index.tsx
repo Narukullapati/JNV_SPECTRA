@@ -311,12 +311,11 @@ export default function Index() {
         });
         const num = (v: any) => Number(v) || 0;
         const billed = orders.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
-        const pending = orders.reduce((a: number, o: any) =>
-          ((o.status || o.order_status || 'pending') !== 'paid' ? a + num(o.balance_amount ?? o.balance) : a), 0);
         const online = orders.filter((o: any) => (o.payment_option === 'online' || o.payment === 'online'));
         const offline = orders.filter((o: any) => (o.payment_option === 'paid_offline' || o.payment === 'paid_offline'));
         const onlineAmt = online.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const offlineAmt = offline.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
+        const pending = Math.max(billed - (onlineAmt + offlineAmt), 0);
         const byMonth = orders.reduce((acc: Record<string, number>, o: any) => {
           const d = new Date(o.date || o.created_at || o.event_date);
           if (isNaN(d.getTime())) return acc;
