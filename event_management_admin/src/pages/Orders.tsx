@@ -653,18 +653,18 @@ export default function Orders() {
   const gridHeight = Math.max(320, window.innerHeight - 300);
   const gridPageSize = Math.max(5, Math.floor((gridHeight - 150) / 42));
   const gridColDefs: any[] = [
-    { headerName: 'Customer', field: 'customer_name' },
-    { headerName: 'Email', field: 'email' },
-    { headerName: 'Phone', field: 'contact_number' },
-    { headerName: 'Service Type', autoHeight: true, valueGetter: (p: any) =>
+    { headerName: 'Customer', field: 'customer_name', flex: 1.3, minWidth: 150 },
+    { headerName: 'Email', field: 'email', flex: 1.7, minWidth: 190 },
+    { headerName: 'Phone', field: 'contact_number', flex: 1, minWidth: 130 },
+    { headerName: 'Service Type', autoHeight: true, flex: 2.6, minWidth: 240, valueGetter: (p: any) =>
       (p.data.order_details?.items || []).map((it: any) => `${it.name}${it.quantity ? ` (x${it.quantity})` : ''}`).join(', ') },
-    { headerName: 'Event Date', field: 'event_date', valueFormatter: (p: any) => formatDate(p.value), comparator: (a: any, b: any) => (new Date(a).getTime() || 0) - (new Date(b).getTime() || 0) },
-    { headerName: 'Total', field: 'total_amount', filter: 'agNumberColumnFilter', valueFormatter: (p: any) => formatCurrency(p.value) },
-    { headerName: 'Payment Option', field: 'payment_option', cellRenderer: (p: any) => (
+    { headerName: 'Event Date', field: 'event_date', flex: 0.9, minWidth: 115, valueFormatter: (p: any) => formatDate(p.value), comparator: (a: any, b: any) => (new Date(a).getTime() || 0) - (new Date(b).getTime() || 0) },
+    { headerName: 'Total', field: 'total_amount', flex: 0.8, minWidth: 95, filter: 'agNumberColumnFilter', valueFormatter: (p: any) => formatCurrency(p.value) },
+    { headerName: 'Payment Option', field: 'payment_option', flex: 0.9, minWidth: 110, cellRenderer: (p: any) => (
       <Badge variant={p.value === 'online' ? 'default' : 'secondary'}>{paymentOptionLabel(p.value)}</Badge>) },
-    { headerName: 'Status', field: 'order_status', cellRenderer: (p: any) => (
+    { headerName: 'Status', field: 'order_status', flex: 0.8, minWidth: 95, cellRenderer: (p: any) => (
       <Badge variant={p.value === 'paid' ? 'default' : p.value === 'cancelled' ? 'destructive' : 'secondary'}>{p.value}</Badge>) },
-    { headerName: 'Actions', field: 'id', sortable: false, filter: false, width: 150, cellRenderer: ActionsCell },
+    { headerName: 'Actions', field: 'id', sortable: false, filter: false, width: 165, cellRenderer: ActionsCell },
   ];
   const pagination = data?.data?.pagination;
 
