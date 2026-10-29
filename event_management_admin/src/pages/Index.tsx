@@ -306,13 +306,13 @@ export default function Index() {
       {stats ? (() => {
         const orders = stats.recentOrders || [];
         const num = (v: any) => Number(v) || 0;
-        const billed = orders.reduce((a: number, o: any) => a + num(o.total_amount), 0);
+        const billed = orders.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const pending = orders.reduce((a: number, o: any) =>
-          (o.order_status || 'pending') !== 'paid' ? a + num(o.balance_amount) : a, 0);
-        const online = orders.filter((o: any) => o.payment_option === 'online');
-        const offline = orders.filter((o: any) => o.payment_option === 'paid_offline');
-        const onlineAmt = online.reduce((a: number, o: any) => a + num(o.total_amount), 0);
-        const offlineAmt = offline.reduce((a: number, o: any) => a + num(o.total_amount), 0);
+          ((o.status || o.order_status || 'pending') !== 'paid' ? a + num(o.balance_amount ?? o.balance) : a), 0);
+        const online = orders.filter((o: any) => (o.payment_option === 'online' || o.payment === 'online'));
+        const offline = orders.filter((o: any) => (o.payment_option === 'paid_offline' || o.payment === 'paid_offline'));
+        const onlineAmt = online.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
+        const offlineAmt = offline.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const byMonth = orders.reduce((acc: Record<string, number>, o: any) => {
           const d = new Date(o.event_date || o.created_at);
           if (isNaN(d.getTime())) return acc;
