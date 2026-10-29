@@ -31,7 +31,9 @@ export function Navbar() {
           <AvatarImage src="/placeholder.svg" alt="Avatar" />
           <AvatarFallback>AD</AvatarFallback>
         </Avatar>
-        <img src={logo} alt="JNV Spectra" className="h-9 w-auto object-contain" />
+        <div className="rounded-lg bg-[linear-gradient(135deg,#4b1248,#3d093d)] px-2.5 py-1.5 shadow-sm">
+          <img src={logo} alt="JNV Spectra" className="h-10 w-auto object-contain" />
+        </div>
       </div>
     </header>
   );
