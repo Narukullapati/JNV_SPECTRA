@@ -25,20 +25,18 @@ export function StatsCard({
   return (
     <Card className={cn(
       "overflow-hidden transition-all duration-300 hover:shadow-lg",
-      "bg-gradient-to-br from-white to-gray-50",
+      "bg-card rounded-xl",
       className
     )}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          {icon && (
-            <div className="p-2 rounded-full bg-primary/10 text-primary">
-              {icon}
-            </div>
-          )}
-        </div>
-        <div className="mt-4 flex items-baseline">
-          <p className="text-3xl font-bold tracking-tight">{value}</p>
+      <CardContent className="p-5">
+        {icon && (
+          <div className="rounded-lg bg-[#6c2e70]/10 p-2.5 text-[#6c2e70] w-fit mb-3 [&>svg]:h-5 [&>svg]:w-5">
+            {icon}
+          </div>
+        )}
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</p>
+        <div className="mt-2 flex items-baseline">
+          <p className="text-2xl font-bold tracking-tight">{value}</p>
           {trend && (
             <div className={cn(
               "ml-3 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium",

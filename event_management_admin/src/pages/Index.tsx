@@ -345,21 +345,21 @@ export default function Index() {
         }, {} as Record<string, number>);
         const months = Object.entries(byMonth).slice(-6);
         const maxM = Math.max(...months.map(([, v]) => v), 1);
-        const card = 'bg-card border rounded-lg p-4';
+        const card = 'bg-card border rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all';
         return (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 jnv-stagger">
             <div className={card}>
-              <p className="text-xs text-muted-foreground mb-1">Total Billed</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Total Billed</p>
               <p className="text-xl font-bold">{formatCurrency(billed)}</p>
               <p className="text-xs text-muted-foreground mt-1">{orders.length} recent orders</p>
             </div>
             <div className={card}>
-              <p className="text-xs text-muted-foreground mb-1">Balance Pending</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Balance Pending</p>
               <p className="text-xl font-bold text-[#e0a422]">{formatCurrency(pending)}</p>
               <p className="text-xs text-muted-foreground mt-1">unpaid balances</p>
             </div>
             <div className={card}>
-              <p className="text-xs text-muted-foreground mb-1">Online Payments</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Online Payments</p>
               <p className="text-xl font-bold">{formatCurrency(onlineAmt)}</p>
               <p className="text-xs text-muted-foreground mt-1">{online.length} online · {offline.length} offline ({formatCurrency(offlineAmt)})</p>
             </div>
