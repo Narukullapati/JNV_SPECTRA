@@ -923,6 +923,7 @@ export default function Orders() {
                 defaultColDef={{ sortable: true, filter: true, floatingFilter: true, resizable: true }}
                 pagination={true}
                 paginationPageSize={gridPageSize}
+                autoSizeStrategy={{ type: 'fitGridWidth' }}
               />
             </div>
           </div>
