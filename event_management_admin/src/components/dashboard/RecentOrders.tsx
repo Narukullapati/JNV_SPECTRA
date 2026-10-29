@@ -28,7 +28,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-medium">Recent Orders</CardTitle>
+        <CardTitle className="text-lg font-bold text-[#3d093d]">Recent Orders</CardTitle>
       </CardHeader>
       <CardContent>
         {orders && orders.length > 0 ? (
