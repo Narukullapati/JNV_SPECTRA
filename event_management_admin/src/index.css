@@ -106,7 +106,7 @@
 
 /* JNV brand themes (purple #4b1248 / gold #e8c96a) */
 .theme-gold {
-  --background: 47 88% 96%;
+  --background: 0 0% 100%;
   --foreground: 300 30% 12%;
   --card: 0 0% 100%;
   --card-foreground: 300 30% 12%;
