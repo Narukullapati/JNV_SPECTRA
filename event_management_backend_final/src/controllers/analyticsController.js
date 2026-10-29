@@ -167,10 +167,11 @@ const getDashboardStats = async (req, res, next) => {
              COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'online'), 0)::float AS online,
              COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'paid_offline'), 0)::float AS offline
       FROM orders
-      WHERE created_at >= date_trunc('month', now()) - interval '5 months'
+      WHERE created_at >= date_trunc('month', $1::timestamp)
+        AND created_at <= $2::timestamp
         AND order_status <> 'cancelled'
       GROUP BY 1, 2 ORDER BY 2
-    `);
+    `, [startDate, endDate]);
 
     // Get recent orders for display
     const recentOrders = ordersResult.data

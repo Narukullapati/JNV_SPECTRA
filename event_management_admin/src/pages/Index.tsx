@@ -306,7 +306,7 @@ export default function Index() {
             <div className="flex flex-col gap-6 h-full">
             {/* Monthly Orders Chart */}
             <div className="bg-card border rounded-lg p-5 shadow-sm flex-1 flex flex-col">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Orders — Last 6 Months</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Orders by Month</h3>
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={stats.monthlyTrend || []} margin={{ top: 8, right: 8, left: -16, bottom: 0 }} barCategoryGap="35%">
@@ -325,7 +325,7 @@ export default function Index() {
 
             {/* Payments — Last 6 Months */}
             <div className="bg-card border rounded-lg p-5 shadow-sm flex-1 flex flex-col">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Payments — Last 6 Months</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Payments by Month</h3>
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
