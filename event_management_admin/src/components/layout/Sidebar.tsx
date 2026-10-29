@@ -88,7 +88,7 @@ export function Sidebar() {
       "flex-col border-r bg-sidebar h-screen transition-all duration-300 relative hidden md:flex",
       collapsed ? "w-[70px]" : "w-[250px]"
     )}>
-      <div className="flex flex-col items-center p-4 gap-2">
+      <div className="flex flex-col items-center p-4 pb-3 gap-0">
         <div className="flex items-center justify-between w-full">
           <div className={cn("flex items-center gap-2", collapsed && "hidden")}>
             <h1 className="font-semibold text-lg text-sidebar-foreground">Admin Panel</h1>

@@ -50,7 +50,7 @@ export default function Login() {
                 <img 
                   src={logo} 
                   alt="JNV Events Logo" 
-                  className="h-32 w-auto object-contain jnv-logo-float"
+                  className="h-32 w-auto object-contain jnv-logo-float jnv-logo-flip"
                   onError={(e) => {
                     // Fallback to icon if logo fails to load
                     e.currentTarget.style.display = 'none';
