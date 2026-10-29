@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Services from "./pages/Services";
 import Orders from "./pages/Orders";
+import AuditLogs from "@/pages/AuditLogs";
 import Rentals from "./pages/Rentals";
 import Events from "./pages/Events";
 import EventsHosted from "./pages/EventsHosted";
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/rentals" element={<ProtectedRoute><Rentals /></ProtectedRoute>} />
           <Route path="/venues" element={<ProtectedRoute><Venues /></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+          <Route path="/audit-logs" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
           <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
           <Route path="/events-hosted" element={<ProtectedRoute><EventsHosted /></ProtectedRoute>} />
           <Route path="/sliders" element={<ProtectedRoute><Sliders /></ProtectedRoute>} />

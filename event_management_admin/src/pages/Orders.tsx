@@ -589,7 +589,6 @@ export default function Orders() {
           </div>
         </div>
 
-        {ConfirmDialog}
     </DashboardLayout>
     );
   }
@@ -950,6 +949,7 @@ export default function Orders() {
           </DialogContent>
         </Dialog>
       </div>
+      {ConfirmDialog}
     </DashboardLayout>
   );
 }

@@ -43,6 +43,7 @@ const navItems: NavItem[] = [
   { label: "Sliders", href: "/sliders", icon: Layers },
   { label: "Gallery", href: "/gallery", icon: Image },
   { label: "Testimonials", href: "/testimonials", icon: MessageSquare },
+  { label: "Audit Log", href: "/audit-logs", icon: ClipboardCheck },
   { label: "Profile", href: "/profile", icon: User },
 ];
 
