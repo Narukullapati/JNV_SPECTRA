@@ -193,7 +193,7 @@ export default function Index() {
         const billed = cur.billed || 0;
         const onlineAmt = cur.online || 0;
         const offlineAmt = cur.offline || 0;
-        const pending = Math.max(billed - onlineAmt - offlineAmt, 0);
+        const pending = Math.max(billed - (stats.totalRevenue?.value || 0), 0);
         const online = { length: cur.online_orders || 0 };
         const offline = { length: cur.offline_orders || 0 };
         const card = 'bg-card border rounded-xl p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all';
