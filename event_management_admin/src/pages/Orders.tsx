@@ -611,7 +611,8 @@ export default function Orders() {
   const ActionsCell = (params: any) => {
     const order = params.data;
     return (
-                        <DropdownMenu>
+    <div onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+                        <DropdownMenu modal={false}>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon">
                               <MoreHorizontal className="h-4 w-4" />
@@ -760,6 +761,7 @@ export default function Orders() {
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
+    </div>
     );
   };
 
