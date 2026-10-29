@@ -304,7 +304,11 @@ export default function Index() {
 
       {/* Financial + monthly trends */}
       {stats ? (() => {
-        const orders = stats.recentOrders || [];
+        const nowM = new Date();
+        const orders = (stats.recentOrders || []).filter((o: any) => {
+          const d = new Date(o.event_date || o.created_at || o.date);
+          return !isNaN(d.getTime()) && d.getMonth() === nowM.getMonth() && d.getFullYear() === nowM.getFullYear();
+        });
         const num = (v: any) => Number(v) || 0;
         const billed = orders.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const pending = orders.reduce((a: number, o: any) =>
@@ -328,7 +332,7 @@ export default function Index() {
             <div className={card}>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Total Billed</p>
               <p className="text-xl font-bold">{formatCurrency(billed)}</p>
-              <p className="text-xs text-muted-foreground mt-1">{orders.length} recent orders</p>
+              <p className="text-xs text-muted-foreground mt-1">{orders.length} orders this month</p>
             </div>
             <div className={card}>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Balance Pending</p>
