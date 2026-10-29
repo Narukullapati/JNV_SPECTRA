@@ -12,6 +12,7 @@ import { Plus, MoreHorizontal, EyeIcon, CreditCard, Download, Loader2, Trash2, S
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { OrderForm } from "@/components/orders/OrderForm";
+import logo from "@/assets/images/logo.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
@@ -609,7 +610,7 @@ export default function Orders() {
         )}
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Orders</h1>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <Button onClick={() => setIsFormOpen(true)} disabled={createOrder.isPending}>
               {createOrder.isPending ? (
                 <>
@@ -623,6 +624,9 @@ export default function Orders() {
                 </>
               )}
             </Button>
+            <div className="rounded-lg bg-[linear-gradient(135deg,#4b1248,#3d093d)] px-2.5 py-1.5 shadow-sm">
+              <img src={logo} alt="JNV Spectra" className="h-10 w-auto object-contain" />
+            </div>
           </div>
         </div>
 
