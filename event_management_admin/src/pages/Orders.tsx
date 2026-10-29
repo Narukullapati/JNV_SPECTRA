@@ -3,6 +3,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AgGridReact } from "ag-grid-react";
+import { AllCommunityModule, ModuleRegistry, themeQuartz } from "ag-grid-community";
+ModuleRegistry.registerModules([AllCommunityModule]);
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -603,204 +606,10 @@ export default function Orders() {
     else { setSortKey(key); setSortDir('asc'); }
   };
   const sortMark = (key: string) => (sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '');
-  const pagination = data?.data?.pagination;
 
-  return (
-    <DashboardLayout>
-      <div className="space-y-4 relative">
-        {isPageLoading && (
-          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="text-sm text-muted-foreground">
-                {loadingAction?.action === 'mark_deposit_paid' && "Marking deposit as paid..."}
-                {loadingAction?.action === 'mark_paid' && "Marking order as paid..."}
-                {loadingAction?.action === 'download_invoice' && "Downloading receipt..."}
-                {loadingAction?.action === 'cancel' && "Cancelling order..."}
-                {loadingAction?.action === 'generate_quotation' && "Generating invoice..."}
-                {loadingAction?.action === 'generate_deposit_link' && "Generating deposit payment link..."}
-                {loadingAction?.action === 'generate_balance_link' && "Generating balance payment link..."}
-              </p>
-            </div>
-          </div>
-        )}
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Orders</h1>
-          <div className="flex items-center space-x-3">
-            <Button onClick={() => setIsFormOpen(true)} disabled={createOrder.isPending}>
-              {createOrder.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                <>
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Order
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-end gap-3">
-          <div className="w-full sm:w-64">
-            <label className="mb-1 block text-sm text-muted-foreground">Search</label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Search customer or email"
-                className="pl-9"
-              />
-            </div>
-          </div>
-
-          <div className="w-full sm:w-48">
-            <label className="mb-1 block text-sm text-muted-foreground">Status</label>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full justify-between font-normal">
-                  {statusFilterLabel}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuCheckboxItem
-                  checked={statusFilter.length === 0}
-                  onCheckedChange={() => setStatusFilter([])}
-                >
-                  All statuses
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator />
-                {orderStatusOptions.map((status) => (
-                  <DropdownMenuCheckboxItem
-                    key={status}
-                    checked={statusFilter.includes(status)}
-                    onCheckedChange={() => toggleStatusFilter(status)}
-                  >
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          <div className="w-full sm:w-40">
-            <label className="mb-1 block text-sm text-muted-foreground">From Date</label>
-            <Input
-              type="date"
-              value={fromDate}
-              onChange={(event) => setFromDate(event.target.value)}
-            />
-          </div>
-
-          <div className="w-full sm:w-40">
-            <label className="mb-1 block text-sm text-muted-foreground">To Date</label>
-            <Input
-              type="date"
-              value={toDate}
-              onChange={(event) => setToDate(event.target.value)}
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setSearchQuery("");
-                setStatusFilter([]);
-                setFromDate("");
-                setToDate("");
-              }}
-              disabled={isLoading}
-            >
-              Clear Filters
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleExportOrders}
-              disabled={isExporting || isLoading}
-            >
-              {isExporting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Exporting...
-                </>
-              ) : (
-                <>
-                  <Download className="mr-2 h-4 w-4" />
-                  Export Excel
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {isLoading ? (
-          renderOrdersSkeleton()
-        ) : (
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('customer_name')}>Customer{sortMark('customer_name')}</button></TableHead>
-                  <TableHead>Service Type</TableHead>
-                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('event_date')}>Event Date{sortMark('event_date')}</button></TableHead>
-                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('total_amount')}>Total{sortMark('total_amount')}</button></TableHead>
-                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('payment_option')}>Payment Option{sortMark('payment_option')}</button></TableHead>
-                  <TableHead><button type="button" className="font-medium hover:text-primary" onClick={() => toggleSort('order_status')}>Status{sortMark('order_status')}</button></TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      <div className="flex flex-col items-center justify-center text-muted-foreground">
-                        <ShoppingBag className="h-10 w-10 mb-2" />
-                        <p>No orders found</p>
-                        <p className="text-sm">Create a new order to get started</p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  sortedOrders.map((order: Order) => (
-                    <TableRow key={order.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{order.customer_name}</div>
-                          <div className="text-sm text-gray-500">{order.email}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {order.order_details?.items?.map((item, index) => (
-                          <div key={index} className="text-sm">
-                            {item.name} {item.quantity ? `(x${item.quantity})` : ''}
-                          </div>
-                        ))}
-                      </TableCell>
-                      <TableCell>{formatDate(order.event_date)}</TableCell>
-                      <TableCell>{formatCurrency(order.total_amount)}</TableCell>
-                      <TableCell>
-                        <Badge variant={order.payment_option === "online" ? "default" : "secondary"}>
-                          {paymentOptionLabel(order.payment_option)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            order.order_status === "paid"
-                              ? "default"
-                              : order.order_status === "cancelled"
-                              ? "destructive"
-                              : "secondary"
-                          }
-                        >
-                          {order.order_status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
+  const ActionsCell = (params: any) => {
+    const order = params.data;
+    return (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon">
@@ -950,12 +759,172 @@ export default function Orders() {
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+    );
+  };
+
+  const gridHeight = Math.max(320, window.innerHeight - 300);
+  const gridPageSize = Math.max(5, Math.floor((gridHeight - 150) / 42));
+  const gridColDefs: any[] = [
+    { headerName: 'Customer', field: 'customer_name', autoHeight: true, cellRenderer: (p: any) => (
+      <div><div className="font-medium">{p.value}</div><div className="text-sm text-gray-500">{p.data.email}</div></div>) },
+    { headerName: 'Service Type', autoHeight: true, valueGetter: (p: any) =>
+      (p.data.order_details?.items || []).map((it: any) => `${it.name}${it.quantity ? ` (x${it.quantity})` : ''}`).join(', ') },
+    { headerName: 'Event Date', field: 'event_date', valueFormatter: (p: any) => formatDate(p.value) },
+    { headerName: 'Total', field: 'total_amount', filter: 'agNumberColumnFilter', valueFormatter: (p: any) => formatCurrency(p.value) },
+    { headerName: 'Payment Option', field: 'payment_option', cellRenderer: (p: any) => (
+      <Badge variant={p.value === 'online' ? 'default' : 'secondary'}>{paymentOptionLabel(p.value)}</Badge>) },
+    { headerName: 'Status', field: 'order_status', cellRenderer: (p: any) => (
+      <Badge variant={p.value === 'paid' ? 'default' : p.value === 'cancelled' ? 'destructive' : 'secondary'}>{p.value}</Badge>) },
+    { headerName: 'Actions', field: 'id', sortable: false, filter: false, width: 90, cellRenderer: ActionsCell },
+  ];
+  const pagination = data?.data?.pagination;
+
+  return (
+    <DashboardLayout>
+      <div className="space-y-4 relative">
+        {isPageLoading && (
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">
+                {loadingAction?.action === 'mark_deposit_paid' && "Marking deposit as paid..."}
+                {loadingAction?.action === 'mark_paid' && "Marking order as paid..."}
+                {loadingAction?.action === 'download_invoice' && "Downloading receipt..."}
+                {loadingAction?.action === 'cancel' && "Cancelling order..."}
+                {loadingAction?.action === 'generate_quotation' && "Generating invoice..."}
+                {loadingAction?.action === 'generate_deposit_link' && "Generating deposit payment link..."}
+                {loadingAction?.action === 'generate_balance_link' && "Generating balance payment link..."}
+              </p>
+            </div>
+          </div>
+        )}
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Orders</h1>
+          <div className="flex items-center space-x-3">
+            <Button onClick={() => setIsFormOpen(true)} disabled={createOrder.isPending}>
+              {createOrder.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Order
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="w-full sm:w-64">
+            <label className="mb-1 block text-sm text-muted-foreground">Search</label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search customer or email"
+                className="pl-9"
+              />
+            </div>
+          </div>
+
+          <div className="w-full sm:w-48">
+            <label className="mb-1 block text-sm text-muted-foreground">Status</label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full justify-between font-normal">
+                  {statusFilterLabel}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuCheckboxItem
+                  checked={statusFilter.length === 0}
+                  onCheckedChange={() => setStatusFilter([])}
+                >
+                  All statuses
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuSeparator />
+                {orderStatusOptions.map((status) => (
+                  <DropdownMenuCheckboxItem
+                    key={status}
+                    checked={statusFilter.includes(status)}
+                    onCheckedChange={() => toggleStatusFilter(status)}
+                  >
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="w-full sm:w-40">
+            <label className="mb-1 block text-sm text-muted-foreground">From Date</label>
+            <Input
+              type="date"
+              value={fromDate}
+              onChange={(event) => setFromDate(event.target.value)}
+            />
+          </div>
+
+          <div className="w-full sm:w-40">
+            <label className="mb-1 block text-sm text-muted-foreground">To Date</label>
+            <Input
+              type="date"
+              value={toDate}
+              onChange={(event) => setToDate(event.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery("");
+                setStatusFilter([]);
+                setFromDate("");
+                setToDate("");
+              }}
+              disabled={isLoading}
+            >
+              Clear Filters
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleExportOrders}
+              disabled={isExporting || isLoading}
+            >
+              {isExporting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <Download className="mr-2 h-4 w-4" />
+                  Export Excel
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {isLoading ? (
+          renderOrdersSkeleton()
+        ) : (
+          <div className="rounded-md border">
+            <div className="ag-theme-quartz" style={{ height: gridHeight, width: '100%' }}>
+              <AgGridReact
+                theme={themeQuartz}
+                rowData={sortedOrders}
+                columnDefs={gridColDefs}
+                defaultColDef={{ sortable: true, filter: true, floatingFilter: true, resizable: true }}
+                pagination={true}
+                paginationPageSize={gridPageSize}
+              />
+            </div>
           </div>
         )}
 
