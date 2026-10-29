@@ -253,7 +253,7 @@ class EmailService {
         customerName: order.customer_name,
         email: order.email,
         serviceType: order.order_details.items[0]?.name || 'Event Services',
-        eventDate: order.event_date,
+        eventDate: order.event_date ? parseLocalDate(order.event_date)?.toLocaleDateString() || '' : '',
         reviewLink: reviewLink,
       };
 
@@ -279,7 +279,7 @@ class EmailService {
     try {
       logger.info('Starting calendar invite generation for order:', { 
         orderId: order.id,
-        eventDate: order.event_date,
+        eventDate: order.event_date ? parseLocalDate(order.event_date)?.toLocaleDateString() || '' : '',
         eventTime: order.event_time,
       });
       
@@ -331,7 +331,7 @@ class EmailService {
       } catch (parseError) {
         logger.error('Error parsing event datetime:', {
           error: parseError.message,
-          eventDate: order.event_date,
+          eventDate: order.event_date ? parseLocalDate(order.event_date)?.toLocaleDateString() || '' : '',
           eventTime: order.event_time,
           eventDateType: typeof order.event_date,
           isDateInstance: order.event_date instanceof Date,
@@ -420,7 +420,7 @@ class EmailService {
         stack: error.stack,
         orderId: order.id,
         customerEmail: order.email,
-        eventDate: order.event_date,
+        eventDate: order.event_date ? parseLocalDate(order.event_date)?.toLocaleDateString() || '' : '',
         eventTime: order.event_time,
         eventDateType: typeof order.event_date,
         isDateInstance: order.event_date instanceof Date,
