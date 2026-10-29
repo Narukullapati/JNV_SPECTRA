@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useOrders, useMarkOrderAsPaid, useGeneratePaymentLink, downloadInvoice, useDeleteOrder, useCreateOrder, useGenerateDepositPaymentLink, useGenerateBalancePaymentLink, useCancelOrder, useGenerateBalanceQuotation, fetchOrdersForExport } from "@/api/orders";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Plus, MoreHorizontal, EyeIcon, CreditCard, Download, Loader2, Trash2, ShoppingBag, Search } from "lucide-react";
+import { Plus, MoreHorizontal, EyeIcon, CreditCard, Download, Loader2, Trash2, ShoppingBag, Search, BadgeCheck, Link2, Ban } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { OrderForm } from "@/components/orders/OrderForm";
@@ -610,158 +610,33 @@ export default function Orders() {
 
   const ActionsCell = (params: any) => {
     const order = params.data;
+    const busy = loadingAction?.id === order.id ? loadingAction?.action : null;
+    const ic = 'h-4 w-4';
+    const btn = 'inline-flex items-center justify-center h-7 w-7 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground disabled:opacity-40';
+    const spin = <Loader2 className={`${ic} animate-spin`} />;
     return (
-    <div onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
-                        <DropdownMenu modal={false}>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setSelectedOrder(order)}>
-                              <EyeIcon className="mr-2 h-4 w-4" />
-                              View Details
-                            </DropdownMenuItem>
-                            {order.payment_option === 'online' && (
-                              <>
-                                {order.order_status === 'pending' && !order.deposit_paid_at && (
-                                  <>
-                                    <DropdownMenuItem 
-                                      onClick={() => handlePaymentLinkGeneration(order, 'deposit')}
-                                      disabled={loadingAction?.id === order.id}
-                                    >
-                                      {loadingAction?.id === order.id && loadingAction?.action === 'generate_deposit_link' ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                      )}
-                                      Pay Deposit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleMarkAsPaid(order.id, 'deposit')}
-                                      disabled={loadingAction?.id === order.id}
-                                    >
-                                      {loadingAction?.id === order.id && loadingAction?.action === 'mark_deposit_paid' ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                      )}
-                                      Mark as Deposit Paid
-                                    </DropdownMenuItem>
-                                  </>
-                                )}
-                                {order.order_status === 'confirmed' && !order.balance_paid_at && (
-                                  <>
-                                    <DropdownMenuItem
-                                      onClick={() => handleMarkAsPaid(order.id, 'full')}
-                                      disabled={loadingAction?.id === order.id}
-                                    >
-                                      {loadingAction?.id === order.id && loadingAction?.action === 'mark_paid' ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                      )}
-                                      Mark as Paid
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleGenerateBalancePayLink(order)}
-                                      disabled={loadingAction?.id === order.id}
-                                    >
-                                      {loadingAction?.id === order.id && loadingAction?.action === 'generate_balance_link' ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                      )}
-                                      Generate Balance Pay Link
-                                    </DropdownMenuItem>
-                                  </>
-                                )}
-                              </>
-                            )}
-                            {order.payment_option === 'paid_offline' && (
-                              <>
-                                {order.order_status === 'pending' && !order.deposit_paid_at && (
-                                  <>
-                                    {/* <DropdownMenuItem 
-                                      onClick={() => handlePaymentLinkGeneration(order, 'deposit')}
-                                      disabled={loadingAction?.id === order.id}
-                                    >
-                                      {loadingAction?.id === order.id && loadingAction?.action === 'generate_deposit_link' ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                      )}
-                                      Pay Deposit
-                                    </DropdownMenuItem> */}
-                                    <DropdownMenuItem
-                                      onClick={() => handleMarkAsPaid(order.id, 'deposit')}
-                                      disabled={loadingAction?.id === order.id}
-                                    >
-                                      {loadingAction?.id === order.id && loadingAction?.action === 'mark_deposit_paid' ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      ) : (
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                      )}
-                                      Mark as Deposit Paid
-                                    </DropdownMenuItem>
-                                  </>
-                                )}
-                                {order.order_status === 'confirmed' && !order.balance_paid_at && (
-                                  <DropdownMenuItem
-                                    onClick={() => handleMarkAsPaid(order.id, 'full')}
-                                    disabled={loadingAction?.id === order.id}
-                                  >
-                                    {loadingAction?.id === order.id && loadingAction?.action === 'mark_paid' ? (
-                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    ) : (
-                                      <CreditCard className="mr-2 h-4 w-4" />
-                                    )}
-                                    Mark as Paid
-                                  </DropdownMenuItem>
-                                )}
-                              </>
-                            )}
-                            {order.order_status === "paid" && (
-                              <DropdownMenuItem 
-                                onClick={() => handleDownloadInvoice(order.id, order.order_status)}
-                                disabled={loadingAction?.id === order.id}
-                              >
-                                {loadingAction?.id === order.id && loadingAction?.action === 'download_invoice' ? (
-                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Download className="mr-2 h-4 w-4" />
-                                )}
-                                Download Receipt
-                              </DropdownMenuItem>
-                            )}
-                            {order.order_status !== 'cancelled' && (
-                              <DropdownMenuItem 
-                                onClick={() => handleCancelOrder(order.id)}
-                                disabled={loadingAction?.id === order.id}
-                              >
-                                {loadingAction?.id === order.id && loadingAction?.action === 'cancel' ? (
-                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                )}
-                                Cancel Order
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem 
-                              onClick={() => setOrderToDelete(order)}
-                              disabled={loadingAction?.id === order.id}
-                            >
-                              {loadingAction?.id === order.id && loadingAction?.action === 'delete' ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              ) : (
-                                <Trash2 className="mr-2 h-4 w-4" />
-                              )}
-                              Delete Order
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-    </div>
+      <div className="flex items-center gap-0.5" onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+        <button title="View Details" className={btn} onClick={() => setSelectedOrder(order)}><EyeIcon className={ic} /></button>
+        {order.order_status === 'pending' && !order.deposit_paid_at && order.payment_option === 'online' && (
+          <button title="Pay Deposit" className={btn} disabled={!!busy} onClick={() => handlePaymentLinkGeneration(order, 'deposit')}>{busy === 'generate_deposit_link' ? spin : <CreditCard className={ic} />}</button>
+        )}
+        {order.order_status === 'pending' && !order.deposit_paid_at && (
+          <button title="Mark as Deposit Paid" className={btn} disabled={!!busy} onClick={() => handleMarkAsPaid(order.id, 'deposit')}>{busy === 'mark_deposit_paid' ? spin : <BadgeCheck className={ic} />}</button>
+        )}
+        {order.order_status === 'confirmed' && !order.balance_paid_at && (
+          <button title="Mark as Paid" className={btn} disabled={!!busy} onClick={() => handleMarkAsPaid(order.id, 'full')}>{busy === 'mark_paid' ? spin : <BadgeCheck className={ic} />}</button>
+        )}
+        {order.order_status === 'confirmed' && !order.balance_paid_at && order.payment_option === 'online' && (
+          <button title="Generate Balance Pay Link" className={btn} disabled={!!busy} onClick={() => handleGenerateBalancePayLink(order)}>{busy === 'generate_balance_link' ? spin : <Link2 className={ic} />}</button>
+        )}
+        {order.order_status === 'paid' && (
+          <button title="Download Receipt" className={btn} disabled={!!busy} onClick={() => handleDownloadInvoice(order.id, order.order_status)}>{busy === 'download_invoice' ? spin : <Download className={ic} />}</button>
+        )}
+        {order.order_status !== 'cancelled' && (
+          <button title="Cancel Order" className={btn} disabled={!!busy} onClick={() => handleCancelOrder(order.id)}>{busy === 'cancel' ? spin : <Ban className={ic} />}</button>
+        )}
+        <button title="Delete Order" className={`${btn} text-red-500`} disabled={busy === 'delete'} onClick={() => setOrderToDelete(order)}>{busy === 'delete' ? spin : <Trash2 className={ic} />}</button>
+      </div>
     );
   };
 
@@ -788,7 +663,7 @@ export default function Orders() {
       <Badge variant={p.value === 'online' ? 'default' : 'secondary'}>{paymentOptionLabel(p.value)}</Badge>) },
     { headerName: 'Status', field: 'order_status', cellRenderer: (p: any) => (
       <Badge variant={p.value === 'paid' ? 'default' : p.value === 'cancelled' ? 'destructive' : 'secondary'}>{p.value}</Badge>) },
-    { headerName: 'Actions', field: 'id', sortable: false, filter: false, width: 90, cellRenderer: ActionsCell },
+    { headerName: 'Actions', field: 'id', sortable: false, filter: false, width: 150, cellRenderer: ActionsCell },
   ];
   const pagination = data?.data?.pagination;
 
