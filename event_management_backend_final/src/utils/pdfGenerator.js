@@ -113,6 +113,24 @@ class PDFGenerator {
     });
   }
 
+  static customerShortCode(name) {
+    const words = String(name || 'customer')
+      .replace(/[^a-zA-Z0-9\s]/g, '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (!words.length) return 'CUST';
+    const code = (words[0].slice(0, 4) + words.slice(1).map((w) => w[0]).join('')).toUpperCase();
+    return code.slice(0, 6);
+  }
+
+  static invoiceFileName(customerName) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, '0');
+    return `documents/inv_${PDFGenerator.customerShortCode(customerName)}_${months[d.getMonth()]}_${p(d.getDate())}_${d.getFullYear()}_${p(d.getHours())}_${p(d.getMinutes())}_${p(d.getSeconds())}.pdf`;
+  }
+
   static async generateInvoicePDF(data) {
     try {
       const doc = new PDFDocument({ margin: 50 });
@@ -522,7 +540,7 @@ class PDFGenerator {
       const pdfBuffer = await PDFGenerator.generatePDF(doc);
 
       // Upload to S3
-      const fileName = `documents/invoice-${Date.now()}.pdf`;
+      const fileName = PDFGenerator.invoiceFileName(data.customerInfo && data.customerInfo.name);
       await uploadToS3(fileName, pdfBuffer, 'application/pdf');
 
       // Get public URL
