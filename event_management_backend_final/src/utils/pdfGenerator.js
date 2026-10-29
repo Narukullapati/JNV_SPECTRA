@@ -126,9 +126,11 @@ class PDFGenerator {
 
   static invoiceFileName(customerName) {
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const d = new Date();
+    const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
     const p = (n) => String(n).padStart(2, '0');
-    return `documents/inv_${PDFGenerator.customerShortCode(customerName)}_${months[d.getMonth()]}_${p(d.getDate())}_${d.getFullYear()}_${p(d.getHours())}_${p(d.getMinutes())}_${p(d.getSeconds())}.pdf`;
+    const ampm = d.getHours() >= 12 ? 'pm' : 'am';
+    const h = d.getHours() % 12 || 12;
+    return `documents/inv_${PDFGenerator.customerShortCode(customerName)}_${months[d.getMonth()]}_${p(d.getDate())}_${d.getFullYear()}_${p(h)}_${p(d.getMinutes())}_${p(d.getSeconds())}_${ampm}.pdf`;
   }
 
   static async generateInvoicePDF(data) {
