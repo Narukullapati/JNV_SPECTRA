@@ -34,7 +34,7 @@ export function StatsCard({
             {icon}
           </div>
         )}
-        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</p>
+        <p className="text-xs font-bold uppercase tracking-wider text-[#3d093d]">{title}</p>
         <div className="mt-2 flex items-baseline">
           <p className="text-2xl font-bold tracking-tight">{value}</p>
           {trend && (

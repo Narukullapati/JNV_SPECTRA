@@ -203,22 +203,22 @@ export default function Index() {
         return (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 jnv-stagger">
             <div className={card}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Total Billed</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Total Billed</p>
               <p className="text-xl font-bold">{formatCurrency(billed)}</p>
               <p className="text-xs text-muted-foreground mt-1">{orders.length} orders this month</p>
             </div>
             <div className={card}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Balance Pending</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Balance Pending</p>
               <p className="text-xl font-bold text-[#e0a422]">{formatCurrency(pending)}</p>
               <p className="text-xs text-muted-foreground mt-1">unpaid balances</p>
             </div>
             <div className={card}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Online Payments</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Online Payments</p>
               <p className="text-xl font-bold">{formatCurrency(onlineAmt)}</p>
               <p className="text-xs text-muted-foreground mt-1">{online.length} orders</p>
             </div>
             <div className={card}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Offline Payments</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Offline Payments</p>
               <p className="text-xl font-bold">{formatCurrency(offlineAmt)}</p>
               <p className="text-xs text-muted-foreground mt-1">{offline.length} orders</p>
             </div>
@@ -306,7 +306,7 @@ export default function Index() {
             <div className="flex flex-col gap-6 h-full">
             {/* Monthly Orders Chart */}
             <div className="bg-card border rounded-lg p-5 shadow-sm flex-1 flex flex-col">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Orders — Last 6 Months</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Orders — Last 6 Months</h3>
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={stats.monthlyTrend || []} margin={{ top: 8, right: 8, left: -16, bottom: 0 }} barCategoryGap="35%">
@@ -325,7 +325,7 @@ export default function Index() {
 
             {/* Payments — Last 6 Months */}
             <div className="bg-card border rounded-lg p-5 shadow-sm flex-1 flex flex-col">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Payments — Last 6 Months</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#3d093d] mb-1">Payments — Last 6 Months</h3>
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
