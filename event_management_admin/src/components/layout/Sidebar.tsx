@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useLogout } from "@/api/auth";
-import logo from "@/assets/images/logo.png";
+
 
 type NavItem = {
   label: string;
@@ -91,11 +91,6 @@ export function Sidebar() {
       <div className="flex flex-col items-center p-4 gap-2">
         <div className="flex items-center justify-between w-full">
           <div className={cn("flex items-center gap-2", collapsed && "hidden")}>
-            <img 
-              src={logo} 
-              alt="JNV Events Logo" 
-              className="h-8 w-auto object-contain"
-            />
             <h1 className="font-semibold text-lg text-sidebar-foreground">Admin Panel</h1>
           </div>
           <Button 
@@ -108,7 +103,7 @@ export function Sidebar() {
           </Button>
         </div>
         {!collapsed && (
-          <p className="text-xs text-muted-foreground">Event Management System</p>
+          <p className="text-xs text-sidebar-foreground/70">Event Management System</p>
         )}
       </div>
       

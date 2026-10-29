@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { ThemePicker } from "@/components/layout/ThemePicker";
+import logo from "@/assets/images/logo.png";
 
 export function Navbar() {
   return (
@@ -30,6 +31,7 @@ export function Navbar() {
           <AvatarImage src="/placeholder.svg" alt="Avatar" />
           <AvatarFallback>AD</AvatarFallback>
         </Avatar>
+        <img src={logo} alt="JNV Spectra" className="h-9 w-auto object-contain" />
       </div>
     </header>
   );
