@@ -269,35 +269,6 @@ export default function Index() {
               </p>
             </div>
 
-            {/* Order Status Breakdown */}
-            <div className="bg-card border rounded-lg p-6 lg:col-span-2">
-              <h3 className="text-lg font-semibold mb-4">Recent Orders Status</h3>
-              {(() => {
-                const orders = stats.recentOrders || [];
-                const counts = orders.reduce((acc: Record<string, number>, o: any) => {
-                  const st = (o.order_status || o.status || 'pending').toLowerCase();
-                  acc[st] = (acc[st] || 0) + 1;
-                  return acc;
-                }, {} as Record<string, number>);
-                const colors: Record<string, string> = { pending: '#e0a422', confirmed: '#16a34a', paid: '#4b1248', cancelled: '#dc2626', completed: '#16a34a' };
-                const total = orders.length || 1;
-                const entries = Object.entries(counts);
-                if (!entries.length) return <p className="text-sm text-muted-foreground">No recent orders</p>;
-                return (
-                  <div className="space-y-3">
-                    {entries.map(([st, n]) => (
-                      <div key={st} className="flex items-center gap-3">
-                        <span className="text-sm capitalize w-24">{st}</span>
-                        <div className="flex-1 h-2.5 rounded-full bg-muted overflow-hidden">
-                          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(n / total) * 100}%`, background: colors[st] || '#6c2e70' }} />
-                        </div>
-                        <span className="text-sm font-medium w-8 text-right">{n}</span>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
-            </div>
           </>
         ) : null}
       </div>
