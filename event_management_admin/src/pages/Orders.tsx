@@ -15,6 +15,7 @@ import { Plus, MoreHorizontal, EyeIcon, CreditCard, Download, Loader2, Trash2, S
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { OrderForm } from "@/components/orders/OrderForm";
+import { useConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
@@ -77,6 +78,7 @@ export default function Orders() {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const { toast } = useToast();
+  const { ask, ConfirmDialog } = useConfirmDialog();
   const queryClient = useQueryClient();
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
   const [paymentType, setPaymentType] = useState<'deposit' | 'balance' | null>(null);
@@ -587,7 +589,8 @@ export default function Orders() {
           </div>
         </div>
 
-      </DashboardLayout>
+        {ConfirmDialog}
+    </DashboardLayout>
     );
   }
 
@@ -617,7 +620,6 @@ export default function Orders() {
     const order = params.data;
     const busy = loadingAction?.id === order.id ? loadingAction?.action : null;
     const ic = 'h-4 w-4';
-    const ask = (msg: string, fn: () => void) => () => { if (window.confirm(msg)) fn(); };
     const btn = 'inline-flex items-center justify-center h-7 w-7 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground disabled:opacity-40';
     const spin = <Loader2 className={`${ic} animate-spin`} />;
     return (
