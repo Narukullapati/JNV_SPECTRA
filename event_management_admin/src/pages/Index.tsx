@@ -272,7 +272,7 @@ export default function Index() {
         ) : null}
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 jnv-stagger items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 jnv-stagger items-stretch">
         {isLoading ? (
           <>
             <div className="rounded-lg border p-6 space-y-4">
@@ -303,9 +303,9 @@ export default function Index() {
           <>
             <RecentOrders orders={stats.recentOrders} />
             
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 h-full">
             {/* Monthly Orders Chart */}
-            <div className="bg-card border rounded-lg p-5 shadow-sm">
+            <div className="bg-card border rounded-lg p-5 shadow-sm flex-1 flex flex-col">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Orders — Last 6 Months</h3>
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
@@ -324,7 +324,7 @@ export default function Index() {
             </div>
 
             {/* Payments — Last 6 Months */}
-            <div className="bg-card border rounded-lg p-5 shadow-sm">
+            <div className="bg-card border rounded-lg p-5 shadow-sm flex-1 flex flex-col">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Payments — Last 6 Months</h3>
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
