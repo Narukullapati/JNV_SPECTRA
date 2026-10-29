@@ -350,6 +350,7 @@ export default function Index() {
                 <span className="flex items-center gap-1"><span className="h-2.5 w-2.5 rounded-sm" style={{background:'#9ca3af'}} />Pending</span>
               </div>
             </div>
+            </div>
 
           </>
         ) : null}
