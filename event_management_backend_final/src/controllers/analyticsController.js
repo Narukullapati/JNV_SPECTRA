@@ -169,6 +169,12 @@ const getDashboardStats = async (req, res, next) => {
         status: order.order_status === 'paid' || order.order_status === 'completed' ? 'completed' : 
           order.order_status === 'cancelled' ? 'cancelled' : 'pending',
         total: (order.order_details?.subtotal || 0) + (order.order_details?.tax || 0),
+        order_status: order.order_status,
+        payment_option: order.payment_option,
+        total_amount: order.total_amount,
+        deposit_amount: order.deposit_amount,
+        balance_amount: order.balance_amount,
+        event_date: order.event_date,
       }));
     
     // Calculate trends (percentage change)
