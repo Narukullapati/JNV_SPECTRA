@@ -19,7 +19,7 @@ const colDefs: any[] = [
 
 export default function AuditLogs() {
   const { data, isLoading } = useAuditLogs();
-  const rows = data?.data || [];
+  const rows = Array.isArray(data) ? data : (data?.data || []);
   return (
     <DashboardLayout>
       <div className="flex items-center justify-between mb-4">
