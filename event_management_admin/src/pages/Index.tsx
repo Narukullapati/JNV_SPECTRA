@@ -270,8 +270,8 @@ export default function Index() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-card border rounded-lg p-6 flex flex-col justify-center">
-              <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+            <div className="rounded-lg p-1 flex flex-col justify-center">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Quick Actions</h3>
               <div className="grid grid-cols-2 gap-2.5">
                 {[
                   { label: 'Orders', path: '/orders', icon: <ShoppingBag className="h-4 w-4" /> },
@@ -282,10 +282,11 @@ export default function Index() {
                   <button
                     key={a.path}
                     onClick={() => navigate(a.path)}
-                    className="flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all hover:border-[#6c2e70] hover:bg-[#6c2e70] hover:text-white hover:shadow-md"
+                    className="group flex flex-col items-start gap-2 rounded-xl border bg-card p-4 text-left transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-[#6c2e70]/40"
                   >
-                    {a.icon}
-                    {a.label}
+                    <span className="rounded-lg bg-[#6c2e70]/10 p-2.5 text-[#6c2e70] group-hover:bg-[#6c2e70] group-hover:text-[#e8c96a] transition-colors">{a.icon}</span>
+                    <span className="font-semibold text-sm">{a.label}</span>
+                    <span className="text-xs text-muted-foreground">Open {a.label.toLowerCase()}</span>
                   </button>
                 ))}
               </div>
