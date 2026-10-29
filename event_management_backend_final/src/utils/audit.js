@@ -3,8 +3,8 @@ const { pool } = require('../config/database');
 const logAudit = async (req, action, entity, entityId, details) => {
   try {
     await pool.query(
-      'INSERT INTO audit_logs (user_email, action, entity, entity_id, details) VALUES ($1,$2,$3,$4,$5)',
-      [(req.user && req.user.email) || (req.body && req.body.email) || 'public', action, entity, String(entityId || ''), JSON.stringify(details || {})]
+      'INSERT INTO audit_logs (user_email, action, entity, entity_id, ip_address, details) VALUES ($1,$2,$3,$4,$5,$6)',
+      [(req.user && req.user.email) || (req.body && req.body.email) || 'public', action, entity, String(entityId || ''), (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip || '', JSON.stringify(details || {})]
     );
   } catch (e) { /* never break requests on audit failure */ }
 };

@@ -11,6 +11,7 @@ const colDefs: any[] = [
     valueFormatter: (p: any) => new Date(p.value).toLocaleString("en-US", { timeZone: "America/New_York" }) },
   { headerName: "User", field: "user_email", flex: 1.4, minWidth: 180 },
   { headerName: "Action", field: "action", flex: 1, minWidth: 140 },
+  { headerName: "IP Address", field: "ip_address", flex: 1, minWidth: 130 },
   { headerName: "Entity", field: "entity", flex: 0.7, minWidth: 90 },
   { headerName: "Entity ID", field: "entity_id", flex: 1.4, minWidth: 180 },
   { headerName: "Details", field: "details", flex: 2, minWidth: 220 },

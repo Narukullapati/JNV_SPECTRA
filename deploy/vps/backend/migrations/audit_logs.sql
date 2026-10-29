@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs (created_at DESC);
+ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS ip_address varchar(64);
