@@ -118,6 +118,10 @@ export const useLogout = () => {
   
   return useMutation({
     mutationFn: async () => {
+      try {
+        const email = (JSON.parse(localStorage.getItem('user') || localStorage.getItem('jnv_user') || '{}')?.email) || '';
+        fetchApi('/api/v1/audit-logs/logoff', { method: 'POST', body: JSON.stringify({ email }) }).catch(() => {});
+      } catch {}
       // Clear all session data
       clearSession();
       

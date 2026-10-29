@@ -4,6 +4,7 @@ const authController = require('../controllers/authController');
 const { auth, isAdmin } = require('../middleware/auth');
 const { validate, loginSchema, updateProfileSchema, registerSchema } = require('../middleware/validate');
 const { loginLimiter } = require('../middleware/rateLimiter');
+const { auditAction } = require('../utils/audit');
 
 /**
  * @swagger
@@ -53,7 +54,7 @@ const { loginLimiter } = require('../middleware/rateLimiter');
  *       429:
  *         description: Too many login attempts
  */
-router.post('/login', loginLimiter, validate(loginSchema), authController.login);
+router.post('/login', loginLimiter, validate(loginSchema), auditAction('login', 'auth'), authController.login);
 
 /**
  * @swagger
