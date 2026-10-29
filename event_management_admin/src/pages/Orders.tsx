@@ -586,6 +586,7 @@ export default function Orders() {
             </Button>
           </div>
         </div>
+
       </DashboardLayout>
     );
   }
@@ -825,6 +826,14 @@ export default function Orders() {
             </Button>
           </div>
         </div>
+        <div className="flex flex-wrap gap-3 mb-3 mt-2 text-sm">
+              <span className="rounded-lg border bg-card px-3 py-1.5">Total Billed: <b>{formatCurrency(tBilled)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5">Online: <b>{formatCurrency(tOnline)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5">Offline: <b>{formatCurrency(tOffline)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5 text-green-700">Paid: <b>{formatCurrency(tPaid)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5 text-[#e0a422]">Pending: <b>{formatCurrency(tPending)}</b></span>
+            </div>
+
 
         <div className="flex flex-wrap items-end gap-3">
           <div className="w-full sm:w-64">
@@ -924,13 +933,6 @@ export default function Orders() {
           renderOrdersSkeleton()
         ) : (
           <div className="rounded-md border">
-            <div className="flex flex-wrap gap-3 mb-3 text-sm">
-              <span className="rounded-lg border bg-card px-3 py-1.5">Total Billed: <b>{formatCurrency(tBilled)}</b></span>
-              <span className="rounded-lg border bg-card px-3 py-1.5">Online: <b>{formatCurrency(tOnline)}</b></span>
-              <span className="rounded-lg border bg-card px-3 py-1.5">Offline: <b>{formatCurrency(tOffline)}</b></span>
-              <span className="rounded-lg border bg-card px-3 py-1.5 text-green-700">Paid: <b>{formatCurrency(tPaid)}</b></span>
-              <span className="rounded-lg border bg-card px-3 py-1.5 text-[#e0a422]">Pending: <b>{formatCurrency(tPending)}</b></span>
-            </div>
             <div className="ag-theme-quartz" style={{ height: gridHeight, width: '100%' }}>
               <AgGridReact
                 theme={themeQuartz}
