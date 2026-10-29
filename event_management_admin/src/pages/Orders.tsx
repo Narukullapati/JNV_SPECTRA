@@ -99,7 +99,7 @@ export default function Orders() {
   };
 
   const { data, isLoading, error } = useOrders({
-    page: currentPage,
+    limit: 500,
     search: searchQuery || undefined,
     order_status: statusFilter.length ? statusFilter : undefined,
     start_date: fromDate || undefined,
@@ -769,7 +769,7 @@ export default function Orders() {
       <div><div className="font-medium">{p.value}</div><div className="text-sm text-gray-500">{p.data.email}</div></div>) },
     { headerName: 'Service Type', autoHeight: true, valueGetter: (p: any) =>
       (p.data.order_details?.items || []).map((it: any) => `${it.name}${it.quantity ? ` (x${it.quantity})` : ''}`).join(', ') },
-    { headerName: 'Event Date', field: 'event_date', valueFormatter: (p: any) => formatDate(p.value) },
+    { headerName: 'Event Date', field: 'event_date', valueFormatter: (p: any) => formatDate(p.value), comparator: (a: any, b: any) => (new Date(a).getTime() || 0) - (new Date(b).getTime() || 0) },
     { headerName: 'Total', field: 'total_amount', filter: 'agNumberColumnFilter', valueFormatter: (p: any) => formatCurrency(p.value) },
     { headerName: 'Payment Option', field: 'payment_option', cellRenderer: (p: any) => (
       <Badge variant={p.value === 'online' ? 'default' : 'secondary'}>{paymentOptionLabel(p.value)}</Badge>) },
@@ -924,36 +924,6 @@ export default function Orders() {
                 pagination={true}
                 paginationPageSize={gridPageSize}
               />
-            </div>
-          </div>
-        )}
-
-        {!isLoading && pagination && (
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500">
-              Showing {orders.length} of {pagination.total} orders
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1 || isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-                disabled={currentPage === pagination.totalPages || isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                Next
-              </Button>
             </div>
           </div>
         )}
