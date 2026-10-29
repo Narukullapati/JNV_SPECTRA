@@ -63,6 +63,7 @@ app.use('/api/v1/event-planning', eventPlanningRoutes);
 app.use('/api/v1/images', imageRoutes);
 app.use('/api/v1/galleries', galleryRoutes);
 app.use('/api/v1/contact', contactRoutes);
+app.use('/api/v1/audit-logs', require('./routes/auditLogs'));
 
 // Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

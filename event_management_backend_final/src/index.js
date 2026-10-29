@@ -26,6 +26,7 @@ const rentalRoutes = require('./routes/rentals');
 const eventPlanningRoutes = require('./routes/eventPlanning');
 const imageRoutes = require('./routes/imageRoutes');
 const sliderRoutes = require('./routes/sliderRoutes');
+const auditLogRoutes = require('./routes/auditLogs');
 const sliderSlideRoutes = require('./routes/sliderSlideRoutes');
 const analyticsRoutes = require('./routes/analytics');
 const staticContentRoutes = require('./routes/staticContentRoutes');
@@ -92,6 +93,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/audit-logs', auditLogRoutes);
 app.use('/api/v1/venues', venueRoutes);
 app.use('/api/v1/services', serviceRoutes);
 app.use('/api/v1/rentals', rentalRoutes);
