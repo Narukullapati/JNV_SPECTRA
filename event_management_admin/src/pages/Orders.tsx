@@ -762,6 +762,13 @@ export default function Orders() {
     );
   };
 
+  const numT = (v: any) => Number(v) || 0;
+  const tBilled = sortedOrders.reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tOnline = sortedOrders.filter((o: any) => o.payment_option === 'online').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tOffline = sortedOrders.filter((o: any) => o.payment_option === 'paid_offline').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tPaid = sortedOrders.filter((o: any) => o.order_status === 'paid' || o.order_status === 'completed').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
+  const tPending = Math.max(tBilled - tPaid, 0);
+
   const gridHeight = Math.max(320, window.innerHeight - 300);
   const gridPageSize = Math.max(5, Math.floor((gridHeight - 150) / 42));
   const gridColDefs: any[] = [
@@ -915,6 +922,13 @@ export default function Orders() {
           renderOrdersSkeleton()
         ) : (
           <div className="rounded-md border">
+            <div className="flex flex-wrap gap-3 mb-3 text-sm">
+              <span className="rounded-lg border bg-card px-3 py-1.5">Total Billed: <b>{formatCurrency(tBilled)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5">Online: <b>{formatCurrency(tOnline)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5">Offline: <b>{formatCurrency(tOffline)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5 text-green-700">Paid: <b>{formatCurrency(tPaid)}</b></span>
+              <span className="rounded-lg border bg-card px-3 py-1.5 text-[#e0a422]">Pending: <b>{formatCurrency(tPending)}</b></span>
+            </div>
             <div className="ag-theme-quartz" style={{ height: gridHeight, width: '100%' }}>
               <AgGridReact
                 theme={themeQuartz}
