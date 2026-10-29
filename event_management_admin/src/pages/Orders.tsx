@@ -592,16 +592,21 @@ export default function Orders() {
   }
 
   const orders = data?.data?.data || [];
-  const sortedOrders = React.useMemo(() => [...orders].sort((a: any, b: any) => {
-    if (!sortKey) return 0;
-    const k = sortKey as keyof typeof a;
-    let av: any = a[k], bv: any = b[k];
-    if (k === 'total_amount') { av = Number(av) || 0; bv = Number(bv) || 0; }
-    else { av = String(av ?? '').toLowerCase(); bv = String(bv ?? '').toLowerCase(); }
-    if (av < bv) return sortDir === 'asc' ? -1 : 1;
-    if (av > bv) return sortDir === 'asc' ? 1 : -1;
-    return 0;
-  }), [orders, sortKey, sortDir]);
+  const sortedOrders = React.useMemo(() => {
+    const withSeq = [...orders].sort((a: any, b: any) =>
+      new Date(a.created_at || a.date || 0).getTime() - new Date(b.created_at || b.date || 0).getTime());
+    withSeq.forEach((o: any, i: number) => { o.seq = i + 1; });
+    if (!sortKey) return withSeq;
+    return withSeq.sort((a: any, b: any) => {
+      const k = sortKey as keyof typeof a;
+      let av: any = a[k], bv: any = b[k];
+      if (k === 'total_amount' || k === 'seq') { av = Number(av) || 0; bv = Number(bv) || 0; }
+      else { av = String(av ?? '').toLowerCase(); bv = String(bv ?? '').toLowerCase(); }
+      if (av < bv) return sortDir === 'asc' ? -1 : 1;
+      if (av > bv) return sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [orders, sortKey, sortDir]);
   const toggleSort = (key: string) => {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
     else { setSortKey(key); setSortDir('asc'); }
@@ -653,8 +658,7 @@ export default function Orders() {
   const gridHeight = Math.max(320, window.innerHeight - 300);
   const gridPageSize = Math.max(5, Math.floor((gridHeight - 150) / 42));
   const gridColDefs: any[] = [
-    { headerName: '#', width: 70, sortable: false, filter: false,
-      valueGetter: (p: any) => (p.node ? p.node.rowIndex + 1 : '') },
+    { headerName: 'Order #', field: 'seq', width: 110, sortable: true, filter: 'agNumberColumnFilter' },
     { headerName: 'Customer', field: 'customer_name', flex: 1.3, minWidth: 150 },
     { headerName: 'Email', field: 'email', flex: 1.7, minWidth: 190 },
     { headerName: 'Phone', field: 'contact_number', flex: 1, minWidth: 130 },
