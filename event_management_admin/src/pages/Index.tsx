@@ -340,9 +340,13 @@ export default function Index() {
               <p className="text-xs text-muted-foreground mt-1">unpaid balances</p>
             </div>
             <div className={card}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Online Payments</p>
-              <p className="text-xl font-bold">{formatCurrency(onlineAmt)}</p>
-              <p className="text-xs text-muted-foreground mt-1">{online.length} online · {offline.length} offline ({formatCurrency(offlineAmt)})</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Payments</p>
+              <p className="text-xl font-bold">{formatCurrency(onlineAmt + offlineAmt > 0 ? onlineAmt + offlineAmt : billed - pending)}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {online.length + offline.length > 0
+                  ? `${online.length} online · ${offline.length} offline`
+                  : pending === 0 ? 'all collected' : 'collected this month'}
+              </p>
             </div>
             <div className={card}>
               <p className="text-xs text-muted-foreground mb-2">Monthly Trend</p>
