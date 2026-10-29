@@ -306,7 +306,7 @@ export default function Index() {
       {stats ? (() => {
         const nowM = new Date();
         const orders = (stats.recentOrders || []).filter((o: any) => {
-          const d = new Date(o.event_date || o.created_at || o.date);
+          const d = new Date(o.date || o.created_at || o.event_date);
           return !isNaN(d.getTime()) && d.getMonth() === nowM.getMonth() && d.getFullYear() === nowM.getFullYear();
         });
         const num = (v: any) => Number(v) || 0;
@@ -318,7 +318,7 @@ export default function Index() {
         const onlineAmt = online.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const offlineAmt = offline.reduce((a: number, o: any) => a + num(o.total ?? o.total_amount), 0);
         const byMonth = orders.reduce((acc: Record<string, number>, o: any) => {
-          const d = new Date(o.event_date || o.created_at);
+          const d = new Date(o.date || o.created_at || o.event_date);
           if (isNaN(d.getTime())) return acc;
           const k = d.toLocaleString('en-US', { month: 'short' });
           acc[k] = (acc[k] || 0) + num(o.total_amount);
