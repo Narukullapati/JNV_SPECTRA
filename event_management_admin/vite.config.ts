@@ -9,6 +9,13 @@ export default defineConfig(({ mode }) => ({
     host: "0.0.0.0",
     port: 8080,
     open: true,
+    proxy: {
+      "/api": {
+        target: "https://api.jnvspectra.com",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   plugins: [
     react(),

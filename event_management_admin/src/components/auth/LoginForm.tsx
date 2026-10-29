@@ -87,7 +87,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
           </CardContent>
           
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-[linear-gradient(135deg,#4b1248,#3d093d)] text-[#e8c96a] font-semibold hover:bg-[linear-gradient(135deg,#6c2e70,#4b1248)] hover:text-[#f6d87c]" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign In
             </Button>

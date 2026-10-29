@@ -99,3 +99,7 @@
     @apply bg-background text-foreground;
   }
 }
+@keyframes jnv-zoom{0%{opacity:0;transform:scale(.3)}60%{transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+.jnv-logo-zoom{animation:jnv-zoom .9s cubic-bezier(.22,1.4,.36,1) both}
+@keyframes jnv-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.jnv-logo-float{animation:jnv-float 3.2s ease-in-out 1s infinite}

@@ -36,7 +36,7 @@ services:
       - jnv-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jnv-cdn.rule=Host(`cdn-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-cdn.rule=Host(`cdn.jnvspectra.com`) || Host(`cdn-spectra.mymedischedule.com`)"
       - "traefik.http.routers.jnv-cdn.priority=10"
       - "traefik.http.routers.jnv-cdn.entrypoints=websecure"
       - "traefik.http.routers.jnv-cdn.tls=true"
@@ -45,12 +45,13 @@ services:
       - "traefik.http.services.jnv-cdn.loadbalancer.server.port=9000"
 
   # Branding proxy in front of the RustFS console (9001): rewrites page title
-  # and injects a "JNV Spectra" badge. minio-spectra.mymedischedule.com routes here.
+  # and injects a "JNV Spectra" badge. minio.jnvspectra.com routes here.
   console-proxy:
     image: nginx:alpine
     container_name: jnv-console-proxy
     volumes:
       - ./console-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./jnv-logo.png:/usr/share/nginx/brand/jnv-logo.png:ro
     depends_on:
       - minio
     restart: unless-stopped
@@ -58,7 +59,7 @@ services:
       - jnv-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jnv-minio.rule=Host(`minio-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-minio.rule=Host(`minio.jnvspectra.com`) || Host(`minio-spectra.mymedischedule.com`)"
       - "traefik.http.routers.jnv-minio.priority=10"
       - "traefik.http.routers.jnv-minio.entrypoints=websecure"
       - "traefik.http.routers.jnv-minio.tls=true"
@@ -85,7 +86,7 @@ services:
       - jnv-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jnv-api.rule=Host(`api-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-api.rule=Host(`api.jnvspectra.com`) || Host(`api-spectra.mymedischedule.com`)"
       - "traefik.http.routers.jnv-api.priority=10"
       - "traefik.http.routers.jnv-api.entrypoints=websecure"
       - "traefik.http.routers.jnv-api.tls=true"
@@ -108,7 +109,7 @@ services:
       - jnv-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jnv-web.rule=Host(`spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-web.rule=Host(`jnvspectra.com`) || Host(`www.jnvspectra.com`) || Host(`spectra.mymedischedule.com`)"
       - "traefik.http.routers.jnv-web.priority=10"
       - "traefik.http.routers.jnv-web.entrypoints=websecure"
       - "traefik.http.routers.jnv-web.tls=true"
@@ -125,7 +126,7 @@ services:
       - jnv-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jnv-admin.rule=Host(`admin-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-admin.rule=Host(`admin.jnvspectra.com`) || Host(`admin-spectra.mymedischedule.com`)"
       - "traefik.http.routers.jnv-admin.priority=10"
       - "traefik.http.routers.jnv-admin.entrypoints=websecure"
       - "traefik.http.routers.jnv-admin.tls=true"
@@ -142,7 +143,7 @@ services:
       - jnv-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jnv-checkout.rule=Host(`pay-spectra.mymedischedule.com`)"
+      - "traefik.http.routers.jnv-checkout.rule=Host(`checkout.jnvspectra.com`) || Host(`pay-spectra.mymedischedule.com`)"
       - "traefik.http.routers.jnv-checkout.priority=10"
       - "traefik.http.routers.jnv-checkout.entrypoints=websecure"
       - "traefik.http.routers.jnv-checkout.tls=true"

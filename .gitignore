@@ -91,6 +91,10 @@ dist
 # Gatsby files
 .cache/
 public
+# Vite public asset dirs must be committed (they ship app logos/favicons)
+!jnv_spectra_website/public/
+!event_management_admin/public/
+!jnv-checkout-app/public/
 
 # Vuepress build output
 .vuepress/dist

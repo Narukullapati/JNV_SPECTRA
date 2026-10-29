@@ -38,19 +38,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="min-h-screen flex items-center justify-center bg-[linear-gradient(135deg,#fdf6e0_0%,#f6d87c_50%,#e0a422_100%)]">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-xl">
         <div className="text-center space-y-6">
           <div className="flex justify-center">
             <div className="relative">
               {/* Logo background with gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full blur-xl opacity-20" />
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,#e0a422,#b8841c)] rounded-full blur-xl opacity-20" />
               {/* Logo container */}
-              <div className="relative w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center border-2 border-blue-100">
+              <div className="relative rounded-2xl jnv-logo-zoom bg-[linear-gradient(135deg,#4b1248,#3d093d)] shadow-lg flex items-center justify-center px-4 py-3 border-2 border-[#e8c96a]">
                 <img 
                   src={logo} 
                   alt="JNV Events Logo" 
-                  className="w-16 h-16 object-contain"
+                  className="h-32 w-auto object-contain jnv-logo-float"
                   onError={(e) => {
                     // Fallback to icon if logo fails to load
                     e.currentTarget.style.display = 'none';
