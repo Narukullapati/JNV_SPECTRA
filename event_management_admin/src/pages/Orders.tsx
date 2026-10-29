@@ -653,8 +653,8 @@ export default function Orders() {
   const gridHeight = Math.max(320, window.innerHeight - 300);
   const gridPageSize = Math.max(5, Math.floor((gridHeight - 150) / 42));
   const gridColDefs: any[] = [
-    { headerName: 'Order #', field: 'id', width: 120, sortable: true, filter: true,
-      valueFormatter: (p: any) => '#' + String(p.value || '').slice(0, 8).toUpperCase() },
+    { headerName: '#', width: 70, sortable: false, filter: false,
+      valueGetter: (p: any) => (p.node ? p.node.rowIndex + 1 : '') },
     { headerName: 'Customer', field: 'customer_name', flex: 1.3, minWidth: 150 },
     { headerName: 'Email', field: 'email', flex: 1.7, minWidth: 190 },
     { headerName: 'Phone', field: 'contact_number', flex: 1, minWidth: 130 },
