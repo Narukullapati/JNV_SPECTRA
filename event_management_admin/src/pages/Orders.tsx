@@ -763,7 +763,7 @@ export default function Orders() {
   };
 
   const [gridRows, setGridRows] = useState<any[] | null>(null);
-  const totRows = gridRows ?? sortedOrders;
+  const totRows = (gridRows ?? sortedOrders).filter((o: any) => (o.order_status || '').toLowerCase() !== 'cancelled');
   const numT = (v: any) => Number(v) || 0;
   const tBilled = totRows.reduce((a: number, o: any) => a + numT(o.total_amount), 0);
   const tOnline = totRows.filter((o: any) => o.payment_option === 'online').reduce((a: number, o: any) => a + numT(o.total_amount), 0);
