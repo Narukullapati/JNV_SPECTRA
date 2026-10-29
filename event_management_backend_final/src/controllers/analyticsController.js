@@ -160,8 +160,8 @@ const getDashboardStats = async (req, res, next) => {
     
     // Last 6 months order aggregates for dashboard trend chart
     const { rows: monthlyTrend } = await pool.query(`
-      SELECT to_char(date_trunc('month', created_at), 'Mon') AS month,
-             date_trunc('month', created_at) AS m,
+      SELECT to_char(date_trunc('month', event_date), 'Mon') AS month,
+             date_trunc('month', event_date) AS m,
              COALESCE(SUM(total_amount), 0)::float AS billed,
              COUNT(*)::int AS orders,
              COALESCE(SUM(total_amount) FILTER (WHERE payment_option = 'online'), 0)::float AS online,
@@ -169,8 +169,9 @@ const getDashboardStats = async (req, res, next) => {
              COUNT(*) FILTER (WHERE payment_option = 'online')::int AS online_orders,
              COUNT(*) FILTER (WHERE payment_option = 'paid_offline')::int AS offline_orders
       FROM orders
-      WHERE created_at >= date_trunc('month', $1::timestamp)
-        AND created_at <= $2::timestamp
+      WHERE event_date >= date_trunc('month', $1::timestamp)::date
+        AND event_date <= $2::timestamp::date
+        AND event_date IS NOT NULL
         AND order_status <> 'cancelled'
       GROUP BY 1, 2 ORDER BY 2
     `, [startDate, endDate]);
