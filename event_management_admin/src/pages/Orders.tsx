@@ -653,8 +653,9 @@ export default function Orders() {
   const gridHeight = Math.max(320, window.innerHeight - 300);
   const gridPageSize = Math.max(5, Math.floor((gridHeight - 150) / 42));
   const gridColDefs: any[] = [
-    { headerName: 'Customer', field: 'customer_name', autoHeight: true, cellRenderer: (p: any) => (
-      <div><div className="font-medium">{p.value}</div><div className="text-sm text-gray-500">{p.data.email}</div></div>) },
+    { headerName: 'Customer', field: 'customer_name' },
+    { headerName: 'Email', field: 'email' },
+    { headerName: 'Phone', field: 'contact_number' },
     { headerName: 'Service Type', autoHeight: true, valueGetter: (p: any) =>
       (p.data.order_details?.items || []).map((it: any) => `${it.name}${it.quantity ? ` (x${it.quantity})` : ''}`).join(', ') },
     { headerName: 'Event Date', field: 'event_date', valueFormatter: (p: any) => formatDate(p.value), comparator: (a: any, b: any) => (new Date(a).getTime() || 0) - (new Date(b).getTime() || 0) },
