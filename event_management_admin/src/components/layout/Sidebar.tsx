@@ -103,7 +103,7 @@ export function Sidebar() {
           </Button>
         </div>
         {!collapsed && (
-          <p className="text-xs text-sidebar-foreground/70">Event Management System</p>
+          <p className="text-xs text-sidebar-foreground/70 -mt-2">Event Management System</p>
         )}
       </div>
       
