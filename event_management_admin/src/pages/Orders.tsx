@@ -850,7 +850,7 @@ export default function Orders() {
         </Dialog>
 
         <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl">
             {selectedOrder && <InvoiceDocument order={selectedOrder} />}
           </DialogContent>
         </Dialog>

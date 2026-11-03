@@ -74,14 +74,14 @@ export function InvoiceDocument({ order }: { order: any }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mt-6 pt-4 border-t">
+      <div className="grid grid-cols-2 gap-6 mt-3 pt-2 border-t">
         <div>
           <p className="text-xs font-semibold text-gray-500 mb-1">Bill to</p>
           <p className="font-medium">{order.customer_name}</p>
           <p className="text-sm">{order.email}</p>
           <p className="text-sm">{order.contact_number || "N/A"}</p>
         </div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
           <p className="text-gray-500">Invoice number</p><p>{invNo}</p>
           <p className="text-gray-500">Date</p><p>{dstr(order.created_at)}</p>
           <p className="text-gray-500">Payment terms</p><p>{payLabel}</p>
@@ -91,7 +91,7 @@ export function InvoiceDocument({ order }: { order: any }) {
         </div>
       </div>
 
-      <table className="w-full mt-6 text-sm border border-gray-300">
+      <table className="w-full mt-4 text-sm border border-gray-300">
         <thead>
           <tr className="border-b border-gray-300 bg-gray-50">
             <th className="text-left p-2 font-semibold">Item summary</th>
@@ -128,7 +128,7 @@ export function InvoiceDocument({ order }: { order: any }) {
         </tbody>
       </table>
 
-      <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
+      <div className="grid grid-cols-2 gap-6 mt-4 text-sm">
         <div>
           <p className="text-sm font-semibold text-gray-800">Payment Information</p>
           <div className="text-xs text-gray-600 mt-1 space-y-0.5">
@@ -141,14 +141,14 @@ export function InvoiceDocument({ order }: { order: any }) {
         <div className="space-y-1 text-right">
           <p className="text-gray-600">Invoice total in USD</p>
           <p className="text-2xl font-bold">{fmt(order.total_amount)}</p>
-          <p className="text-gray-600 pt-2">Amount applied in USD</p>
+          <p className="text-gray-600 pt-1">Amount applied in USD</p>
           <p className="text-lg">{fmt(applied)}</p>
-          <p className="text-gray-600 pt-2">Total amount due in USD</p>
+          <p className="text-gray-600 pt-1">Total amount due in USD</p>
           <p className="text-2xl font-bold">{fmt(due)}</p>
         </div>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-gray-300">
+      <div className="mt-4 pt-2 border-t border-gray-300">
         <p className="text-sm font-semibold text-gray-800">Terms and Conditions</p>
         <ul className="text-xs text-gray-600 mt-1 space-y-1 list-none">
           <li>• <span className="font-medium">Validity:</span> This invoice is valid for 30 days from the invoice date.</li>
