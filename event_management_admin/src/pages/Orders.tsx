@@ -16,6 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { OrderForm } from "@/components/orders/OrderForm";
 import { useConfirmDialog } from "@/components/ui/confirm-dialog";
+import { InvoiceDocument } from "@/components/orders/InvoiceDocument";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertDialog,
@@ -850,106 +851,7 @@ export default function Orders() {
 
         <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            {selectedOrder && (() => {
-              const invNo = 'INV-' + selectedOrder.id.slice(0, 8).toUpperCase();
-              const applied = (selectedOrder.deposit_paid_at ? (selectedOrder.deposit_amount || 0) : 0) + (selectedOrder.balance_paid_at ? (selectedOrder.balance_amount || 0) : 0);
-              const due = (selectedOrder.total_amount || 0) - applied;
-              return (
-                <div className="bg-white text-gray-900">
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-3">
-                      <img src="https://jnvspectra.com/jnvSpectraLogoBold.png" alt="JNV Spectra" className="h-14 w-14 object-contain" />
-                      <div>
-                        <h2 className="text-xl font-bold text-[#4b1248]">JNV Spectra</h2>
-                        <p className="text-xs text-gray-500">Event Management &amp; Rentals</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="h-8 w-44 ml-auto" style={{ background: 'repeating-linear-gradient(90deg,#000 0 2px,#fff 2px 5px)' }} />
-                      <p className="text-[11px] tracking-[0.2em] mt-1">{invNo}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-6 mt-6 pt-4 border-t">
-                    <div>
-                      <p className="text-xs font-semibold text-gray-500 mb-1">Bill to</p>
-                      <p className="font-medium">{selectedOrder.customer_name}</p>
-                      <p className="text-sm">{selectedOrder.email}</p>
-                      <p className="text-sm">{selectedOrder.contact_number || 'N/A'}</p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                      <p className="text-gray-500">Invoice number</p><p>{invNo}</p>
-                      <p className="text-gray-500">Date</p><p>{formatDate(selectedOrder.created_at)}</p>
-                      <p className="text-gray-500">Payment terms</p><p>{paymentOptionLabel(selectedOrder.payment_option)}</p>
-                      <p className="text-gray-500">Due date</p><p>{formatDate(selectedOrder.event_date)}</p>
-                      <p className="text-gray-500">Service period</p><p>{formatDate(selectedOrder.event_date)}{(selectedOrder as any).event_time ? ' ' + (selectedOrder as any).event_time : ''}</p>
-                      <p className="text-gray-500">Status</p><p className="capitalize">{selectedOrder.order_status}</p>
-                    </div>
-                  </div>
-
-                  <table className="w-full mt-6 text-sm border border-gray-300">
-                    <thead>
-                      <tr className="border-b border-gray-300 bg-gray-50">
-                        <th className="text-left p-2 font-semibold">Item summary</th>
-                        <th className="p-2 font-semibold w-16">Qty</th>
-                        <th className="p-2 font-semibold w-24">Rate</th>
-                        <th className="p-2 font-semibold w-24">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(selectedOrder.order_details?.items || []).map((item, i) => (
-                        <tr key={i} className="border-b border-gray-200">
-                          <td className="p-2">{item.name}</td>
-                          <td className="p-2 text-center">{item.quantity || 1}</td>
-                          <td className="p-2 text-right">{formatCurrency(item.price)}</td>
-                          <td className="p-2 text-right">{formatCurrency(item.price * (item.quantity || 1))}</td>
-                        </tr>
-                      ))}
-                      {(!selectedOrder.order_details?.items || selectedOrder.order_details.items.length === 0) && (
-                        <tr className="border-b border-gray-200">
-                          <td className="p-2">{selectedOrder.service_type}</td>
-                          <td className="p-2 text-center">1</td>
-                          <td className="p-2 text-right">{formatCurrency(selectedOrder.total_amount)}</td>
-                          <td className="p-2 text-right">{formatCurrency(selectedOrder.total_amount)}</td>
-                        </tr>
-                      )}
-                      <tr className="border-b border-gray-200">
-                        <td className="p-2 text-gray-500" colSpan={3}>Subtotal</td>
-                        <td className="p-2 text-right">{formatCurrency(selectedOrder.order_details?.subtotal ?? selectedOrder.total_amount)}</td>
-                      </tr>
-                      <tr>
-                        <td className="p-2 text-gray-500" colSpan={3}>Tax</td>
-                        <td className="p-2 text-right">{formatCurrency(selectedOrder.order_details?.tax || 0)}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
-                    <div className="space-y-3 text-xs text-gray-600">
-                      <div>
-                        <p className="font-semibold text-gray-800">To pay by card (online):</p>
-                        {selectedOrder.payment_option === 'online' && (selectedOrder.deposit_payment_link || selectedOrder.balance_payment_link)
-                          ? <p>Use the generated payment link on this order.</p>
-                          : <p>Offline payment — Zelle / check / cash.</p>}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800">Deposit:</p>
-                        <p>{formatCurrency(selectedOrder.deposit_amount)}{selectedOrder.deposit_paid_at ? ' — paid ' + formatDate(selectedOrder.deposit_paid_at) : ' — pending'}</p>
-                        <p className="mt-1"><span className="font-semibold text-gray-800">Balance:</span> {formatCurrency(selectedOrder.balance_amount)}{selectedOrder.balance_paid_at ? ' — paid ' + formatDate(selectedOrder.balance_paid_at) : ' — pending'}</p>
-                      </div>
-                    </div>
-                    <div className="space-y-1 text-right">
-                      <p className="text-gray-600">Invoice total in USD</p>
-                      <p className="text-2xl font-bold">{formatCurrency(selectedOrder.total_amount)}</p>
-                      <p className="text-gray-600 pt-2">Amount applied in USD</p>
-                      <p className="text-lg">{formatCurrency(applied)}</p>
-                      <p className="text-gray-600 pt-2">Total amount due in USD</p>
-                      <p className="text-2xl font-bold">{formatCurrency(due)}</p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
+            {selectedOrder && <InvoiceDocument order={selectedOrder} />}
           </DialogContent>
         </Dialog>
 

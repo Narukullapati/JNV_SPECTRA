@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Services from "./pages/Services";
 import Orders from "./pages/Orders";
 import AuditLogs from "@/pages/AuditLogs";
+import InvoiceView from "@/pages/InvoiceView";
 import Rentals from "./pages/Rentals";
 import Events from "./pages/Events";
 import EventsHosted from "./pages/EventsHosted";
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/content" element={<ProtectedRoute><StaticContent /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/orders/:orderId" element={<OrderConfirmation />} />
+          <Route path="/invoice/:orderId" element={<InvoiceView />} />
           <Route path="/gallery" element={<ProtectedRoute><Gallery /></ProtectedRoute>} />
           <Route path="/testimonials" element={<ProtectedRoute><Testimonials /></ProtectedRoute>} />
           <Route path="/checkout/:orderId" element={<Checkout />} />
