@@ -1,6 +1,6 @@
 import { useState } from "react";
 import QRCode from "react-qr-code";
-import { Printer, Download, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { fetchApi } from "@/lib/api";
 
 const fmt = (n: number) =>
@@ -16,7 +16,7 @@ export function InvoiceDocument({ order }: { order: any }) {
   const downloadPdf = async () => {
     setDownloading(true);
     try {
-      const res = await fetchApi(`/api/v1/orders/${order.id}/invoice`);
+      const res = await fetchApi(`/api/v1/orders/${order.id}/invoice?regenerate=true`);
       const url = res?.data?.pdf_url || res?.pdf_url;
       if (url) window.open(url, "_blank");
       else window.print();
@@ -46,13 +46,7 @@ export function InvoiceDocument({ order }: { order: any }) {
           {downloading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
           Download PDF
         </button>
-        <button
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded bg-[#4b1248] text-white hover:bg-[#6c2e70] transition"
-        >
-          <Printer className="h-3.5 w-3.5" />
-          Print
-        </button>
+
       </div>
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">

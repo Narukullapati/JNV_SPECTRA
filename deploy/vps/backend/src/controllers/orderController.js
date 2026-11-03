@@ -183,7 +183,7 @@ const getOrderInvoice = async (req, res, next) => {
 
     if (orderData.order_status === 'paid') {
       // If invoice_pdf_url exists, return it directly
-      if (orderData.invoice_pdf_url) {
+      if (orderData.invoice_pdf_url && !req.query.regenerate) {
         responseData = {
           document: orderData.invoice_template,
           pdf_url: orderData.invoice_pdf_url,
@@ -193,8 +193,10 @@ const getOrderInvoice = async (req, res, next) => {
         document = PDFGenerator.generateInvoiceTemplate(orderData);
         const pdfResult = await PDFGenerator.generateInvoicePDF(document);
         const pdfUrl = typeof pdfResult === 'string' ? pdfResult : pdfResult.publicUrl;
-        // Save to order
-        await order.update(orderData.id, { invoice_pdf_url: pdfUrl });
+        // Save to order (skip on regenerate — keep existing record untouched)
+        if (!req.query.regenerate) {
+          await order.update(orderData.id, { invoice_pdf_url: pdfUrl });
+        }
         responseData = {
           document,
           pdf_url: pdfUrl,
