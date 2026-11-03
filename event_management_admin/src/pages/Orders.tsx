@@ -382,8 +382,21 @@ export default function Orders() {
     }
   };
 
+  const normalizePhone = (p: string) => {
+    const raw = (p || '').trim();
+    const d = raw.replace(/\D/g, '');
+    if (!d) return raw;
+    if (raw.startsWith('+')) return '+' + d;
+    if (d.length === 10) return '+1' + d;
+    if (d.length === 11 && d.startsWith('1')) return '+' + d;
+    return raw;
+  };
+
+  const [formError, setFormError] = useState<string | null>(null);
+
   const handleCreateOrder = async (values: any) => {
     try {
+      values.contact_number = normalizePhone(values.contact_number);
       await createOrder.mutateAsync(values);
       setIsFormOpen(false);
       toast({
@@ -391,6 +404,7 @@ export default function Orders() {
         description: "Order created successfully",
       });
     } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Failed to create order");
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create order",
@@ -854,6 +868,18 @@ export default function Orders() {
             {selectedOrder && <InvoiceDocument order={selectedOrder} />}
           </DialogContent>
         </Dialog>
+
+        <AlertDialog open={!!formError} onOpenChange={() => setFormError(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Unable to create order</AlertDialogTitle>
+              <AlertDialogDescription>{formError}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={() => setFormError(null)}>OK</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <AlertDialog open={!!orderToDelete} onOpenChange={() => setOrderToDelete(null)}>
           <AlertDialogContent>
