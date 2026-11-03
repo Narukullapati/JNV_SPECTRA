@@ -128,7 +128,16 @@ export function InvoiceDocument({ order }: { order: any }) {
         </tbody>
       </table>
 
-      <div className="mt-6 text-sm">
+      <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
+        <div>
+          <p className="text-sm font-semibold text-gray-800">Payment Information</p>
+          <div className="text-xs text-gray-600 mt-1 space-y-0.5">
+            <p>Payment details will be provided separately</p>
+            <p>Alternate payment option: <span className="font-medium">Zelle</span></p>
+            <p>Email: jnvcommercials@gmail.com</p>
+            <p>Valid until: 12/3/2026</p>
+          </div>
+        </div>
         <div className="space-y-1 text-right">
           <p className="text-gray-600">Invoice total in USD</p>
           <p className="text-2xl font-bold">{fmt(order.total_amount)}</p>
@@ -136,16 +145,6 @@ export function InvoiceDocument({ order }: { order: any }) {
           <p className="text-lg">{fmt(applied)}</p>
           <p className="text-gray-600 pt-2">Total amount due in USD</p>
           <p className="text-2xl font-bold">{fmt(due)}</p>
-        </div>
-      </div>
-
-      <div className="mt-8 pt-4 border-t border-gray-300">
-        <p className="text-sm font-semibold text-gray-800">Payment Information</p>
-        <div className="text-xs text-gray-600 mt-1 space-y-0.5">
-          <p>Payment details will be provided separately</p>
-          <p>Alternate payment option: <span className="font-medium">Zelle</span></p>
-          <p>Email: jnvcommercials@gmail.com</p>
-          <p>Valid until: 12/3/2026</p>
         </div>
       </div>
 
