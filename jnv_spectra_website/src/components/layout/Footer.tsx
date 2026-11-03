@@ -57,6 +57,10 @@ const Footer: React.FC = () => {
               <FaWhatsapp size={18} />
             </a>
           </div>
+          <div className="mt-4 text-white text-[15px] space-y-1">
+            <p><a href="mailto:info@jnvspectra.com" className="hover:underline">info@jnvspectra.com</a></p>
+            <p><a href="tel:+19417733879" className="hover:underline">+1 (941) 773-3879</a></p>
+          </div>
         </div>
 
 

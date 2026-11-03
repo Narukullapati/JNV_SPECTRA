@@ -28,6 +28,7 @@ export function InvoiceDocument({ order }: { order: any }) {
           <div>
             <h2 className="text-xl font-bold text-[#4b1248]">JNV Spectra</h2>
             <p className="text-xs text-gray-500">Event Management &amp; Rentals</p>
+            <p className="text-xs text-gray-500">info@jnvspectra.com&nbsp;&nbsp;|&nbsp;&nbsp;+1 (941) 773-3879</p>
           </div>
         </div>
         <div className="text-right">
