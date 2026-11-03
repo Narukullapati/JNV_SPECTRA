@@ -1,4 +1,7 @@
+import { useState } from "react";
 import QRCode from "react-qr-code";
+import { Printer, Download, Loader2 } from "lucide-react";
+import { fetchApi } from "@/lib/api";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n || 0);
@@ -9,6 +12,20 @@ const dstr = (d?: string) =>
     : "—";
 
 export function InvoiceDocument({ order }: { order: any }) {
+  const [downloading, setDownloading] = useState(false);
+  const downloadPdf = async () => {
+    setDownloading(true);
+    try {
+      const res = await fetchApi(`/api/v1/orders/${order.id}/invoice`);
+      const url = res?.data?.pdf_url || res?.pdf_url;
+      if (url) window.open(url, "_blank");
+      else window.print();
+    } catch {
+      window.print();
+    } finally {
+      setDownloading(false);
+    }
+  };
   const invNo = "INV-" + String(order.id).slice(0, 8).toUpperCase();
   const applied =
     (order.deposit_paid_at ? order.deposit_amount || 0 : 0) +
@@ -19,7 +36,24 @@ export function InvoiceDocument({ order }: { order: any }) {
   const items = order.order_details?.items || [];
 
   return (
-    <div className="bg-white text-gray-900">
+    <div className="bg-white text-gray-900 invoice-doc">
+      <div className="flex justify-end gap-2 mb-4 print:hidden">
+        <button
+          onClick={downloadPdf}
+          disabled={downloading}
+          className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded border border-[#4b1248] text-[#4b1248] hover:bg-[#4b1248] hover:text-white transition disabled:opacity-50"
+        >
+          {downloading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+          Download PDF
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded bg-[#4b1248] text-white hover:bg-[#6c2e70] transition"
+        >
+          <Printer className="h-3.5 w-3.5" />
+          Print
+        </button>
+      </div>
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
           <div className="bg-[#4b1248] rounded-lg p-1.5">

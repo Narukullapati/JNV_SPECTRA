@@ -192,3 +192,9 @@
 .jnv-stagger>*:nth-child(4){animation-delay:.24s}
 .jnv-stagger>*:nth-child(5){animation-delay:.32s}
 .jnv-stagger>*:hover{transform:translateY(-4px);box-shadow:0 12px 28px -10px rgb(75 18 72 / .25)}
+
+@media print {
+  body * { visibility: hidden; }
+  .invoice-doc, .invoice-doc * { visibility: visible; }
+  .invoice-doc { position: absolute; top: 0; left: 0; width: 100%; padding: 0 24px; }
+}
