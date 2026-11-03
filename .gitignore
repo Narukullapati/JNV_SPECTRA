@@ -208,3 +208,4 @@ media/
 migration/
 deploy/vps/.env
 .devin/
+!AGENTS.md
