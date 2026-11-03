@@ -86,7 +86,7 @@ export function InvoiceDocument({ order }: { order: any }) {
           <p className="text-gray-500">Date</p><p>{dstr(order.created_at)}</p>
           <p className="text-gray-500">Payment terms</p><p>{payLabel}</p>
           <p className="text-gray-500">Due date</p><p>{dstr(order.event_date)}</p>
-          <p className="text-gray-500">Service period</p><p>{dstr(order.event_date)}{order.event_time ? " " + order.event_time : ""}</p>
+          <p className="text-gray-500">Event on</p><p>{dstr(order.event_date)}{order.event_time ? " " + order.event_time : ""}</p>
           <p className="text-gray-500">Status</p><p className="capitalize">{order.order_status}</p>
         </div>
       </div>
