@@ -130,18 +130,7 @@ export function InvoiceDocument({ order }: { order: any }) {
 
       <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
         <div className="space-y-3 text-xs text-gray-600">
-          <div>
-            <p className="font-semibold text-gray-800">To pay by card (online):</p>
-            {order.payment_option === "online" && (order.deposit_payment_link || order.balance_payment_link)
-              ? <p>Use the generated payment link on this order.</p>
-              : <p>Offline payment — Zelle / check / cash.</p>}
-          </div>
-          <div>
-            <p className="font-semibold text-gray-800">Deposit:</p>
-            <p>{fmt(order.deposit_amount)}{order.deposit_paid_at ? " — paid " + dstr(order.deposit_paid_at) : " — pending"}</p>
-            <p className="mt-1"><span className="font-semibold text-gray-800">Balance:</span> {fmt(order.balance_amount)}{order.balance_paid_at ? " — paid " + dstr(order.balance_paid_at) : " — pending"}</p>
-          </div>
-          <p className="text-gray-400 pt-2">View this invoice online: {viewUrl}</p>
+          <p className="text-gray-400">View this invoice online: {viewUrl}</p>
         </div>
         <div className="space-y-1 text-right">
           <p className="text-gray-600">Invoice total in USD</p>
