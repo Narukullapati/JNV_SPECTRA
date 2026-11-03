@@ -207,3 +207,4 @@ media/
 # Migration artifacts (contain production data/secrets)
 migration/
 deploy/vps/.env
+.devin/

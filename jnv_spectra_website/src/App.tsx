@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { lazy, Suspense } from 'react';
 import ScrollToTop from "./lib/utils";
+import OfferBanner from "./components/layout/OfferBanner";
 import PreloadResources from './components/SEO/PreloadResources';
 import ErrorBoundary from './components/ErrorBoundary';
 import { useNetworkStatus } from './hooks/useNetworkStatus';
@@ -73,6 +74,7 @@ const AppContent = () => {
           <BrowserRouter>
             <PreloadResources />
             <ScrollToTop />
+            <OfferBanner />
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
                 <Route path="/" element={<Index />} />
