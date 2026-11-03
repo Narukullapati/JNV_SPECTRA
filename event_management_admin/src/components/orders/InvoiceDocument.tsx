@@ -152,6 +152,40 @@ export function InvoiceDocument({ order }: { order: any }) {
           <p className="text-2xl font-bold">{fmt(due)}</p>
         </div>
       </div>
+
+      <div className="mt-8 pt-4 border-t border-gray-300">
+        <p className="text-sm font-semibold text-gray-800">Payment Information</p>
+        <div className="text-xs text-gray-600 mt-1 space-y-0.5">
+          <p>Payment details will be provided separately</p>
+          <p>Alternate payment option: <span className="font-medium">Zelle</span></p>
+          <p>Email: jnvcommercials@gmail.com</p>
+          <p>Valid until: 12/3/2026</p>
+        </div>
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-gray-300">
+        <p className="text-sm font-semibold text-gray-800">Terms and Conditions</p>
+        <ul className="text-xs text-gray-600 mt-1 space-y-1 list-none">
+          <li>• <span className="font-medium">Validity:</span> This invoice is valid for 30 days from the invoice date.</li>
+          <li>• <span className="font-medium">Deposit:</span> Above mentioned amount is required to confirm booking. Balance due before the event.</li>
+          <li>• <span className="font-medium">Cancellation:</span> 30 days prior notice is required for free cancellation. Beyond that, cancellation charges will be applied depending on the number of days before the event.</li>
+          <li>• <span className="font-medium">Power Requirements:</span> Client is responsible for arranging Electricity for the equipment.</li>
+          <li>• <span className="font-medium">Equipment Usage:</span>
+            <ul className="ml-4 space-y-0.5 mt-0.5">
+              <li>- Clients must use the above mentioned rental equipment solely for the agreed-upon purpose.</li>
+              <li>- Any damage caused due to improper use, negligence, or mishandling will be the Client's responsibility.</li>
+              <li>- Unauthorized modifications or tampering with the equipment is strictly prohibited.</li>
+            </ul>
+          </li>
+          <li>• <span className="font-medium">Damage Liability:</span>
+            <ul className="ml-4 space-y-0.5 mt-0.5">
+              <li>- The Client assumes full responsibility for any damage, loss or theft of the rented equipment during the rental period.</li>
+              <li>- In case of damage, repair costs or full replacement fees will be charged based on the severity of the damage.</li>
+              <li>- JNV Spectra is not liable for any indirect or consequential damages.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }
