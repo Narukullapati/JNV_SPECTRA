@@ -128,10 +128,7 @@ export function InvoiceDocument({ order }: { order: any }) {
         </tbody>
       </table>
 
-      <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
-        <div className="space-y-3 text-xs text-gray-600">
-          <p className="text-gray-400">View this invoice online: {viewUrl}</p>
-        </div>
+      <div className="mt-6 text-sm">
         <div className="space-y-1 text-right">
           <p className="text-gray-600">Invoice total in USD</p>
           <p className="text-2xl font-bold">{fmt(order.total_amount)}</p>
@@ -174,6 +171,11 @@ export function InvoiceDocument({ order }: { order: any }) {
             </ul>
           </li>
         </ul>
+      </div>
+
+      <div className="mt-8 pt-4 border-t border-gray-300 text-center">
+        <p className="text-xs text-gray-400">View this invoice online: <a href={viewUrl} className="text-[#4b1248] hover:underline">{viewUrl}</a></p>
+        <p className="text-[10px] text-gray-400 mt-1">JNV Spectra · Event Management &amp; Rentals · info@jnvspectra.com · +1 (941) 773-3879</p>
       </div>
     </div>
   );
