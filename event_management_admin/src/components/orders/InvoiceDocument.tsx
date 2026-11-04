@@ -26,7 +26,7 @@ export function InvoiceDocument({ order }: { order: any }) {
       setDownloading(false);
     }
   };
-  const invNo = "INV-" + String(order.id).slice(0, 8).toUpperCase();
+  const invNo = "INV-" + new Date(order.created_at || Date.now()).getTime();
   const applied =
     (order.deposit_paid_at ? order.deposit_amount || 0 : 0) +
     (order.balance_paid_at ? order.balance_amount || 0 : 0);

@@ -72,11 +72,12 @@ type OrderFormValues = z.infer<typeof orderSchema>;
 interface OrderFormProps {
   onSubmit: (data: OrderFormValues) => void;
   isLoading?: boolean;
+  initialValues?: Partial<OrderFormValues>;
 }
 
-export function OrderForm({ onSubmit, isLoading = false }: OrderFormProps) {
+export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [services, setServices] = useState<Array<{ name: string; price: number; quantity: number }>>([]);
+  const [services, setServices] = useState<Array<{ name: string; price: number; quantity: number }>>(initialValues?.order_details?.items || []);
   const [newService, setNewService] = useState({ name: "", price: undefined, quantity: 1 });
 
   const form = useForm<OrderFormValues>({
@@ -97,7 +98,8 @@ export function OrderForm({ onSubmit, isLoading = false }: OrderFormProps) {
         tax: undefined,
         total: undefined,
         items: []
-      }
+      },
+      ...(initialValues || {})
     }
   });
 

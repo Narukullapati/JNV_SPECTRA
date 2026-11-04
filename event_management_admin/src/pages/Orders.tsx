@@ -9,9 +9,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { useOrders, useMarkOrderAsPaid, useGeneratePaymentLink, downloadInvoice, useDeleteOrder, useCreateOrder, useGenerateDepositPaymentLink, useGenerateBalancePaymentLink, useCancelOrder, useGenerateBalanceQuotation, fetchOrdersForExport } from "@/api/orders";
+import { useOrders, useMarkOrderAsPaid, useGeneratePaymentLink, downloadInvoice, useDeleteOrder, useCreateOrder, useGenerateDepositPaymentLink, useGenerateBalancePaymentLink, useCancelOrder, useGenerateBalanceQuotation, fetchOrdersForExport, useUpdateOrder } from "@/api/orders";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Plus, MoreHorizontal, EyeIcon, CreditCard, Download, Loader2, Trash2, ShoppingBag, Search, BadgeCheck, Link2, Ban } from "lucide-react";
+import { Plus, MoreHorizontal, EyeIcon, Pencil as PencilIcon, CreditCard, Download, Loader2, Trash2, ShoppingBag, Search, BadgeCheck, Link2, Ban } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { OrderForm } from "@/components/orders/OrderForm";
@@ -112,6 +112,8 @@ export default function Orders() {
   const markOrderAsPaid = useMarkOrderAsPaid();
   const generatePaymentLink = useGeneratePaymentLink();
   const createOrder = useCreateOrder();
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const updateOrder = useUpdateOrder(editingOrder?.id || "");
   const deleteOrder = useDeleteOrder();
   const generateDepositPaymentLink = useGenerateDepositPaymentLink();
   const generateBalancePaymentLink = useGenerateBalancePaymentLink();
@@ -413,6 +415,22 @@ export default function Orders() {
     }
   };
 
+  const handleUpdateOrder = async (values: any) => {
+    try {
+      values.contact_number = normalizePhone(values.contact_number);
+      await updateOrder.mutateAsync(values);
+      setEditingOrder(null);
+      toast({ title: "Success", description: "Order updated successfully" });
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Failed to update order");
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update order",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleDeleteOrder = async () => {
     if (!orderToDelete) return;
     
@@ -639,6 +657,7 @@ export default function Orders() {
     return (
       <div className="flex items-center gap-0.5" onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
         <button title="View Details" className={btn} onClick={() => setSelectedOrder(order)}><EyeIcon className={ic} /></button>
+        <button title="Edit Order" className={btn} onClick={() => setEditingOrder(order)}><PencilIcon className={ic} /></button>
         {order.order_status === 'pending' && !order.deposit_paid_at && order.payment_option === 'online' && (
           <button title="Pay Deposit" className={btn} disabled={!!busy} onClick={ask('Generate deposit payment link for ' + order.customer_name + '?', () => handlePaymentLinkGeneration(order, 'deposit'))}>{busy === 'generate_deposit_link' ? spin : <CreditCard className={ic} />}</button>
         )}
@@ -860,6 +879,29 @@ export default function Orders() {
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogContent className="max-w-2xl">
             <OrderForm onSubmit={handleCreateOrder} />
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={!!editingOrder} onOpenChange={() => setEditingOrder(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            {editingOrder && (
+              <OrderForm
+                onSubmit={handleUpdateOrder}
+                initialValues={{
+                  customer_name: editingOrder.customer_name,
+                  email: editingOrder.email,
+                  contact_number: editingOrder.contact_number || "",
+                  event_date: editingOrder.event_date ? new Date(editingOrder.event_date) : undefined,
+                  event_time: (editingOrder as any).event_time || "",
+                  payment_option: editingOrder.payment_option,
+                  order_status: editingOrder.order_status,
+                  total_amount: editingOrder.total_amount,
+                  deposit_amount: editingOrder.deposit_amount,
+                  balance_amount: editingOrder.balance_amount,
+                  order_details: editingOrder.order_details as any,
+                }}
+              />
+            )}
           </DialogContent>
         </Dialog>
 
