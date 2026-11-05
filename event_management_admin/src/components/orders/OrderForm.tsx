@@ -191,17 +191,17 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
   const handleDepositChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('Deposit changed:', e.target.value);
     e.preventDefault();
-    const percentage = parseInt(e.target.value) || 0;
+    let percentage = parseFloat(e.target.value) || 0;
+    if (percentage > 100) {
+      percentage = 100;
+      e.target.value = "100";
+    }
+    if (percentage < 0) {
+      percentage = 0;
+      e.target.value = "0";
+    }
     const total = form.getValues("total_amount") || 0;
     const value = (percentage / 100) * total;
-    
-    if (percentage > 100) {
-      form.setError("deposit_amount", {
-        type: "manual",
-        message: "Deposit percentage cannot be greater than 100%"
-      });
-      return;
-    }
 
     form.setValue("deposit_amount", value, {
       shouldValidate: true,
