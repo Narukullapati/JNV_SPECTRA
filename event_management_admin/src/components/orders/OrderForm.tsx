@@ -223,10 +223,10 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <Card className="border-gray-300 shadow-sm">
-        <CardContent className="space-y-6 pt-6">
-          <div className="flex justify-between items-start pb-4 border-b">
+        <CardContent className="space-y-4 pt-4">
+          <div className="flex justify-between items-start pb-3 border-b">
             <div className="flex items-center gap-3">
               <div className="bg-[#4b1248] rounded-lg p-1.5">
                 <img src="https://jnvspectra.com/jnvSpectraLogoBold.png" alt="JNV Spectra" className="h-12 w-12 object-contain" />
@@ -245,9 +245,9 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
           <Form {...form}>
             <form 
               onSubmit={form.handleSubmit(handleSubmit)} 
-              className="space-y-6"
+              className="space-y-4"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="customer_name"
@@ -415,32 +415,47 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
                   </Button>
                 </div>
 
-                <div className="space-y-2">
+                <div>
+                  {services.length > 0 && (
+                    <div className="border rounded overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-gray-50 border-b text-left">
+                            <th className="px-3 py-2 font-semibold">Item summary</th>
+                            <th className="px-3 py-2 font-semibold w-16">Qty</th>
+                            <th className="px-3 py-2 font-semibold w-24 text-right">Rate</th>
+                            <th className="px-3 py-2 font-semibold w-24 text-right">Total</th>
+                            <th className="px-3 py-2 w-16"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
                   {services.map((service, index) => (
-                    <div key={index} className="flex items-center gap-4 p-2 border rounded">
-                      <div className="flex-1">
-                        <span className="font-medium">{service.name}</span>
-                      </div>
-                      <div className="flex-1">
-                        <span>${service.price.toFixed(2)} x {service.quantity}</span>
-                      </div>
-                      <div className="flex-1">
-                        <span>Total: ${(service.price * service.quantity).toFixed(2)}</span>
-                      </div>
+                    <tr key={index} className="border-b last:border-0">
+                      <td className="px-3 py-2 font-medium">{service.name}</td>
+                      <td className="px-3 py-2">{service.quantity}</td>
+                      <td className="px-3 py-2 text-right">${service.price.toFixed(2)}</td>
+                      <td className="px-3 py-2 text-right">${(service.price * service.quantity).toFixed(2)}</td>
+                      <td className="px-3 py-2 text-center">
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
+                        className="h-7 px-2 text-red-500 hover:text-red-600"
                         onClick={() => removeService(index)}
                       >
                         Remove
                       </Button>
-                    </div>
+                      </td>
+                    </tr>
                   ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                    control={form.control}
                    name="order_details.tax"
