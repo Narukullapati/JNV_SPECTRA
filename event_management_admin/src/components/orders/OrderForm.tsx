@@ -224,11 +224,24 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
 
   return (
     <div className="space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>{isEdit ? "Edit Order" : "Create New Order"}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
+      <Card className="border-gray-300 shadow-sm">
+        <CardContent className="space-y-6 pt-6">
+          <div className="flex justify-between items-start pb-4 border-b">
+            <div className="flex items-center gap-3">
+              <div className="bg-[#4b1248] rounded-lg p-1.5">
+                <img src="https://jnvspectra.com/jnvSpectraLogoBold.png" alt="JNV Spectra" className="h-12 w-12 object-contain" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-[#4b1248]">JNV Spectra</h2>
+                <p className="text-xs text-gray-500">Event Management &amp; Rentals</p>
+                <p className="text-xs text-gray-500">info@jnvspectra.com&nbsp;&nbsp;|&nbsp;&nbsp;+1 (941) 773-3879</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-gray-800">{isEdit ? "Update Order" : "New Order"}</p>
+              <p className="text-xs text-gray-400 mt-1">{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+            </div>
+          </div>
           <Form {...form}>
             <form 
               onSubmit={form.handleSubmit(handleSubmit)} 
@@ -362,6 +375,7 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
               </div>
 
               <div className="space-y-4">
+                <p className="text-xs font-semibold text-gray-500">Item summary</p>
                 <div className="flex items-end gap-4">
                   <div className="flex-1">
                     <FormLabel>Service Name</FormLabel>
