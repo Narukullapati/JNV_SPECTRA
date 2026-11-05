@@ -1,4 +1,5 @@
 const PDFDocument = require('pdfkit');
+const https = require('https');
 const { uploadToS3, getS3PublicUrl } = require('./s3');
 const { setupLogger } = require('../utils/logger');
 const { AppError } = require('../utils/AppError');
@@ -314,6 +315,8 @@ class PDFGenerator {
          phone: '+1 234 567 8900',
          email: 'info@jnvevents.com',
        },
+       paymentOption: orderData.payment_option,
+       orderStatus: orderData.order_status,
        customerInfo: {
          name: orderData.customer_name,
          email: orderData.email,
@@ -346,13 +349,15 @@ class PDFGenerator {
     
       return {
        documentType: 'invoice',
-       quotationNumber: `INV-${orderId}`,
+       quotationNumber: `INV-${new Date(orderData.created_at || Date.now()).getTime()}`,
        companyInfo: {
          name: 'JNV Events',
          address: '123 Event Street, City, Country',
          phone: '+1 234 567 8900',
          email: 'info@jnvevents.com',
        },
+       paymentOption: orderData.payment_option,
+       orderStatus: orderData.order_status,
        customerInfo: {
          name: orderData.customer_name,
          email: orderData.email,
@@ -381,150 +386,145 @@ class PDFGenerator {
      };
   }
 
+  static fetchQRCodeImage(text) {
+    return new Promise((resolve) => {
+      const url = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}`;
+      const req = https.get(url, (res) => {
+        const chunks = [];
+        res.on('data', (c) => chunks.push(c));
+        res.on('end', () => resolve(res.statusCode === 200 ? Buffer.concat(chunks) : null));
+      });
+      req.setTimeout(5000, () => { req.destroy(); resolve(null); });
+      req.on('error', () => resolve(null));
+    });
+  }
+
   static async generateQuotationPDF(data) {
     try {
       const doc = new PDFDocument({ margin: 50 });
 
-      // Add watermark logo
-      PDFGenerator.addWatermarkLogo(doc);
+      const PURPLE = '#4b1248';
+      const GRAY = '#666666';
+      const LM = 50;
+      const RM = doc.page.width - 50;
 
-      const isDeposit = data.isDeposit;
-      const paymentType = isDeposit ? 'Deposit' : 'Final';
-
-      // Document setup - Add logo if available
+      // Header: purple chip + logo
+      doc.rect(LM, 42, 54, 54).fill(PURPLE);
       try {
-        doc.image(path.join(__dirname, '../../public/images/logo.png'), 50, 45, { width: 80 });
+        doc.image(path.join(__dirname, '../../public/images/logo.png'), LM + 5, 47, { fit: [44, 44], align: 'center', valign: 'center' });
       } catch (error) {
         logger.warn('Logo image not found, continuing with placeholder');
       }
+      doc.fillColor(PURPLE).fontSize(20).font('Helvetica-Bold').text('JNV Spectra', LM + 64, 46);
+      doc.fillColor(GRAY).fontSize(9).font('Helvetica')
+        .text('Event Management & Rentals', LM + 64, 68)
+        .text('info@jnvspectra.com  |  +1 (941) 773-3879', LM + 64, 80);
 
-      // Invoice Title - Large, prominent
-      doc.fontSize(36).font('Helvetica-Bold').fillColor('#333333');
-      doc.text('Invoice', 350, 50, { align: 'left' });
-
-      // Invoice details - Right aligned
-      doc.fontSize(12).font('Helvetica');
-      doc.text(`Invoice #${data.quotationNumber}`, 350, 100, { align: 'left' });
-      doc.text(`${new Date().toLocaleDateString()}`, 350, 130, { align: 'left' });
-      
-      // Bill To section
-      doc.fontSize(14).font('Helvetica-Bold').fillColor('#333333');
-      doc.text('Bill To', 50, 140);
-      
-      // Customer info
-      let yPos = 160;
-      doc.fontSize(12).font('Helvetica').fillColor('#333333');
-      doc.text(data.customerInfo.name, 50, yPos);
-      yPos += 20;
-      doc.text(data.customerInfo.email, 50, yPos);
-      yPos += 20;
-      if (data.customerInfo.phone) {
-        doc.text(data.customerInfo.phone, 50, yPos);
-        yPos += 20;
+      // QR code to online invoice (orderId recovered from quotationNumber suffix)
+      const orderIdForQr = (data.quotationNumber || '').replace('INV-', '');
+      const viewUrl = `https://admin.jnvspectra.com/invoice/${orderIdForQr}`;
+      const qrBuf = await PDFGenerator.fetchQRCodeImage(viewUrl);
+      if (qrBuf) {
+        doc.rect(486, 40, 76, 76).strokeColor('#dddddd').stroke();
+        doc.image(qrBuf, 488, 42, { width: 72, height: 72 });
       }
+      doc.fontSize(9).fillColor(GRAY)
+        .text(data.quotationNumber, 460, 120, { width: 102, align: 'right' })
+        .fontSize(8).text('Scan to view online', 460, 131, { width: 102, align: 'right' });
 
-      // Event Details - show event date and time on invoice PDF
-      doc.fontSize(14).font('Helvetica-Bold').fillColor('#333333');
-      doc.text('Event Details', 50, yPos + 10);
-      yPos += 35;
-      doc.fontSize(12).font('Helvetica').fillColor('#333333');
-      if (data.orderDetails.eventDate) {
-        doc.text(`Event Date: ${data.orderDetails.eventDate}`, 50, yPos);
-        yPos += 20;
-      }
-      if (data.orderDetails.eventTime) {
-        doc.text(`Event Time: ${data.orderDetails.eventTime}`, 50, yPos);
-        yPos += 20;
-      }
+      // Divider
+      doc.moveTo(LM, 150).lineTo(RM, 150).strokeColor('#dddddd').lineWidth(1).stroke();
 
-       // Create a clean table with column headers
-       const tableTop = yPos + 20;
-      const colHeaders = ['Description', 'Quantity', 'Unit Price', 'Amount'];
-      const colWidths = [250, 80, 100, 100];
-      const colPos = [50, 300, 380, 480];
-      
-      // Draw table headers
-      doc.fontSize(12).font('Helvetica-Bold').fillColor('#333333');
-      colHeaders.forEach((header, i) => {
-        doc.text(header, colPos[i], tableTop);
+      // Bill to (left) + meta grid (right)
+      let y = 166;
+      doc.fontSize(9).font('Helvetica-Bold').fillColor(GRAY).text('Bill to', LM, y);
+      doc.fontSize(11).font('Helvetica-Bold').fillColor('#222222').text(data.customerInfo.name || '', LM, y + 14);
+      doc.fontSize(9).font('Helvetica').fillColor('#333333')
+        .text(data.customerInfo.email || '', LM, y + 30)
+        .text(data.customerInfo.phone || 'N/A', LM, y + 43);
+
+      const meta = [
+        ['Invoice number', data.quotationNumber],
+        ['Date', new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })],
+        ['Payment terms', data.paymentOption === 'online' ? 'Online' : 'Offline'],
+        ['Due date', data.orderDetails.eventDate || 'N/A'],
+        ['Event on', `${data.orderDetails.eventDate || 'N/A'} ${data.orderDetails.eventTime || ''}`.trim()],
+        ['Status', data.orderStatus || ''],
+      ];
+      let my = y;
+      meta.forEach(([k, v]) => {
+        doc.fontSize(9).font('Helvetica').fillColor(GRAY).text(k, 320, my);
+        doc.fontSize(9).font('Helvetica').fillColor('#222222').text(String(v || ''), 440, my, { width: 122, align: 'right' });
+        my += 15;
       });
-      
-      // Add a horizontal line after headers
-      doc.moveTo(50, tableTop + 20).lineTo(550, tableTop + 20).stroke();
 
-      // Draw table rows
-      let y = tableTop + 30;
-      doc.fontSize(12).font('Helvetica');
-      
-      // Add items to the table
-      if (data.orderDetails.items && data.orderDetails.items.length > 0) {
-        data.orderDetails.items.forEach((item) => {
-          doc.text(item.name, colPos[0], y);
-          doc.text((item.quantity || 1).toString(), colPos[1], y);
-          doc.text(`$${item.price.toFixed(2)}`, colPos[2], y);
-          doc.text(`$${(item.price * (item.quantity || 1)).toFixed(2)}`, colPos[3], y);
-          y += 20;
-        });
-      }
+      // Items table
+      const tableTop = Math.max(y + 60, my + 8);
+      doc.rect(LM, tableTop, RM - LM, 18).fill('#f5f5f5');
+      doc.fontSize(9).font('Helvetica-Bold').fillColor('#333333')
+        .text('Item summary', LM + 6, tableTop + 5)
+        .text('Qty', 350, tableTop + 5)
+        .text('Rate', 420, tableTop + 5, { width: 60, align: 'right' })
+        .text('Total', 480, tableTop + 5, { width: 76, align: 'right' });
+      doc.rect(LM, tableTop, RM - LM, 18).strokeColor('#dddddd').stroke();
 
-      // Add subtotal, tax, and total
-      y += 20;
-      doc.text('Subtotal:', colPos[2], y);
-      doc.text(`$${data.orderDetails.subtotal.toFixed(2)}`, colPos[3], y);
-      
-      y += 20;
-      doc.text('Tax:', colPos[2], y);
-      doc.text(`$${Number(data.orderDetails.tax || 0).toFixed(2)}`, colPos[3], y);
-      
-      if (!isDeposit) {
-        y += 20;
-        doc.font('Helvetica');
-        doc.text('Deposit Required:', colPos[2], y);
-        doc.text(`$${Number(data.paymentInfo.depositAmount || 0).toFixed(2)}`, colPos[3], y);
+      let ry = tableTop + 26;
+      doc.fontSize(9).font('Helvetica').fillColor('#333333');
+      const items = (data.orderDetails.items && data.orderDetails.items.length)
+        ? data.orderDetails.items
+        : [{ name: 'Event Services', price: data.orderDetails.total, quantity: 1 }];
+      items.forEach((item) => {
+        doc.text(item.name, LM + 6, ry, { width: 290 })
+          .text(String(item.quantity || 1), 350, ry)
+          .text(`$${Number(item.price).toFixed(2)}`, 420, ry, { width: 60, align: 'right' })
+          .text(`$${(Number(item.price) * (item.quantity || 1)).toFixed(2)}`, 480, ry, { width: 76, align: 'right' });
+        ry += 20;
+        doc.moveTo(LM, ry - 6).lineTo(RM, ry - 6).strokeColor('#eeeeee').lineWidth(0.5).stroke();
+      });
+      doc.font('Helvetica').fillColor(GRAY)
+        .text('Subtotal', LM + 6, ry)
+        .fillColor('#333333')
+        .text(`$${Number(data.orderDetails.subtotal || data.orderDetails.total).toFixed(2)}`, 480, ry, { width: 76, align: 'right' });
+      ry += 20;
+      doc.fillColor(GRAY).text('Tax', LM + 6, ry);
+      doc.fillColor('#333333').text(`$${Number(data.orderDetails.tax || 0).toFixed(2)}`, 480, ry, { width: 76, align: 'right' });
+      ry += 34;
 
-        y += 20;
-        doc.font('Helvetica-Bold');
-        doc.text('Final Amount:', colPos[2], y);
-        doc.text(`$${Number(data.orderDetails.total || 0).toFixed(2)}`, colPos[3], y);
-      
-      }
-
-      // Add payment information
-      y += 40;
-      doc.fontSize(14).font('Helvetica-Bold').fillColor('#333333');
-      doc.text('Payment Information', 50, y);
-      
-      y += 20;
-      doc.fontSize(12).font('Helvetica');
-      doc.text(data.paymentTerms || 'Payment details will be provided separately', 50, y);
-      
-      if (data.paymentLink) {
-        y += 20;
-        doc.fillColor('#0066cc');
-        doc.text(data.paymentLink, 50, y, { link: data.paymentLink });
-      }
-
-      // Add alternate payment options
-      y += 25;
-      doc.fontSize(12).font('Helvetica').fillColor('#333333');
-      doc.text('Alternate payment option: Zelle', 50, y);
-      doc.text(`Email: ${ZELLE_EMAIL}`, 50, y + 18);
-
-      // Add validity period
-      y += 40;
-      doc.fontSize(12).font('Helvetica').fillColor('#333333');
+      // Payment Information (left) + totals (right)
+      const botY = ry;
+      doc.fontSize(10).font('Helvetica-Bold').fillColor('#333333').text('Payment Information', LM, botY);
+      doc.fontSize(8).font('Helvetica').fillColor(GRAY)
+        .text(data.paymentTerms || 'Payment details will be provided separately', LM, botY + 15)
+        .text('Alternate payment option: Zelle', LM, botY + 27)
+        .text(`Email: ${ZELLE_EMAIL}`, LM, botY + 39);
       const validUntil = new Date();
-      validUntil.setDate(validUntil.getDate() + 30); // 30 days from now
-      doc.text(`Valid until: ${validUntil.toLocaleDateString()}`, 50, y);
-      
-      // Add Terms and Conditions section
-      y += 40;
-      doc.fontSize(14).font('Helvetica-Bold').fillColor('#333333');
-      doc.text('Terms and Conditions', 50, y);
-      
-      y += 20;
-      doc.fontSize(10).font('Helvetica').fillColor('#333333');
-     const termsText = `• Validity: This invoice is valid for 30 days from the invoice date.
+      validUntil.setDate(validUntil.getDate() + 30);
+      doc.text(`Valid until: ${validUntil.toLocaleDateString()}`, LM, botY + 51);
+      if (data.paymentLink) {
+        doc.fillColor('#0066cc').text(data.paymentLink, LM, botY + 63, { link: data.paymentLink, width: 240 });
+      }
+
+      let ty = botY;
+      doc.fontSize(9).font('Helvetica').fillColor(GRAY).text('Invoice total in USD', 340, ty, { width: 222, align: 'right' });
+      ty += 14;
+      doc.fontSize(16).font('Helvetica-Bold').fillColor('#222222').text(`$${Number(data.orderDetails.total || 0).toFixed(2)}`, 340, ty, { width: 222, align: 'right' });
+      ty += 26;
+      doc.fontSize(9).font('Helvetica').fillColor(GRAY).text('Amount applied in USD', 340, ty, { width: 222, align: 'right' });
+      ty += 14;
+      doc.fontSize(11).font('Helvetica').fillColor('#222222').text(`$${Number(data.paymentInfo.depositAmount || 0).toFixed(2)}`, 340, ty, { width: 222, align: 'right' });
+      ty += 22;
+      doc.fontSize(9).font('Helvetica').fillColor(GRAY).text('Total amount due in USD', 340, ty, { width: 222, align: 'right' });
+      ty += 14;
+      doc.fontSize(16).font('Helvetica-Bold').fillColor('#222222').text(`$${Number((data.orderDetails.total || 0) - (data.paymentInfo.depositAmount || 0)).toFixed(2)}`, 340, ty, { width: 222, align: 'right' });
+      ry = Math.max(ry, ty + 6) + 14;
+
+      // Terms and Conditions
+      doc.moveTo(LM, ry).lineTo(RM, ry).strokeColor('#dddddd').lineWidth(0.5).stroke();
+      ry += 12;
+      doc.fontSize(10).font('Helvetica-Bold').fillColor('#333333').text('Terms and Conditions', LM, ry);
+      ry += 15;
+      doc.fontSize(7.5).font('Helvetica').fillColor(GRAY);
+      const termsText = `• Validity: This invoice is valid for 30 days from the invoice date.
 • Deposit: Above mentioned amount is required to confirm booking. Balance due before the event.
 • Cancellation: 30 days prior notice is required for free cancellation. Beyond that, cancellation charges will be applied depending on the number of days before the event.
 • Power Requirements: Client is responsible for arranging Electricity for the equipment.
@@ -536,7 +536,13 @@ class PDFGenerator {
    - The Client assumes full responsibility for any damage, loss or theft of the rented equipment during the rental period.
    - In case of damage, repair costs or full replacement fees will be charged based on the severity of the damage.
    - JNV Spectra is not liable for any indirect or consequential damages.`;
-      doc.text(termsText, 50, y + 10, { width: 500, lineGap: 3 });
+      doc.text(termsText, LM, ry, { width: 512, lineGap: 2 });
+
+      // Footer
+      const fy = doc.y + 20;
+      doc.moveTo(LM, fy).lineTo(RM, fy).strokeColor('#dddddd').lineWidth(0.5).stroke();
+      doc.fontSize(8).fillColor(GRAY).text(`View this invoice online: ${viewUrl}`, LM, fy + 8, { align: 'center', width: 512 });
+      doc.text('JNV Spectra - Event Management & Rentals - info@jnvspectra.com - +1 (941) 773-3879', LM, fy + 20, { align: 'center', width: 512 });
 
       // Generate PDF buffer
       const pdfBuffer = await PDFGenerator.generatePDF(doc);
