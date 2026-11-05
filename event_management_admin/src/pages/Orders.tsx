@@ -887,19 +887,34 @@ export default function Orders() {
             {editingOrder && (
               <OrderForm
                 onSubmit={handleUpdateOrder}
-                initialValues={{
-                  customer_name: editingOrder.customer_name,
-                  email: editingOrder.email,
-                  contact_number: editingOrder.contact_number || "",
-                  event_date: editingOrder.event_date ? new Date(editingOrder.event_date) : undefined,
-                  event_time: (editingOrder as any).event_time || "",
-                  payment_option: editingOrder.payment_option,
-                  order_status: editingOrder.order_status,
-                  total_amount: editingOrder.total_amount,
-                  deposit_amount: editingOrder.deposit_amount,
-                  balance_amount: editingOrder.balance_amount,
-                  order_details: editingOrder.order_details as any,
-                }}
+                initialValues={(() => {
+                  const od: any = editingOrder.order_details || {};
+                  const sub = Number(od.subtotal) || 0;
+                  const taxAmt = Number(od.tax) || 0;
+                  const taxPct = od.tax_percentage != null ? Number(od.tax_percentage) : (sub > 0 ? (taxAmt / sub) * 100 : 0);
+                  return {
+                    customer_name: editingOrder.customer_name,
+                    email: editingOrder.email,
+                    contact_number: editingOrder.contact_number || "",
+                    event_date: editingOrder.event_date ? new Date(editingOrder.event_date) : undefined,
+                    event_time: (editingOrder as any).event_time || "",
+                    payment_option: editingOrder.payment_option,
+                    order_status: editingOrder.order_status,
+                    total_amount: Number(editingOrder.total_amount) || 0,
+                    deposit_amount: Number(editingOrder.deposit_amount) || 0,
+                    balance_amount: Number(editingOrder.balance_amount) || 0,
+                    order_details: {
+                      subtotal: sub,
+                      tax: taxPct,
+                      total: Number(od.total) || 0,
+                      items: (od.items || []).map((i: any) => ({
+                        name: i.name,
+                        price: Number(i.price) || 0,
+                        quantity: Number(i.quantity) || 1,
+                      })),
+                    },
+                  };
+                })()}
               />
             )}
           </DialogContent>

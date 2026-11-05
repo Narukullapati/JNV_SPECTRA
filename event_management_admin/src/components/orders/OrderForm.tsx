@@ -144,6 +144,13 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
        shouldDirty: true,
        shouldTouch: true
      });
+     // keep deposit $ fixed; balance follows the new total
+     const dep = form.getValues("deposit_amount") || 0;
+     form.setValue("balance_amount", total - dep, {
+       shouldValidate: true,
+       shouldDirty: true,
+       shouldTouch: true
+     });
    };
 
   const handleSubmit = async (values: OrderFormValues) => {
