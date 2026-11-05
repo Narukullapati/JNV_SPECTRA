@@ -551,7 +551,7 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
                       Creating...
                     </>
                   ) : (
-                    {isEdit ? "Update Order" : "Create Order"}
+                    isEdit ? "Update Order" : "Create Order"
                   )}
                 </Button>
               </div>
