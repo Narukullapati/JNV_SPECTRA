@@ -415,7 +415,8 @@ export default function Orders() {
     }
   };
 
-  const handleUpdateOrder = async (values: any) => {
+  const handleUpdateOrder = ask("Save changes to this order?", async () => {
+    const values = pendingUpdateRef.current;
     try {
       values.contact_number = normalizePhone(values.contact_number);
       await updateOrder.mutateAsync(values);
@@ -429,6 +430,12 @@ export default function Orders() {
         variant: "destructive",
       });
     }
+  });
+
+  const pendingUpdateRef = { current: null as any };
+  const onOrderFormUpdate = (values: any) => {
+    pendingUpdateRef.current = values;
+    handleUpdateOrder();
   };
 
   const handleDeleteOrder = async () => {
@@ -886,7 +893,7 @@ export default function Orders() {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             {editingOrder && (
               <OrderForm
-                onSubmit={handleUpdateOrder}
+                onSubmit={onOrderFormUpdate}
                 initialValues={(() => {
                   const od: any = editingOrder.order_details || {};
                   const sub = Number(od.subtotal) || 0;

@@ -208,14 +208,14 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
       e.target.value = "0";
     }
     const total = form.getValues("total_amount") || 0;
-    const value = (percentage / 100) * total;
+    const value = Math.round(((percentage / 100) * total) * 100) / 100;
 
     form.setValue("deposit_amount", value, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true
     });
-    form.setValue("balance_amount", total - value, {
+    form.setValue("balance_amount", Math.round((total - value) * 100) / 100, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true
