@@ -77,6 +77,7 @@ interface OrderFormProps {
 
 export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEdit = !!initialValues;
   const [services, setServices] = useState<Array<{ name: string; price: number; quantity: number }>>(initialValues?.order_details?.items || []);
   const [newService, setNewService] = useState({ name: "", price: undefined, quantity: 1 });
 
@@ -218,7 +219,7 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Create New Order</CardTitle>
+          <CardTitle>{isEdit ? "Edit Order" : "Create New Order"}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <Form {...form}>
@@ -550,7 +551,7 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
                       Creating...
                     </>
                   ) : (
-                    "Create Order"
+                    {isEdit ? "Update Order" : "Create Order"}
                   )}
                 </Button>
               </div>
