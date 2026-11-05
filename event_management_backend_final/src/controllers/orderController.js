@@ -128,10 +128,10 @@ const updateOrder = async (req, res, next) => {
       throw new AppError('Order ID is required', 400);
     }
 
-    const order = await order.update(req.params.id, req.body);
+    const updatedOrder = await order.update(req.params.id, req.body);
     res.status(200).json({
       status: 'success',
-      data: order,
+      data: updatedOrder,
     });
   } catch (error) {
     if (error instanceof AppError) {
