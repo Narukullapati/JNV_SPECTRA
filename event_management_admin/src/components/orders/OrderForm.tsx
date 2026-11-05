@@ -121,7 +121,19 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
     updateAmounts();
   };
 
-   const updateAmounts = () => {
+     const updateService = (index: number, field: 'name' | 'price' | 'quantity', val: string) => {
+    const updated = services.map((sv, i) => {
+      if (i !== index) return sv;
+      if (field === 'name') return { ...sv, name: val };
+      const n = val === '' ? 0 : Number(val);
+      return { ...sv, [field]: field === 'quantity' ? Math.max(1, Math.floor(n) || 1) : Math.max(0, n) };
+    });
+    setServices(updated);
+    form.setValue("order_details.items", updated, { shouldDirty: true, shouldValidate: true });
+    updateAmounts();
+  };
+
+const updateAmounts = () => {
      const items = form.getValues("order_details.items") || [];
      const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
      const taxPercentage = form.getValues("order_details.tax") || 0;
@@ -431,9 +443,15 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
                         <tbody>
                   {services.map((service, index) => (
                     <tr key={index} className="border-b last:border-0">
-                      <td className="px-3 py-2 font-medium">{service.name}</td>
-                      <td className="px-3 py-2">{service.quantity}</td>
-                      <td className="px-3 py-2 text-right">${service.price.toFixed(2)}</td>
+                      <td className="px-2 py-1">
+                        <Input className="h-8 border-0 shadow-none px-1" value={service.name} onChange={(e) => updateService(index, 'name', e.target.value)} />
+                      </td>
+                      <td className="px-2 py-1">
+                        <Input className="h-8 w-16 border-0 shadow-none px-1 text-center" type="number" min={1} value={service.quantity} onChange={(e) => updateService(index, 'quantity', e.target.value)} />
+                      </td>
+                      <td className="px-2 py-1">
+                        <Input className="h-8 w-24 border-0 shadow-none px-1 text-right" type="number" min={0} step="0.01" value={service.price} onChange={(e) => updateService(index, 'price', e.target.value)} />
+                      </td>
                       <td className="px-3 py-2 text-right">${(service.price * service.quantity).toFixed(2)}</td>
                       <td className="px-3 py-2 text-center">
                       <Button
