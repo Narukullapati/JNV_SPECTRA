@@ -884,13 +884,13 @@ export default function Orders() {
         )}
 
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-4xl">
             <OrderForm onSubmit={handleCreateOrder} />
           </DialogContent>
         </Dialog>
 
         <Dialog open={!!editingOrder} onOpenChange={() => setEditingOrder(null)}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             {editingOrder && (
               <OrderForm
                 onSubmit={onOrderFormUpdate}
