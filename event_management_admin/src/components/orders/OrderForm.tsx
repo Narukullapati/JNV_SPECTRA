@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -443,12 +444,17 @@ const updateAmounts = () => {
                             </td>
                             <td className="px-3 py-2 text-right text-gray-400">—</td>
                             <td className="px-3 py-2 text-center">
-                              <Button type="button" variant="ghost" size="sm" title="Click here to add to invoice"
-                                className="h-7 w-7 p-0 text-[#4b1248] hover:text-[#4b1248]/70"
-                                onClick={addService}
-                                disabled={!newService.name || newService.price === undefined || newService.price <= 0}>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5v14"/></svg>
-                              </Button>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button type="button" variant="ghost" size="sm"
+                                    className="h-7 w-7 p-0 text-[#4b1248] hover:text-[#4b1248]/70"
+                                    onClick={addService}
+                                    disabled={!newService.name || newService.price === undefined || newService.price <= 0}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5v14"/></svg>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-[#4b1248] text-white text-xs">Click here to add to invoice</TooltipContent>
+                              </Tooltip>
                             </td>
                           </tr>
                         </tbody>
