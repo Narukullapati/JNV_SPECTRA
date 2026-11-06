@@ -154,11 +154,22 @@ router.post('/square', express.raw({ type: 'application/json' }), verifySquareWe
             const totalAmount = order.total_amount;
             const depositAmount = order.deposit_amount;
 
+            // Record this payment under order_details.payments (shows in Payments received)
+            const _od = order.order_details || {};
+            const _pmts = Array.isArray(_od.payments) ? [..._od.payments] : [];
+            _pmts.push({
+              amount: customAmount,
+              method: 'Online (Square)',
+              note: `Square payment${payment.card_details?.card?.last_4 ? ' ****' + payment.card_details.card.last_4 : ''}`,
+              at: new Date().toISOString(),
+            });
+
             if (isDepositPayment || (isCustomPayment && customAmount < totalAmount && customAmount >= depositAmount)) {
               // Handle deposit payment or partial custom payment
               const updatedOrder = await orderModel.update(order.id, {
                 order_status: 'confirmed',
                 deposit_paid_at: new Date(),
+                order_details: { ..._od, payments: _pmts },
                 payment_details: {
                   ...order.payment_details,
                   deposit_payment: {
@@ -193,6 +204,7 @@ router.post('/square', express.raw({ type: 'application/json' }), verifySquareWe
               const updatedOrder = await orderModel.update(order.id, {
                 order_status: 'paid',
                 balance_paid_at: new Date(),
+                order_details: { ..._od, payments: _pmts },
                 payment_details: {
                   ...order.payment_details,
                   balance_payment: {
