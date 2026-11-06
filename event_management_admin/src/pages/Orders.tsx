@@ -713,6 +713,9 @@ export default function Orders() {
 
   const gridColDefs: any[] = [
     { headerName: 'Order #', field: 'seq', width: 110, sortable: true, filter: 'agNumberColumnFilter' },
+    { headerName: 'Invoice #', flex: 1, minWidth: 155,
+      valueGetter: (p: any) => p.data?.created_at ? `INV-${new Date(p.data.created_at).getTime()}` : '',
+      filter: 'agTextColumnFilter' },
     { headerName: 'Customer', field: 'customer_name', flex: 1.3, minWidth: 150 },
     { headerName: 'Email', field: 'email', flex: 1.7, minWidth: 190 },
     { headerName: 'Phone', field: 'contact_number', flex: 1, minWidth: 130 },
