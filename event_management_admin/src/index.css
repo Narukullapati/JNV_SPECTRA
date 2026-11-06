@@ -198,3 +198,6 @@
   .invoice-doc, .invoice-doc * { visibility: visible; }
   .invoice-doc { position: absolute; top: 0; left: 0; width: 100%; padding: 0 24px; }
 }
+
+.ag-row.jnv-row-paid { background-color: #e8f5e9 !important; }
+.ag-row.jnv-row-paid .ag-cell { background-color: #e8f5e9 !important; }

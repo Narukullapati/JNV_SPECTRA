@@ -886,7 +886,8 @@ export default function Orders() {
               <AgGridReact
                 theme={themeQuartz}
                 rowData={sortedOrders}
-                getRowStyle={(p: any) => (p.data?.order_status === 'paid' && Number(p.data?.balance_amount || 0) === 0 ? { backgroundColor: '#e8f5e9' } : undefined)}
+                rowClassRules={{ 'jnv-row-paid': (p: any) => p.data?.order_status === 'paid' && Number(p.data?.balance_amount || 0) === 0 }}
+                getRowStyle={(p: any) => (p.data?.order_status === 'paid' && Number(p.data?.balance_amount || 0) === 0 ? { '--ag-row-background-color': '#e8f5e9', backgroundColor: '#e8f5e9' } : undefined)}
                 columnDefs={gridColDefs}
                 defaultColDef={{ sortable: true, filter: true, floatingFilter: true, resizable: true }}
                 pagination={true}
