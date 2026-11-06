@@ -189,9 +189,9 @@ const getOrderInvoice = async (req, res, next) => {
           pdf_url: orderData.invoice_pdf_url,
         };
       } else {
-        // For backward compatibility, generate and save if missing
-        document = PDFGenerator.generateInvoiceTemplate(orderData);
-        const pdfResult = await PDFGenerator.generateInvoicePDF(document);
+        // Regenerate/reshoot uses the professional layout for paid orders too
+        document = PDFGenerator.generateQuotationTemplate(orderData);
+        const pdfResult = await PDFGenerator.generateQuotationPDF(document);
         const pdfUrl = typeof pdfResult === 'string' ? pdfResult : pdfResult.publicUrl;
         // Save to order (skip on regenerate — keep existing record untouched)
         if (!req.query.regenerate) {

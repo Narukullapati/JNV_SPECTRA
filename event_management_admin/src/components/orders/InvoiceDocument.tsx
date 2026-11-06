@@ -1,5 +1,15 @@
 import { useState } from "react";
 import QRCode from "react-qr-code";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Download, Loader2 } from "lucide-react";
 import { fetchApi } from "@/lib/api";
 
@@ -13,7 +23,14 @@ const dstr = (d?: string) =>
 
 export function InvoiceDocument({ order }: { order: any }) {
   const [downloading, setDownloading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const isOldFormat = !order.quotation_template && !!order.invoice_template;
   const downloadPdf = async () => {
+    if (isOldFormat) { setConfirmOpen(true); return; }
+    await generateAndDownload();
+  };
+  const generateAndDownload = async () => {
+    setConfirmOpen(false);
     setDownloading(true);
     try {
       const res = await fetchApi(`/api/v1/orders/${order.id}/invoice?regenerate=true`);
@@ -209,6 +226,20 @@ export function InvoiceDocument({ order }: { order: any }) {
         <p className="text-xs text-gray-400">View this invoice online: <a href={viewUrl} className="text-[#4b1248] hover:underline">{viewUrl}</a></p>
         <p className="text-[10px] text-gray-400 mt-1">JNV Spectra · Event Management &amp; Rentals · info@jnvspectra.com · +1 (941) 773-3879</p>
       </div>
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Generate new invoice format?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This order uses the old invoice format. Generate a new-format PDF? It will replace the stored one.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep old format</AlertDialogCancel>
+            <AlertDialogAction onClick={generateAndDownload}>Yes, generate new format</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
