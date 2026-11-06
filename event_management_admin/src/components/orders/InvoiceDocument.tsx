@@ -146,12 +146,12 @@ export function InvoiceDocument({ order }: { order: any }) {
             <p>{fmt(taxAmount)}</p>
           </div>
           <div className="flex justify-between gap-6">
-            <p className="text-gray-800">Deposit Required:</p>
-            <p>{fmt(order.deposit_amount)}</p>
-          </div>
-          <div className="flex justify-between gap-6">
             <p className="text-gray-800 font-semibold">Final Amount:</p>
             <p className="font-bold">{fmt(order.total_amount)}</p>
+          </div>
+          <div className="flex justify-between gap-6">
+            <p className="text-gray-800">Deposit Required:</p>
+            <p>{fmt(order.deposit_amount)}</p>
           </div>
         </div>
       </div>
