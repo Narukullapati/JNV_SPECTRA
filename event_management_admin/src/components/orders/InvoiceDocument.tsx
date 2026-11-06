@@ -31,6 +31,9 @@ export function InvoiceDocument({ order }: { order: any }) {
     (order.deposit_paid_at ? order.deposit_amount || 0 : 0) +
     (order.balance_paid_at ? order.balance_amount || 0 : 0);
   const due = (order.total_amount || 0) - applied;
+  const od: any = order.order_details || {};
+  const subtotal = Number(od.subtotal) || 0;
+  const taxAmount = Number(od.tax_amount) || 0;
   const viewUrl = `${window.location.origin}/invoice/${order.id}`;
   const payLabel = order.payment_option === "online" ? "Online" : "Offline";
   const items = order.order_details?.items || [];
@@ -132,13 +135,23 @@ export function InvoiceDocument({ order }: { order: any }) {
             <p>Valid until: 12/3/2026</p>
           </div>
         </div>
-        <div className="space-y-1 text-right">
-          <p className="text-gray-600">Invoice total in USD</p>
-          <p className="text-2xl font-bold">{fmt(order.total_amount)}</p>
-          <p className="text-gray-600 pt-1">Amount applied in USD</p>
-          <p className="text-lg">{fmt(applied)}</p>
-          <p className="text-gray-600 pt-1">Total amount due in USD</p>
-          <p className="text-2xl font-bold">{fmt(due)}</p>
+        <div className="space-y-0.5">
+          <div className="flex justify-between gap-6">
+            <p className="text-gray-800">Subtotal:</p>
+            <p>{fmt(subtotal)}</p>
+          </div>
+          <div className="flex justify-between gap-6">
+            <p className="text-gray-800">Tax:</p>
+            <p>{fmt(taxAmount)}</p>
+          </div>
+          <div className="flex justify-between gap-6">
+            <p className="text-gray-800">Deposit Required:</p>
+            <p>{fmt(order.deposit_amount)}</p>
+          </div>
+          <div className="flex justify-between gap-6">
+            <p className="text-gray-800 font-semibold">Final Amount:</p>
+            <p className="font-bold">{fmt(order.total_amount)}</p>
+          </div>
         </div>
       </div>
 
