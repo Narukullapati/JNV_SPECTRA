@@ -255,22 +255,22 @@ const updateAmounts = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <Card className="border-gray-300 shadow-sm">
-        <CardContent className="space-y-4 pt-4">
-          <div className="flex justify-between items-start pb-3 border-b">
-            <div className="flex items-center gap-3">
+        <CardContent className="space-y-3 pt-3">
+          <div className="flex justify-between items-start pb-2 border-b">
+            <div className="flex items-center gap-2">
               <div className="bg-[#4b1248] rounded-lg p-1.5">
-                <img src="https://jnvspectra.com/jnvSpectraLogoBold.png" alt="JNV Spectra" className="h-12 w-12 object-contain" />
+                <img src="https://jnvspectra.com/jnvSpectraLogoBold.png" alt="JNV Spectra" className="h-10 w-10 object-contain" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-[#4b1248]">JNV Spectra</h2>
+                <h2 className="text-lg font-bold text-[#4b1248]">JNV Spectra</h2>
                 <p className="text-xs text-gray-500">Event Management &amp; Rentals</p>
                 <p className="text-xs text-gray-500">info@jnvspectra.com&nbsp;&nbsp;|&nbsp;&nbsp;+1 (941) 773-3879</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold text-gray-800">{isEdit ? "Update Order" : "New Order"}</p>
+              <p className="text-xl font-bold text-gray-800">{isEdit ? "Update Order" : "New Order"}</p>
               <p className="text-xs text-gray-400 mt-1">{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
             </div>
           </div>
@@ -286,14 +286,14 @@ const updateAmounts = () => {
                 };
                 alert(findMsg(errs) || "Please fix the highlighted fields");
               })} 
-              className="space-y-4"
+              className="space-y-3"
             >
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 gap-2">
                 <FormField
                   control={form.control}
                   name="customer_name"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-3">
+                    <FormItem className="flex items-center gap-2">
                       <FormLabel className="w-32 shrink-0">Customer Name</FormLabel>
                       <FormControl>
                         <Input 
@@ -310,12 +310,12 @@ const updateAmounts = () => {
                   )}
                 />
 
-<div className="grid grid-cols-2 gap-4">
+<div className="grid grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-3">
+                    <FormItem className="flex items-center gap-2">
                       <FormLabel className="w-32 shrink-0">Email</FormLabel>
                       <FormControl>
                         <Input 
@@ -337,7 +337,7 @@ const updateAmounts = () => {
                   control={form.control}
                   name="contact_number"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-3">
+                    <FormItem className="flex items-center gap-2">
                       <FormLabel className="w-32 shrink-0">Contact Number</FormLabel>
                       <FormControl>
                         <Input 
@@ -356,12 +356,12 @@ const updateAmounts = () => {
                 />
 
 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                 <FormField
                   control={form.control}
                   name="event_date"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-3">
+                    <FormItem className="flex items-center gap-2">
                       <FormLabel className="w-32 shrink-0">Event Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -400,7 +400,7 @@ const updateAmounts = () => {
                   control={form.control}
                   name="event_time"
                   render={({ field }) => (
-                    <FormItem className="flex items-center gap-3">
+                    <FormItem className="flex items-center gap-2">
                       <FormLabel className="w-32 shrink-0">Event Time</FormLabel>
                       <FormControl>
                         <Input 
@@ -419,7 +419,7 @@ const updateAmounts = () => {
               </div>
 
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <p className="text-xs font-semibold text-gray-500">Item summary</p>
 
                 <div>
@@ -439,13 +439,13 @@ const updateAmounts = () => {
                   {services.map((service, index) => (
                     <tr key={index} className="border-b last:border-0">
                       <td className="px-2 py-1">
-                        <Input className="h-8 border-0 shadow-none px-1" value={service.name} onChange={(e) => updateService(index, 'name', e.target.value)} />
+                        <Input className="h-7 border-0 shadow-none px-1" value={service.name} onChange={(e) => updateService(index, 'name', e.target.value)} />
                       </td>
                       <td className="px-2 py-1">
-                        <Input className="h-8 w-16 border-0 shadow-none px-1 text-center" type="number" min={1} value={service.quantity} onChange={(e) => updateService(index, 'quantity', e.target.value)} />
+                        <Input className="h-7 w-16 border-0 shadow-none px-1 text-center" type="number" min={1} value={service.quantity} onChange={(e) => updateService(index, 'quantity', e.target.value)} />
                       </td>
                       <td className="px-2 py-1">
-                        <Input className="h-8 w-24 border-0 shadow-none px-1 text-right" type="number" min={0} step="0.01" value={service.price} onChange={(e) => updateService(index, 'price', e.target.value)} />
+                        <Input className="h-7 w-24 border-0 shadow-none px-1 text-right" type="number" min={0} step="0.01" value={service.price} onChange={(e) => updateService(index, 'price', e.target.value)} />
                       </td>
                       <td className="px-3 py-2 text-right">${(service.price * service.quantity).toFixed(2)}</td>
                       <td className="px-3 py-2 text-center">
@@ -463,15 +463,15 @@ const updateAmounts = () => {
                   ))}
                           <tr className="bg-gray-50/60">
                             <td className="px-2 py-1">
-                              <Input className="h-8 border-0 shadow-none px-1 bg-transparent" placeholder="Enter new item"
+                              <Input className="h-7 border-0 shadow-none px-1 bg-transparent" placeholder="Enter new item"
                                 value={newService.name} onChange={(e) => setNewService({ ...newService, name: e.target.value })} />
                             </td>
                             <td className="px-2 py-1">
-                              <Input className="h-8 w-16 border-0 shadow-none px-1 text-center bg-transparent" type="number" min={1} placeholder="1"
+                              <Input className="h-7 w-16 border-0 shadow-none px-1 text-center bg-transparent" type="number" min={1} placeholder="1"
                                 value={newService.quantity} onChange={(e) => setNewService({ ...newService, quantity: parseInt(e.target.value) || 1 })} />
                             </td>
                             <td className="px-2 py-1">
-                              <Input className="h-8 w-24 border-0 shadow-none px-1 text-right bg-transparent" type="number" min={0} step="0.01" placeholder="0.00"
+                              <Input className="h-7 w-24 border-0 shadow-none px-1 text-right bg-transparent" type="number" min={0} step="0.01" placeholder="0.00"
                                 value={newService.price === undefined ? "" : newService.price} onChange={(e) => setNewService({ ...newService, price: e.target.value === "" ? undefined : parseFloat(e.target.value) })} />
                             </td>
                             <td className="px-3 py-2 text-right text-gray-400">—</td>
@@ -503,7 +503,7 @@ const updateAmounts = () => {
                        control={form.control}
                        name="order_details.tax"
                        render={({ field }) => (
-                         <FormItem className="flex items-center gap-3">
+                         <FormItem className="flex items-center gap-2">
                            <FormLabel className="w-36 shrink-0">Tax (%)</FormLabel>
                            <FormControl>
                              <Input
@@ -524,7 +524,7 @@ const updateAmounts = () => {
                       control={form.control}
                       name="deposit_amount"
                       render={({ field }) => (
-                        <FormItem className="flex items-center gap-3">
+                        <FormItem className="flex items-center gap-2">
                           <FormLabel className="w-36 shrink-0">Deposit (%)</FormLabel>
                           <FormControl>
                             <Input 
@@ -595,18 +595,18 @@ const updateAmounts = () => {
                       ))}
                       <tr className="bg-gray-50/60">
                         <td className="px-2 py-1">
-                          <Input className="h-8 border-0 shadow-none px-1 bg-transparent" type="number" min={0} step="0.01" placeholder="Amount"
+                          <Input className="h-7 border-0 shadow-none px-1 bg-transparent" type="number" min={0} step="0.01" placeholder="Amount"
                             value={newPayment.amount === undefined ? "" : newPayment.amount}
                             onChange={(e) => setNewPayment({ ...newPayment, amount: e.target.value === "" ? undefined : parseFloat(e.target.value) })} />
                         </td>
                         <td className="px-2 py-1">
-                          <select className="h-8 w-full border-0 bg-transparent text-sm px-1"
+                          <select className="h-7 w-full border-0 bg-transparent text-sm px-1"
                             value={newPayment.method} onChange={(e) => setNewPayment({ ...newPayment, method: e.target.value })}>
                             {["Zelle", "Cash", "Check", "Card", "Bank Transfer", "Other"].map(m => <option key={m} value={m}>{m}</option>)}
                           </select>
                         </td>
                         <td className="px-2 py-1" colSpan={2}>
-                          <Input className="h-8 border-0 shadow-none px-1 bg-transparent" placeholder="Note (optional)"
+                          <Input className="h-7 border-0 shadow-none px-1 bg-transparent" placeholder="Note (optional)"
                             value={newPayment.note} onChange={(e) => setNewPayment({ ...newPayment, note: e.target.value })} />
                         </td>
                         <td className="px-3 py-2 text-center">
