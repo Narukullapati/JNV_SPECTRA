@@ -40,7 +40,7 @@
     "react-hook-form": "^7.56.1",
     "resend": "^4.5.1",
     "sequelize": "^6.37.7",
-    "square": "^38.0.0",
+    "square": "^38.2.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.11.0",

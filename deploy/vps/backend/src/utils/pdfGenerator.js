@@ -326,10 +326,11 @@ class PDFGenerator {
          date: new Date().toLocaleDateString(),
          eventDate: parseLocalDate(orderData.event_date)?.toLocaleDateString() || 'N/A',
          eventTime: format12HourTime(orderData.event_time),
-         services: orderData.order_details.items.map((item) => ({
-           name: item.name,
-           price: item.price,
-         })),
+         items: Array.isArray(orderData.order_details?.items) ? orderData.order_details.items : [{
+           name: 'Event Services',
+           price: orderData.total_amount,
+           quantity: 1,
+         }],
          subtotal: orderData.order_details.subtotal,
          tax: orderData.order_details.tax,
          total: orderData.total_amount,
