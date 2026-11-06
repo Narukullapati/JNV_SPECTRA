@@ -536,9 +536,9 @@ class PDFGenerator {
           doc.fillColor('#222222').text(`$${amt.toFixed(2)}`, px + 82, py, { width: 50 });
           if (col === 1 || i === pmts.length - 1) py += 12;
         });
-        doc.fontSize(9).font('Helvetica').fillColor('#333333').text('Total paid:', LM, py)
-          .fillColor('#222222').text(`$${paid.toFixed(2)}`, LM + 82, py, { width: 50 });
-        py += 14;
+        doc.fontSize(9).font('Helvetica').fillColor('#333333').text('Total paid:', 330, ty, { width: 116 })
+          .fillColor('#222222').text(`$${paid.toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
+        ty += 15;
         doc.fontSize(10).font('Helvetica-Bold').fillColor('#222222').text('Balance due:', 330, ty, { width: 116 })
           .text(`$${Math.max(0, Number(data.orderDetails.total || 0) - paid).toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
         ty += 16;
