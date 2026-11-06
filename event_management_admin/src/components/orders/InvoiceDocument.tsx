@@ -18,7 +18,17 @@ export function InvoiceDocument({ order }: { order: any }) {
     try {
       const res = await fetchApi(`/api/v1/orders/${order.id}/invoice?regenerate=true`);
       const url = res?.data?.pdf_url || res?.pdf_url;
-      if (url) window.open(url, "_blank");
+      if (url) {
+        const blob = await (await fetch(url)).blob();
+        const a = document.createElement("a");
+        const obj = URL.createObjectURL(blob);
+        a.href = obj;
+        a.download = url.split("/").pop() || "invoice.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(obj);
+      }
       else window.print();
     } catch {
       window.print();
