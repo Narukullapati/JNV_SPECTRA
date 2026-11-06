@@ -88,14 +88,14 @@ class PDFGenerator {
         doc.save();
         
         // Set opacity using fillOpacity
-        doc.fillOpacity(0.18);
+        doc.fillOpacity(0.07);
         
         // Add logo as watermark with opacity
         doc.image(logoPath, x, y, {
           fit: [logoWidth, logoHeight],
           align: 'center',
           valign: 'center',
-          opacity: 0.18,
+          opacity: 0.07,
         });
         
         // Restore state
