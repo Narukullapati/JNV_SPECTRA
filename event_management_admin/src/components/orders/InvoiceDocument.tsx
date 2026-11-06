@@ -17,8 +17,9 @@ export function InvoiceDocument({ order }: { order: any }) {
     setDownloading(true);
     try {
       const res = await fetchApi(`/api/v1/orders/${order.id}/invoice?regenerate=true`);
-      const url = res?.data?.pdf_url || res?.pdf_url;
-      if (url) {
+      const url = res?.data?.pdf_url || res?.data?.data?.pdf_url || res?.pdf_url;
+      if (!url) return;
+      try {
         const blob = await (await fetch(url)).blob();
         const a = document.createElement("a");
         const obj = URL.createObjectURL(blob);
@@ -28,10 +29,12 @@ export function InvoiceDocument({ order }: { order: any }) {
         a.click();
         a.remove();
         URL.revokeObjectURL(obj);
+      } catch (e) {
+        console.warn('pdf blob download failed, opening url', e);
+        window.open(url, "_blank");
       }
-      else window.print();
-    } catch {
-      window.print();
+    } catch (e) {
+      console.error('invoice download failed', e);
     } finally {
       setDownloading(false);
     }
