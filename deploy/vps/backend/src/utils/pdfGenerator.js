@@ -520,30 +520,7 @@ class PDFGenerator {
           .fillColor('#222222').text(val, 446, ty, { width: 116, align: 'right' });
         ty += bold ? 18 : 15;
       });
-      // Payments received: left column, laid out side-by-side (2 per row)
       const pmts = Array.isArray(data.paymentInfo.payments) ? data.paymentInfo.payments : [];
-      if (pmts.length) {
-        let py = botY + 63;
-        doc.fontSize(8).font('Helvetica-Bold').fillColor('#333333').text('Payments received:', LM, py);
-        py += 11;
-        let paid = 0;
-        pmts.forEach((pm, i) => {
-          const amt = Number(pm.amount) || 0; paid += amt;
-          const col = i % 2;
-          const px = LM + col * 135;
-          doc.fontSize(8).font('Helvetica').fillColor('#555555')
-            .text(`${pm.method || ''}${pm.note ? ' — ' + pm.note : ''}`, px, py, { width: 85, continued: false });
-          doc.fillColor('#222222').text(`$${amt.toFixed(2)}`, px + 82, py, { width: 50 });
-          if (col === 1 || i === pmts.length - 1) py += 12;
-        });
-        doc.fontSize(9).font('Helvetica').fillColor('#333333').text('Total paid:', 330, ty, { width: 116 })
-          .fillColor('#222222').text(`$${paid.toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
-        ty += 15;
-        doc.fontSize(10).font('Helvetica-Bold').fillColor('#222222').text('Balance due:', 330, ty, { width: 116 })
-          .text(`$${Math.max(0, Number(data.orderDetails.total || 0) - paid).toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
-        ty += 16;
-        ry = Math.max(ry, py + 16) + 14;
-      }
       ry = Math.max(ry, ty + 6) + 14;
 
       // Terms and Conditions
@@ -567,6 +544,44 @@ class PDFGenerator {
       doc.text(termsText, LM, ry, { width: 512, lineGap: 2 });
 
       // Footer
+      // Last page: Payments received (detailed)
+      if (pmts.length) {
+        doc.addPage();
+        PDFGenerator.addWatermarkLogo(doc);
+        doc.fillColor('#4b1248').fontSize(16).font('Helvetica-Bold').text('Payments Received', LM, 60);
+        doc.moveTo(LM, 84).lineTo(RM, 84).strokeColor('#dddddd').lineWidth(1).stroke();
+
+        let py2 = 100;
+        doc.fontSize(9).font('Helvetica-Bold').fillColor('#333333');
+        const px2 = [LM, 180, 300, 480];
+        ['Date', 'Method', 'Note', 'Amount'].forEach((h, i) => {
+          doc.text(h, px2[i], py2, { width: i === 3 ? 76 : 110, align: i === 3 ? 'right' : 'left' });
+        });
+        py2 += 16;
+        doc.moveTo(LM, py2).lineTo(RM, py2).strokeColor('#dddddd').lineWidth(0.5).stroke();
+        py2 += 8;
+
+        let paid2 = 0;
+        doc.font('Helvetica');
+        pmts.forEach((pm) => {
+          const amt = Number(pm.amount) || 0; paid2 += amt;
+          doc.fontSize(9).fillColor('#333333')
+            .text(pm.at ? new Date(pm.at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—', px2[0], py2, { width: 120 })
+            .text(pm.method || '—', px2[1], py2, { width: 110 })
+            .text(pm.note || '—', px2[2], py2, { width: 170 })
+            .text(`$${amt.toFixed(2)}`, px2[3], py2, { width: 76, align: 'right' });
+          py2 += 16;
+          doc.moveTo(LM, py2 - 5).lineTo(RM, py2 - 5).strokeColor('#eeeeee').lineWidth(0.5).stroke();
+        });
+
+        py2 += 10;
+        doc.fontSize(11).font('Helvetica-Bold').fillColor('#222222')
+          .text(`Total paid: $${paid2.toFixed(2)}`, 300, py2, { width: 256, align: 'right' });
+        py2 += 18;
+        doc.fontSize(12).font('Helvetica-Bold').fillColor('#4b1248')
+          .text(`Balance due: $${Math.max(0, Number(data.orderDetails.total || 0) - paid2).toFixed(2)}`, 300, py2, { width: 256, align: 'right' });
+      }
+
       const fy = doc.y + 20;
       doc.moveTo(LM, fy).lineTo(RM, fy).strokeColor('#dddddd').lineWidth(0.5).stroke();
       doc.text('JNV Spectra - Event Management & Rentals - info@jnvspectra.com - +1 (941) 773-3879', LM, fy + 20, { align: 'center', width: 512 });
