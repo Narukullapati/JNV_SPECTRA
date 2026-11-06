@@ -78,9 +78,9 @@ class PDFGenerator {
         const pageWidth = doc.page.width;
         const pageHeight = doc.page.height;
         
-        // Calculate center position
-        const logoWidth = 200; // Width of the watermark logo
-        const logoHeight = 200; // Height of the watermark logo
+        // Watermark at 50% page width, centered
+        const logoWidth = Math.round(pageWidth * 0.5);
+        const logoHeight = logoWidth;
         const x = (pageWidth - logoWidth) / 2;
         const y = (pageHeight - logoHeight) / 2;
         
@@ -88,14 +88,14 @@ class PDFGenerator {
         doc.save();
         
         // Set opacity using fillOpacity
-        doc.fillOpacity(0.3);
+        doc.fillOpacity(0.18);
         
         // Add logo as watermark with opacity
         doc.image(logoPath, x, y, {
           fit: [logoWidth, logoHeight],
           align: 'center',
           valign: 'center',
-          opacity: 0.3,
+          opacity: 0.18,
         });
         
         // Restore state
