@@ -60,6 +60,12 @@ const orderSchema = z.object({
      })),
      total: z.number().min(0.01, { message: "Total must be greater than 0" }),
      subtotal: z.number().min(0, { message: "Subtotal cannot be negative" }),
+     payments: z.array(z.object({
+       amount: z.number().min(0),
+       method: z.string(),
+       note: z.string().optional(),
+       at: z.string().optional(),
+     })).optional(),
    }),
 }).refine((data) => {
   return Math.abs((data.deposit_amount || 0) + (data.balance_amount || 0) - (data.total_amount || 0)) < 0.02;
@@ -80,6 +86,8 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isEdit = !!initialValues;
   const [services, setServices] = useState<Array<{ name: string; price: number; quantity: number }>>(initialValues?.order_details?.items || []);
+  const [payments, setPayments] = useState<Array<{ amount: number; method: string; note?: string; at?: string }>>(initialValues?.order_details?.payments || []);
+  const [newPayment, setNewPayment] = useState<{ amount?: number; method: string; note: string }>({ method: "Zelle", note: "" });
   const [newService, setNewService] = useState({ name: "", price: undefined, quantity: 1 });
 
   const form = useForm<OrderFormValues>({
@@ -133,6 +141,17 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
     form.setValue("order_details.items", updated, { shouldDirty: true, shouldValidate: true });
     updateAmounts();
   };
+
+  const syncPayments = (list: any[]) => {
+    setPayments(list);
+    form.setValue("order_details.payments", list, { shouldDirty: true, shouldValidate: true });
+  };
+  const addPayment = () => {
+    if (!newPayment.amount || newPayment.amount <= 0) return;
+    syncPayments([...payments, { amount: Number(newPayment.amount), method: newPayment.method, note: newPayment.note || undefined, at: new Date().toISOString() }]);
+    setNewPayment({ method: "Zelle", note: "" });
+  };
+  const removePayment = (i: number) => syncPayments(payments.filter((_, x) => x !== i));
 
 const updateAmounts = () => {
      const items = form.getValues("order_details.items") || [];
@@ -542,6 +561,72 @@ const updateAmounts = () => {
                     );
                   })()}
                 </div>
+              </div>
+
+
+              <div>
+                <p className="text-xs font-semibold text-gray-500 mb-2">Payments received</p>
+                <div className="border rounded overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-gray-50 border-b text-left">
+                        <th className="px-3 py-2 font-semibold">Amount</th>
+                        <th className="px-3 py-2 font-semibold">Method</th>
+                        <th className="px-3 py-2 font-semibold">Note</th>
+                        <th className="px-3 py-2 font-semibold w-28">Date</th>
+                        <th className="px-3 py-2 w-12"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {payments.map((pmt, i) => (
+                        <tr key={i} className="border-b last:border-0">
+                          <td className="px-3 py-2">${Number(pmt.amount).toFixed(2)}</td>
+                          <td className="px-3 py-2">{pmt.method}</td>
+                          <td className="px-3 py-2 text-gray-500">{pmt.note || "—"}</td>
+                          <td className="px-3 py-2 text-gray-500 text-xs">{pmt.at ? new Date(pmt.at).toLocaleDateString() : "—"}</td>
+                          <td className="px-3 py-2 text-center">
+                            <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-red-500 hover:text-red-600" onClick={() => removePayment(i)}>Remove</Button>
+                          </td>
+                        </tr>
+                      ))}
+                      <tr className="bg-gray-50/60">
+                        <td className="px-2 py-1">
+                          <Input className="h-8 border-0 shadow-none px-1 bg-transparent" type="number" min={0} step="0.01" placeholder="Amount"
+                            value={newPayment.amount === undefined ? "" : newPayment.amount}
+                            onChange={(e) => setNewPayment({ ...newPayment, amount: e.target.value === "" ? undefined : parseFloat(e.target.value) })} />
+                        </td>
+                        <td className="px-2 py-1">
+                          <select className="h-8 w-full border-0 bg-transparent text-sm px-1"
+                            value={newPayment.method} onChange={(e) => setNewPayment({ ...newPayment, method: e.target.value })}>
+                            {["Zelle", "Cash", "Check", "Card", "Bank Transfer", "Other"].map(m => <option key={m} value={m}>{m}</option>)}
+                          </select>
+                        </td>
+                        <td className="px-2 py-1" colSpan={2}>
+                          <Input className="h-8 border-0 shadow-none px-1 bg-transparent" placeholder="Note (optional)"
+                            value={newPayment.note} onChange={(e) => setNewPayment({ ...newPayment, note: e.target.value })} />
+                        </td>
+                        <td className="px-3 py-2 text-center">
+                          <Button type="button" variant="ghost" size="sm" title="Add payment"
+                            className="h-7 w-7 p-0 text-[#4b1248] hover:text-[#4b1248]/70"
+                            onClick={addPayment} disabled={!newPayment.amount || newPayment.amount <= 0}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5v14"/></svg>
+                          </Button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                {(() => {
+                  const paid = payments.reduce((a, x) => a + (Number(x.amount) || 0), 0);
+                  const tot = form.watch("total_amount") || 0;
+                  const bal = tot - paid;
+                  return (
+                    <div className="text-sm mt-2 space-y-0.5 text-right">
+                      <p><span className="text-gray-600">Total paid:</span> <span className="font-medium">${paid.toFixed(2)}</span></p>
+                      <p><span className="text-gray-600">Balance due:</span> <span className="font-semibold">${bal.toFixed(2)}</span></p>
+                    </div>
+                  );
+                })()}
               </div>
 
                 <FormField
