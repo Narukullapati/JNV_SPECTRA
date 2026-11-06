@@ -700,6 +700,17 @@ export default function Orders() {
 
   const gridHeight = Math.max(320, window.innerHeight - 300);
   const gridPageSize = Math.max(5, Math.floor((gridHeight - 150) / 42));
+  const statusLabel = (s: string) => s === 'partial_paid' ? 'Partial Paid' : String(s || '').charAt(0).toUpperCase() + String(s || '').slice(1);
+  const statusCls: Record<string, string> = {
+    paid: 'bg-green-100 text-green-800',
+    partial_paid: 'bg-amber-100 text-amber-800',
+    quotation: 'bg-blue-100 text-blue-800',
+    confirmed: 'bg-purple-100 text-purple-800',
+    pending: 'bg-gray-100 text-gray-700',
+    cancelled: 'bg-red-100 text-red-800',
+  };
+  const paidOf = (o: any) => ((o.order_details?.payments || []) as any[]).reduce((a, x) => a + (Number(x.amount) || 0), 0);
+
   const gridColDefs: any[] = [
     { headerName: 'Order #', field: 'seq', width: 110, sortable: true, filter: 'agNumberColumnFilter' },
     { headerName: 'Customer', field: 'customer_name', flex: 1.3, minWidth: 150 },
@@ -709,10 +720,15 @@ export default function Orders() {
       (p.data.order_details?.items || []).map((it: any) => `${it.name}${it.quantity ? ` (x${it.quantity})` : ''}`).join(', ') },
     { headerName: 'Event Date', field: 'event_date', flex: 0.9, minWidth: 115, valueFormatter: (p: any) => formatDate(p.value), comparator: (a: any, b: any) => (new Date(a).getTime() || 0) - (new Date(b).getTime() || 0) },
     { headerName: 'Total', field: 'total_amount', flex: 0.8, minWidth: 95, filter: 'agNumberColumnFilter', valueFormatter: (p: any) => formatCurrency(p.value) },
+    { headerName: 'Payments Received', flex: 0.9, minWidth: 115, filter: 'agNumberColumnFilter',
+      valueGetter: (p: any) => paidOf(p.data), valueFormatter: (p: any) => formatCurrency(p.value) },
+    { headerName: 'Balance', flex: 0.7, minWidth: 95, filter: 'agNumberColumnFilter',
+      valueGetter: (p: any) => Math.max(0, (Number(p.data.total_amount) || 0) - paidOf(p.data)),
+      valueFormatter: (p: any) => formatCurrency(p.value) },
     { headerName: 'Payment Option', field: 'payment_option', flex: 0.9, minWidth: 110, cellRenderer: (p: any) => (
       <Badge variant={p.value === 'online' ? 'default' : 'secondary'}>{paymentOptionLabel(p.value)}</Badge>) },
-    { headerName: 'Status', field: 'order_status', flex: 0.8, minWidth: 95, cellRenderer: (p: any) => (
-      <Badge variant={p.value === 'paid' ? 'default' : p.value === 'cancelled' ? 'destructive' : p.value === 'partial_paid' ? 'secondary' : 'outline'}>{p.value === 'partial_paid' ? 'Partial Paid' : p.value}</Badge>) },
+    { headerName: 'Status', field: 'order_status', flex: 0.9, minWidth: 105, cellRenderer: (p: any) => (
+      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusCls[p.value] || 'bg-gray-100 text-gray-700'}`}>{statusLabel(p.value)}</span>) },
     { headerName: 'Actions', field: 'id', sortable: false, filter: false, width: 165, cellRenderer: ActionsCell },
   ];
   const pagination = data?.data?.pagination;
@@ -866,6 +882,7 @@ export default function Orders() {
               <AgGridReact
                 theme={themeQuartz}
                 rowData={sortedOrders}
+                getRowStyle={(p: any) => (p.data?.order_status === 'paid' && Number(p.data?.balance_amount || 0) === 0 ? { backgroundColor: '#e8f5e9' } : undefined)}
                 columnDefs={gridColDefs}
                 defaultColDef={{ sortable: true, filter: true, floatingFilter: true, resizable: true }}
                 pagination={true}
