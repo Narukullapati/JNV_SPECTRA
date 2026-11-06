@@ -91,9 +91,10 @@ class PDFGenerator {
         doc.fillOpacity(0.3);
         
         // Add logo as watermark with opacity
-        doc.image(logoPath, x, y, { 
-          width: logoWidth, 
-          height: logoHeight,
+        doc.image(logoPath, x, y, {
+          fit: [logoWidth, logoHeight],
+          align: 'center',
+          valign: 'center',
           opacity: 0.3,
         });
         
@@ -415,17 +416,16 @@ class PDFGenerator {
       const LM = 50;
       const RM = doc.page.width - 50;
 
-      // Header: purple chip + logo
-      doc.rect(LM, 42, 54, 54).fill(PURPLE);
+      // Header: logo (no background)
       try {
-        doc.image(path.join(__dirname, '../../public/images/logo.png'), LM + 5, 47, { fit: [44, 44], align: 'center', valign: 'center' });
+        doc.image(path.join(__dirname, '../../public/images/logo.png'), LM, 38, { fit: [62, 62], align: 'left', valign: 'center' });
       } catch (error) {
         logger.warn('Logo image not found, continuing with placeholder');
       }
-      doc.fillColor(PURPLE).fontSize(20).font('Helvetica-Bold').text('JNV Spectra', LM + 64, 46);
+      doc.fillColor(PURPLE).fontSize(20).font('Helvetica-Bold').text('JNV Spectra', LM + 70, 46);
       doc.fillColor(GRAY).fontSize(9).font('Helvetica')
-        .text('Event Management & Rentals', LM + 64, 68)
-        .text('info@jnvspectra.com  |  +1 (941) 773-3879', LM + 64, 80);
+        .text('Event Management & Rentals', LM + 70, 68)
+        .text('info@jnvspectra.com  |  +1 (941) 773-3879', LM + 70, 80);
 
       // QR code to online invoice (orderId recovered from quotationNumber suffix)
       const orderIdForQr = (data.quotationNumber || '').replace('INV-', '');
