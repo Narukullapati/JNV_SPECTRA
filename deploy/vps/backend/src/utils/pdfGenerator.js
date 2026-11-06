@@ -576,6 +576,9 @@ class PDFGenerator {
         });
 
         py2 += 10;
+        doc.fontSize(11).font('Helvetica').fillColor('#555555')
+          .text(`Grand Total: $${Number(data.orderDetails.total || 0).toFixed(2)}`, 300, py2, { width: 256, align: 'right' });
+        py2 += 18;
         doc.fontSize(11).font('Helvetica-Bold').fillColor('#222222')
           .text(`Total paid: $${paid2.toFixed(2)}`, 300, py2, { width: 256, align: 'right' });
         py2 += 18;
