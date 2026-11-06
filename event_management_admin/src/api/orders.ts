@@ -465,16 +465,19 @@ export const useOrderInvoice = (orderId: string) => {
 // Download invoice
 export const downloadInvoice = async (orderId: string) => {
   try {
-    const response = await fetchApi(`/api/v1/orders/${orderId}/invoice`);
-    // Handle the new response format
-    if (response.status === "success" && response.data && response.data.pdf_url) {
-      window.open(response.data.pdf_url, "_blank");
-    } else if (response.url) {
-      // Fallback for old response format
-      window.open(response.url, "_blank");
-    } else {
-      throw new Error("No downloadable URL found in the response");
-    }
+    const response = await fetchApi(`/api/v1/orders/${orderId}/invoice?regenerate=true`);
+    const pdfUrl = response?.data?.pdf_url || response?.pdf_url || response?.url;
+    if (!pdfUrl) throw new Error("No downloadable URL found in the response");
+    // Backend saved the new pdf path on regenerate; download the file to disk
+    const blob = await (await fetch(pdfUrl)).blob();
+    const a = document.createElement("a");
+    const obj = URL.createObjectURL(blob);
+    a.href = obj;
+    a.download = pdfUrl.split("/").pop() || "invoice.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(obj);
   } catch (error: any) {
     toast({
       title: "Error",
