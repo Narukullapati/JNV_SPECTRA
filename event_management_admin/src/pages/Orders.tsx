@@ -913,7 +913,7 @@ export default function Orders() {
                     order_details: {
                       subtotal: sub,
                       tax: taxPct,
-                      total: Number(od.total) || 0,
+                      total: Number(od.total) || Number(editingOrder.total_amount) || 0,
                       items: (od.items || []).map((i: any) => ({
                         name: i.name,
                         price: Number(i.price) || 0,
