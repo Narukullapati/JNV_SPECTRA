@@ -310,6 +310,7 @@ const updateAmounts = () => {
                   )}
                 />
 
+<div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="email"
@@ -354,6 +355,8 @@ const updateAmounts = () => {
                   )}
                 />
 
+</div>
+                <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="event_date"
@@ -415,6 +418,7 @@ const updateAmounts = () => {
                 />
               </div>
 
+              </div>
               <div className="space-y-4">
                 <p className="text-xs font-semibold text-gray-500">Item summary</p>
 
