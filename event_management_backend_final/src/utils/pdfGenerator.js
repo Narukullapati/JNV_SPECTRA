@@ -332,7 +332,9 @@ class PDFGenerator {
            quantity: 1,
          }],
          subtotal: orderData.order_details.subtotal,
-         tax: orderData.order_details.tax,
+         tax: orderData.order_details.tax_amount || orderData.order_details.tax || 0,
+         tax_amount: orderData.order_details.tax_amount || 0,
+         tax_percentage: orderData.order_details.tax_percentage || 0,
          total: orderData.total_amount,
        },
        paymentInfo: {
@@ -374,7 +376,9 @@ class PDFGenerator {
            quantity: 1,
          }],
          subtotal: orderData.order_details?.subtotal || orderData.total_amount,
-         tax: orderData.order_details?.tax || 0,
+         tax: orderData.order_details?.tax_amount || orderData.order_details?.tax || 0,
+         tax_amount: orderData.order_details?.tax_amount || 0,
+         tax_percentage: orderData.order_details?.tax_percentage || 0,
          total: orderData.total_amount,
        },
        paymentInfo: {
@@ -482,14 +486,7 @@ class PDFGenerator {
         ry += 20;
         doc.moveTo(LM, ry - 6).lineTo(RM, ry - 6).strokeColor('#eeeeee').lineWidth(0.5).stroke();
       });
-      doc.font('Helvetica').fillColor(GRAY)
-        .text('Subtotal', LM + 6, ry)
-        .fillColor('#333333')
-        .text(`$${Number(data.orderDetails.subtotal || data.orderDetails.total).toFixed(2)}`, 480, ry, { width: 76, align: 'right' });
-      ry += 20;
-      doc.fillColor(GRAY).text('Tax', LM + 6, ry);
-      doc.fillColor('#333333').text(`$${Number(data.orderDetails.tax || 0).toFixed(2)}`, 480, ry, { width: 76, align: 'right' });
-      ry += 34;
+      ry += 14;
 
       // Payment Information (left) + totals (right)
       const botY = ry;
@@ -505,18 +502,22 @@ class PDFGenerator {
         doc.fillColor('#0066cc').text(data.paymentLink, LM, botY + 63, { link: data.paymentLink, width: 240 });
       }
 
+      const taxPct = Number(data.orderDetails.tax_percentage || 0)
+        || (Number(data.orderDetails.subtotal) > 0 ? (Number(data.orderDetails.tax || 0) / Number(data.orderDetails.subtotal)) * 100 : 0);
+      const taxAmt = Number(data.orderDetails.tax_amount || data.orderDetails.tax || 0);
+      const tRows = [
+        ['Subtotal:', `$${Number(data.orderDetails.subtotal || data.orderDetails.total || 0).toFixed(2)}`, false],
+        [`Tax (${Number(taxPct.toFixed(2))}%):`, `$${taxAmt.toFixed(2)}`, false],
+        ['Grand Total:', `$${Number(data.orderDetails.total || 0).toFixed(2)}`, true],
+        ['Deposit Required:', `$${Number(data.paymentInfo.depositAmount || 0).toFixed(2)}`, false],
+      ];
       let ty = botY;
-      doc.fontSize(9).font('Helvetica').fillColor(GRAY).text('Invoice total in USD', 340, ty, { width: 222, align: 'right' });
-      ty += 14;
-      doc.fontSize(16).font('Helvetica-Bold').fillColor('#222222').text(`$${Number(data.orderDetails.total || 0).toFixed(2)}`, 340, ty, { width: 222, align: 'right' });
-      ty += 26;
-      doc.fontSize(9).font('Helvetica').fillColor(GRAY).text('Amount applied in USD', 340, ty, { width: 222, align: 'right' });
-      ty += 14;
-      doc.fontSize(11).font('Helvetica').fillColor('#222222').text(`$${Number(data.paymentInfo.depositAmount || 0).toFixed(2)}`, 340, ty, { width: 222, align: 'right' });
-      ty += 22;
-      doc.fontSize(9).font('Helvetica').fillColor(GRAY).text('Total amount due in USD', 340, ty, { width: 222, align: 'right' });
-      ty += 14;
-      doc.fontSize(16).font('Helvetica-Bold').fillColor('#222222').text(`$${Number((data.orderDetails.total || 0) - (data.paymentInfo.depositAmount || 0)).toFixed(2)}`, 340, ty, { width: 222, align: 'right' });
+      tRows.forEach(([label, val, bold]) => {
+        doc.fontSize(bold ? 11 : 10).font(bold ? 'Helvetica-Bold' : 'Helvetica')
+          .fillColor(bold ? '#222222' : '#555555').text(label, 330, ty, { width: 116 })
+          .fillColor('#222222').text(val, 446, ty, { width: 116, align: 'right' });
+        ty += bold ? 18 : 15;
+      });
       ry = Math.max(ry, ty + 6) + 14;
 
       // Terms and Conditions
