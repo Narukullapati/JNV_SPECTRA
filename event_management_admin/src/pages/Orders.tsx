@@ -715,6 +715,7 @@ export default function Orders() {
     { headerName: 'Order #', field: 'seq', width: 110, sortable: true, filter: 'agNumberColumnFilter' },
     { headerName: 'Invoice #', flex: 1, minWidth: 155,
       valueGetter: (p: any) => p.data?.created_at ? `INV-${new Date(p.data.created_at).getTime()}` : '',
+      comparator: (a: any, b: any) => (Number(String(a || '').replace('INV-', '')) || 0) - (Number(String(b || '').replace('INV-', '')) || 0),
       filter: 'agTextColumnFilter' },
     { headerName: 'Customer', field: 'customer_name', flex: 1.3, minWidth: 150 },
     { headerName: 'Email', field: 'email', flex: 1.7, minWidth: 190 },
