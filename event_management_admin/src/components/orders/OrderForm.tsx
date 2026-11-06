@@ -443,7 +443,7 @@ const updateAmounts = () => {
                             </td>
                             <td className="px-3 py-2 text-right text-gray-400">—</td>
                             <td className="px-3 py-2 text-center">
-                              <Button type="button" variant="ghost" size="sm" title="Add item"
+                              <Button type="button" variant="ghost" size="sm" title="Click here to add to invoice"
                                 className="h-7 w-7 p-0 text-[#4b1248] hover:text-[#4b1248]/70"
                                 onClick={addService}
                                 disabled={!newService.name || newService.price === undefined || newService.price <= 0}>
