@@ -34,6 +34,7 @@ export function InvoiceDocument({ order }: { order: any }) {
   const od: any = order.order_details || {};
   const subtotal = Number(od.subtotal) || 0;
   const taxAmount = Number(od.tax_amount) || 0;
+  const taxPct = od.tax_percentage != null ? Number(od.tax_percentage) : (subtotal > 0 ? (taxAmount / subtotal) * 100 : 0);
   const viewUrl = `${window.location.origin}/invoice/${order.id}`;
   const payLabel = order.payment_option === "online" ? "Online" : "Offline";
   const items = order.order_details?.items || [];
@@ -119,8 +120,8 @@ export function InvoiceDocument({ order }: { order: any }) {
             <td className="p-2 text-right">{fmt(order.order_details?.subtotal ?? order.total_amount)}</td>
           </tr>
           <tr>
-            <td className="p-2 text-gray-500" colSpan={3}>Tax</td>
-            <td className="p-2 text-right">{fmt(order.order_details?.tax || 0)}</td>
+            <td className="p-2 text-gray-500" colSpan={3}>Tax{taxPct ? ` (${Number(taxPct.toFixed(2))}%)` : ""}</td>
+            <td className="p-2 text-right">{fmt(taxAmount)}</td>
           </tr>
         </tbody>
       </table>
