@@ -203,11 +203,9 @@ const getOrderInvoice = async (req, res, next) => {
         };
       }
     } else {
-      // For pending/confirmed orders, use quotation template
-      document = orderData.quotation_template;
-      if (!document) {
-        throw new AppError('Document not found', 404);
-      }
+      // For pending/confirmed orders — rebuild the document from CURRENT order data
+      // (the stored quotation_template is a snapshot from creation and misses later edits)
+      document = PDFGenerator.generateQuotationTemplate(orderData);
 
       const result = await PDFGenerator.generateQuotationPDF(document);
       responseData = {
