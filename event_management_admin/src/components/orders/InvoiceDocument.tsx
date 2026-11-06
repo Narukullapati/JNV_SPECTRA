@@ -115,14 +115,7 @@ export function InvoiceDocument({ order }: { order: any }) {
               <td className="p-2 text-right">{fmt(order.total_amount)}</td>
             </tr>
           )}
-          <tr className="border-b border-gray-200">
-            <td className="p-2 text-gray-500" colSpan={3}>Subtotal</td>
-            <td className="p-2 text-right">{fmt(order.order_details?.subtotal ?? order.total_amount)}</td>
-          </tr>
-          <tr>
-            <td className="p-2 text-gray-500" colSpan={3}>Tax{taxPct ? ` (${Number(taxPct.toFixed(2))}%)` : ""}</td>
-            <td className="p-2 text-right">{fmt(taxAmount)}</td>
-          </tr>
+
         </tbody>
       </table>
 
