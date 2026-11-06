@@ -87,7 +87,7 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
   const isEdit = !!initialValues;
   const [services, setServices] = useState<Array<{ name: string; price: number; quantity: number }>>(initialValues?.order_details?.items || []);
   const [payments, setPayments] = useState<Array<{ amount: number; method: string; note?: string; at?: string }>>(initialValues?.order_details?.payments || []);
-  const [newPayment, setNewPayment] = useState<{ amount?: number; method: string; note: string }>({ method: "Zelle", note: "" });
+  const [newPayment, setNewPayment] = useState<{ amount?: number; method: string; note: string; at?: string }>({ method: "Zelle", note: "" });
   const [newService, setNewService] = useState({ name: "", price: undefined, quantity: 1 });
 
   const form = useForm<OrderFormValues>({
@@ -148,7 +148,7 @@ export function OrderForm({ onSubmit, isLoading = false, initialValues }: OrderF
   };
   const addPayment = () => {
     if (!newPayment.amount || newPayment.amount <= 0) return;
-    syncPayments([...payments, { amount: Number(newPayment.amount), method: newPayment.method, note: newPayment.note || undefined, at: new Date().toISOString() }]);
+    syncPayments([...payments, { amount: Number(newPayment.amount), method: newPayment.method, note: newPayment.note || undefined, at: newPayment.at ? new Date(newPayment.at).toISOString() : new Date().toISOString() }]);
     setNewPayment({ method: "Zelle", note: "" });
   };
   const removePayment = (i: number) => syncPayments(payments.filter((_, x) => x !== i));
@@ -587,7 +587,11 @@ const updateAmounts = () => {
                           <td className="px-3 py-2">${Number(pmt.amount).toFixed(2)}</td>
                           <td className="px-3 py-2">{pmt.method}</td>
                           <td className="px-3 py-2 text-gray-500">{pmt.note || "—"}</td>
-                          <td className="px-3 py-2 text-gray-500 text-xs">{pmt.at ? new Date(pmt.at).toLocaleDateString() : "—"}</td>
+                          <td className="px-2 py-1">
+                            <Input className="h-7 border-0 shadow-none px-1 text-xs bg-transparent" type="date"
+                              value={pmt.at ? String(pmt.at).slice(0, 10) : ""}
+                              onChange={(e) => { const l = [...payments]; l[i] = { ...l[i], at: e.target.value ? new Date(e.target.value).toISOString() : undefined }; syncPayments(l); }} />
+                          </td>
                           <td className="px-3 py-2 text-center">
                             <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-red-500 hover:text-red-600" onClick={() => removePayment(i)}>Remove</Button>
                           </td>
@@ -605,9 +609,13 @@ const updateAmounts = () => {
                             {["Zelle", "Cash", "Check", "Card", "Bank Transfer", "Other"].map(m => <option key={m} value={m}>{m}</option>)}
                           </select>
                         </td>
-                        <td className="px-2 py-1" colSpan={2}>
+                        <td className="px-2 py-1">
                           <Input className="h-7 border-0 shadow-none px-1 bg-transparent" placeholder="Note (optional)"
                             value={newPayment.note} onChange={(e) => setNewPayment({ ...newPayment, note: e.target.value })} />
+                        </td>
+                        <td className="px-2 py-1">
+                          <Input className="h-7 border-0 shadow-none px-1 bg-transparent" type="date"
+                            value={newPayment.at || ""} onChange={(e) => setNewPayment({ ...newPayment, at: e.target.value })} />
                         </td>
                         <td className="px-3 py-2 text-center">
                           <Button type="button" variant="ghost" size="sm" title="Add payment"
