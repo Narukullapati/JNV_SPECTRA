@@ -569,7 +569,6 @@ class PDFGenerator {
       // Footer
       const fy = doc.y + 20;
       doc.moveTo(LM, fy).lineTo(RM, fy).strokeColor('#dddddd').lineWidth(0.5).stroke();
-      doc.fontSize(8).fillColor(GRAY).text(`View this invoice online: ${viewUrl}`, LM, fy + 8, { align: 'center', width: 512 });
       doc.text('JNV Spectra - Event Management & Rentals - info@jnvspectra.com - +1 (941) 773-3879', LM, fy + 20, { align: 'center', width: 512 });
 
       // Generate PDF buffer
