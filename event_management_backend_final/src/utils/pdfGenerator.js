@@ -539,8 +539,9 @@ class PDFGenerator {
         doc.fontSize(9).font('Helvetica').fillColor('#333333').text('Total paid:', LM, py)
           .fillColor('#222222').text(`$${paid.toFixed(2)}`, LM + 82, py, { width: 50 });
         py += 14;
-        doc.fontSize(9).font('Helvetica-Bold').fillColor('#222222').text('Balance due:', LM, py)
-          .text(`$${Math.max(0, Number(data.orderDetails.total || 0) - paid).toFixed(2)}`, LM + 82, py, { width: 50 });
+        doc.fontSize(10).font('Helvetica-Bold').fillColor('#222222').text('Balance due:', 330, ty, { width: 116 })
+          .text(`$${Math.max(0, Number(data.orderDetails.total || 0) - paid).toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
+        ty += 16;
         ry = Math.max(ry, py + 16) + 14;
       }
       ry = Math.max(ry, ty + 6) + 14;
