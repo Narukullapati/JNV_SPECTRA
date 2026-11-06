@@ -62,7 +62,7 @@ const orderSchema = z.object({
      subtotal: z.number().min(0, { message: "Subtotal cannot be negative" }),
    }),
 }).refine((data) => {
-  return data.deposit_amount + data.balance_amount === data.total_amount;
+  return Math.abs((data.deposit_amount || 0) + (data.balance_amount || 0) - (data.total_amount || 0)) < 0.02;
 }, {
   message: "Deposit amount plus balance amount must equal total amount",
   path: ["balance_amount"],
@@ -257,7 +257,11 @@ const updateAmounts = () => {
           </div>
           <Form {...form}>
             <form 
-              onSubmit={form.handleSubmit(handleSubmit)} 
+              onSubmit={form.handleSubmit(handleSubmit, (errs) => {
+                const first: any = Object.values(errs)[0] as any;
+                const msg = (first?.message as string) || "Please fix the highlighted fields";
+                alert(msg);
+              })} 
               className="space-y-4"
             >
               <div className="grid grid-cols-1 gap-3">
