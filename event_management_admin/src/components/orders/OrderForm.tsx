@@ -258,9 +258,14 @@ const updateAmounts = () => {
           <Form {...form}>
             <form 
               onSubmit={form.handleSubmit(handleSubmit, (errs) => {
-                const first: any = Object.values(errs)[0] as any;
-                const msg = (first?.message as string) || "Please fix the highlighted fields";
-                alert(msg);
+                console.log('order form validation errors:', errs);
+                const findMsg = (o: any): string | null => {
+                  if (!o || typeof o !== 'object') return null;
+                  if (typeof o.message === 'string' && o.message) return o.message;
+                  for (const k of Object.keys(o)) { const m = findMsg(o[k]); if (m) return m; }
+                  return null;
+                };
+                alert(findMsg(errs) || "Please fix the highlighted fields");
               })} 
               className="space-y-4"
             >
