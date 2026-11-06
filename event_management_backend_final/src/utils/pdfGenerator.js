@@ -410,6 +410,8 @@ class PDFGenerator {
   static async generateQuotationPDF(data) {
     try {
       const doc = new PDFDocument({ margin: 50 });
+      PDFGenerator.addWatermarkLogo(doc);
+      doc.on('pageAdded', () => PDFGenerator.addWatermarkLogo(doc));
 
       const PURPLE = '#4b1248';
       const GRAY = '#666666';
@@ -547,7 +549,6 @@ class PDFGenerator {
       // Last page: Payments received (detailed)
       if (pmts.length) {
         doc.addPage();
-        PDFGenerator.addWatermarkLogo(doc);
         doc.fillColor('#4b1248').fontSize(16).font('Helvetica-Bold').text('Payments Received', LM, 60);
         doc.moveTo(LM, 84).lineTo(RM, 84).strokeColor('#dddddd').lineWidth(1).stroke();
 
