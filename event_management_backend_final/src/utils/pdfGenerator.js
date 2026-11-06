@@ -339,6 +339,7 @@ class PDFGenerator {
        },
        paymentInfo: {
          depositAmount: orderData.deposit_amount,
+         payments: Array.isArray(orderData.order_details?.payments) ? orderData.order_details.payments : [],
          balanceAmount: orderData.balance_amount,
          totalAmount: orderData.total_amount,
          paymentStatus: orderData.payment_status,
@@ -383,6 +384,7 @@ class PDFGenerator {
        },
        paymentInfo: {
          depositAmount: orderData.deposit_amount,
+         payments: Array.isArray(orderData.order_details?.payments) ? orderData.order_details.payments : [],
          balanceAmount: orderData.balance_amount,
          totalAmount: orderData.total_amount,
        },
@@ -518,6 +520,27 @@ class PDFGenerator {
           .fillColor('#222222').text(val, 446, ty, { width: 116, align: 'right' });
         ty += bold ? 18 : 15;
       });
+      const pmts = Array.isArray(data.paymentInfo.payments) ? data.paymentInfo.payments : [];
+      if (pmts.length) {
+        ty += 6;
+        doc.moveTo(330, ty - 4).lineTo(562, ty - 4).strokeColor('#dddddd').lineWidth(0.5).stroke();
+        doc.fontSize(8).font('Helvetica-Bold').fillColor('#333333').text('Payments received:', 330, ty);
+        ty += 11;
+        let paid = 0;
+        pmts.forEach((pm) => {
+          const amt = Number(pm.amount) || 0; paid += amt;
+          doc.fontSize(8).font('Helvetica').fillColor('#555555')
+            .text(`${pm.method || ''}${pm.note ? ' — ' + pm.note : ''}`, 330, ty, { width: 170 })
+            .fillColor('#222222').text(`$${amt.toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
+          ty += 12;
+        });
+        doc.fontSize(9).font('Helvetica').fillColor('#333333').text('Total paid:', 330, ty, { width: 116 })
+          .text(`$${paid.toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
+        ty += 14;
+        doc.fontSize(10).font('Helvetica-Bold').fillColor('#222222').text('Balance due:', 330, ty, { width: 116 })
+          .text(`$${Math.max(0, Number(data.orderDetails.total || 0) - paid).toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
+        ty += 16;
+      }
       ry = Math.max(ry, ty + 6) + 14;
 
       // Terms and Conditions

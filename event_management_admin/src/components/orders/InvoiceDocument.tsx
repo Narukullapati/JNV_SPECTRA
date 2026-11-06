@@ -159,6 +159,25 @@ export function InvoiceDocument({ order }: { order: any }) {
             <p className="text-gray-800">Deposit Required:</p>
             <p>{fmt(order.deposit_amount)}</p>
           </div>
+          {(od.payments || []).length > 0 && (
+            <div className="pt-1.5 border-t border-gray-200 mt-1">
+              <p className="text-xs font-semibold text-gray-700 pb-0.5">Payments received:</p>
+              {(od.payments || []).map((pm: any, i: number) => (
+                <div key={i} className="flex justify-between gap-6 text-xs">
+                  <p className="text-gray-600">{pm.method}{pm.note ? ` — ${pm.note}` : ""}{pm.at ? ` (${new Date(pm.at).toLocaleDateString()})` : ""}</p>
+                  <p>{fmt(pm.amount)}</p>
+                </div>
+              ))}
+              <div className="flex justify-between gap-6 pt-0.5">
+                <p className="text-gray-800 font-medium">Total paid:</p>
+                <p>{fmt((od.payments || []).reduce((a: number, x: any) => a + (Number(x.amount) || 0), 0))}</p>
+              </div>
+              <div className="flex justify-between gap-6">
+                <p className="text-gray-800 font-semibold">Balance due:</p>
+                <p className="font-bold">{fmt((order.total_amount || 0) - (od.payments || []).reduce((a: number, x: any) => a + (Number(x.amount) || 0), 0))}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

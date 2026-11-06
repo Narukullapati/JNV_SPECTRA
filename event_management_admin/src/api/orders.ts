@@ -126,6 +126,7 @@ const formatOrderData = (values: OrderFormValues) => {
       tax_percentage: taxPercentage,
       tax_amount: taxAmount,
       items: values.order_details.items || [],
+      payments: values.order_details.payments || [],
       subtotal: subtotal
     },
     payment_option: values.payment_option,

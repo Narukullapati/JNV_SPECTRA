@@ -919,6 +919,12 @@ export default function Orders() {
                         price: Number(i.price) || 0,
                         quantity: Number(i.quantity) || 1,
                       })),
+                      payments: (od.payments || []).map((pm: any) => ({
+                        amount: Number(pm.amount) || 0,
+                        method: pm.method || "",
+                        note: pm.note || "",
+                        at: pm.at || "",
+                      })),
                     },
                   };
                 })()}
