@@ -569,7 +569,6 @@ const updateAmounts = () => {
                     </FormItem>
                   )}
                 />
-              </div>
 
               <div className="flex justify-end">
                 <Button 
