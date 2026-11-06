@@ -388,47 +388,9 @@ const updateAmounts = () => {
 
               <div className="space-y-4">
                 <p className="text-xs font-semibold text-gray-500">Item summary</p>
-                <div className="flex items-end gap-4">
-                  <div className="flex-1">
-                    <FormLabel>Service Name</FormLabel>
-                    <Input
-                      value={newService.name}
-                      onChange={(e) => setNewService({ ...newService, name: e.target.value })}
-                      placeholder="Enter service name"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <FormLabel>Price</FormLabel>
-                    <Input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={newService.price === undefined ? "" : newService.price}
-                      onChange={(e) => setNewService({ ...newService, price: e.target.value === "" ? undefined : parseFloat(e.target.value) })}
-                      placeholder="Enter price"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <FormLabel>Quantity</FormLabel>
-                    <Input
-                      type="number"
-                      min="1"
-                      value={newService.quantity}
-                      onChange={(e) => setNewService({ ...newService, quantity: parseInt(e.target.value) || 1 })}
-                      placeholder="Enter quantity"
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    onClick={addService}
-                    disabled={!newService.name || newService.price === undefined || newService.price <= 0}
-                  >
-                    Add Service
-                  </Button>
-                </div>
 
                 <div>
-                  {services.length > 0 && (
+                  {(
                     <div className="border rounded overflow-hidden">
                       <table className="w-full text-sm">
                         <thead>
@@ -466,6 +428,29 @@ const updateAmounts = () => {
                       </td>
                     </tr>
                   ))}
+                          <tr className="bg-gray-50/60">
+                            <td className="px-2 py-1">
+                              <Input className="h-8 border-0 shadow-none px-1 bg-transparent" placeholder="New item..."
+                                value={newService.name} onChange={(e) => setNewService({ ...newService, name: e.target.value })} />
+                            </td>
+                            <td className="px-2 py-1">
+                              <Input className="h-8 w-16 border-0 shadow-none px-1 text-center bg-transparent" type="number" min={1} placeholder="1"
+                                value={newService.quantity} onChange={(e) => setNewService({ ...newService, quantity: parseInt(e.target.value) || 1 })} />
+                            </td>
+                            <td className="px-2 py-1">
+                              <Input className="h-8 w-24 border-0 shadow-none px-1 text-right bg-transparent" type="number" min={0} step="0.01" placeholder="0.00"
+                                value={newService.price === undefined ? "" : newService.price} onChange={(e) => setNewService({ ...newService, price: e.target.value === "" ? undefined : parseFloat(e.target.value) })} />
+                            </td>
+                            <td className="px-3 py-2 text-right text-gray-400">—</td>
+                            <td className="px-3 py-2 text-center">
+                              <Button type="button" variant="ghost" size="sm" title="Add item"
+                                className="h-7 w-7 p-0 text-[#4b1248] hover:text-[#4b1248]/70"
+                                onClick={addService}
+                                disabled={!newService.name || newService.price === undefined || newService.price <= 0}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5v14"/></svg>
+                              </Button>
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
