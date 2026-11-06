@@ -88,7 +88,7 @@ export default function Orders() {
     setCurrentPage(1);
   }, [searchQuery, statusFilter, fromDate, toDate]);
 
-  const orderStatusOptions = ["pending", "confirmed", "paid", "cancelled"] as const;
+  const orderStatusOptions = ["pending", "quotation", "partial_paid", "confirmed", "paid", "cancelled"] as const;
   const statusFilterLabel = statusFilter.length === 0
     ? "All statuses"
     : `${statusFilter.length} selected`;
@@ -712,7 +712,7 @@ export default function Orders() {
     { headerName: 'Payment Option', field: 'payment_option', flex: 0.9, minWidth: 110, cellRenderer: (p: any) => (
       <Badge variant={p.value === 'online' ? 'default' : 'secondary'}>{paymentOptionLabel(p.value)}</Badge>) },
     { headerName: 'Status', field: 'order_status', flex: 0.8, minWidth: 95, cellRenderer: (p: any) => (
-      <Badge variant={p.value === 'paid' ? 'default' : p.value === 'cancelled' ? 'destructive' : 'secondary'}>{p.value}</Badge>) },
+      <Badge variant={p.value === 'paid' ? 'default' : p.value === 'cancelled' ? 'destructive' : p.value === 'partial_paid' ? 'secondary' : 'outline'}>{p.value === 'partial_paid' ? 'Partial Paid' : p.value}</Badge>) },
     { headerName: 'Actions', field: 'id', sortable: false, filter: false, width: 165, cellRenderer: ActionsCell },
   ];
   const pagination = data?.data?.pagination;

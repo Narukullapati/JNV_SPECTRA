@@ -47,7 +47,7 @@ const orderSchema = z.object({
     required_error: "Payment option is required",
     invalid_type_error: "Invalid payment option"
   }),
-  order_status: z.enum(["pending", "confirmed", "paid", "cancelled"]).default("pending"),
+  order_status: z.enum(["pending", "quotation", "partial_paid", "confirmed", "paid", "cancelled"]).default("pending"),
   total_amount: z.number().min(0.01, { message: "Total amount is required and must be greater than 0" }),
   deposit_amount: z.number().min(0.01, { message: "Deposit amount is required and must be greater than 0" }),
   balance_amount: z.number().min(0, { message: "Balance amount cannot be negative" }),
