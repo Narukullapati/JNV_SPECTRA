@@ -520,26 +520,28 @@ class PDFGenerator {
           .fillColor('#222222').text(val, 446, ty, { width: 116, align: 'right' });
         ty += bold ? 18 : 15;
       });
+      // Payments received: left column, laid out side-by-side (2 per row)
       const pmts = Array.isArray(data.paymentInfo.payments) ? data.paymentInfo.payments : [];
       if (pmts.length) {
-        ty += 6;
-        doc.moveTo(330, ty - 4).lineTo(562, ty - 4).strokeColor('#dddddd').lineWidth(0.5).stroke();
-        doc.fontSize(8).font('Helvetica-Bold').fillColor('#333333').text('Payments received:', 330, ty);
-        ty += 11;
+        let py = botY + 63;
+        doc.fontSize(8).font('Helvetica-Bold').fillColor('#333333').text('Payments received:', LM, py);
+        py += 11;
         let paid = 0;
-        pmts.forEach((pm) => {
+        pmts.forEach((pm, i) => {
           const amt = Number(pm.amount) || 0; paid += amt;
+          const col = i % 2;
+          const px = LM + col * 135;
           doc.fontSize(8).font('Helvetica').fillColor('#555555')
-            .text(`${pm.method || ''}${pm.note ? ' — ' + pm.note : ''}`, 330, ty, { width: 170 })
-            .fillColor('#222222').text(`$${amt.toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
-          ty += 12;
+            .text(`${pm.method || ''}${pm.note ? ' — ' + pm.note : ''}`, px, py, { width: 85, continued: false });
+          doc.fillColor('#222222').text(`$${amt.toFixed(2)}`, px + 82, py, { width: 50 });
+          if (col === 1 || i === pmts.length - 1) py += 12;
         });
-        doc.fontSize(9).font('Helvetica').fillColor('#333333').text('Total paid:', 330, ty, { width: 116 })
-          .text(`$${paid.toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
-        ty += 14;
-        doc.fontSize(10).font('Helvetica-Bold').fillColor('#222222').text('Balance due:', 330, ty, { width: 116 })
-          .text(`$${Math.max(0, Number(data.orderDetails.total || 0) - paid).toFixed(2)}`, 446, ty, { width: 116, align: 'right' });
-        ty += 16;
+        doc.fontSize(9).font('Helvetica').fillColor('#333333').text('Total paid:', LM, py)
+          .fillColor('#222222').text(`$${paid.toFixed(2)}`, LM + 82, py, { width: 50 });
+        py += 14;
+        doc.fontSize(9).font('Helvetica-Bold').fillColor('#222222').text('Balance due:', LM, py)
+          .text(`$${Math.max(0, Number(data.orderDetails.total || 0) - paid).toFixed(2)}`, LM + 82, py, { width: 50 });
+        ry = Math.max(ry, py + 16) + 14;
       }
       ry = Math.max(ry, ty + 6) + 14;
 
