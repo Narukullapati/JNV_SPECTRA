@@ -192,7 +192,7 @@ const getOrderInvoice = async (req, res, next) => {
         // Regenerate/reshoot uses the professional layout for paid orders too
         document = PDFGenerator.generateQuotationTemplate(orderData);
         const pdfResult = await PDFGenerator.generateQuotationPDF(document);
-        const pdfUrl = typeof pdfResult === 'string' ? pdfResult : pdfResult.publicUrl;
+        const pdfUrl = typeof pdfResult === 'string' ? pdfResult : (pdfResult.pdfUrl || pdfResult.publicUrl);
         // Save to order (skip on regenerate — keep existing record untouched)
         if (!req.query.regenerate) {
           await order.update(orderData.id, { invoice_pdf_url: pdfUrl });
@@ -208,9 +208,14 @@ const getOrderInvoice = async (req, res, next) => {
       document = PDFGenerator.generateQuotationTemplate(orderData);
 
       const result = await PDFGenerator.generateQuotationPDF(document);
+      const qPdfUrl = typeof result === 'string' ? result : (result.pdfUrl || result.publicUrl);
+      // Save the new pdf path to the order (replaces previous stored path)
+      if (req.query.regenerate && qPdfUrl) {
+        await order.update(orderData.id, { invoice_pdf_url: qPdfUrl });
+      }
       responseData = {
         document,
-        pdf_url: result.pdfUrl,
+        pdf_url: qPdfUrl,
         payment_link: result.paymentLink,
       };
     }
