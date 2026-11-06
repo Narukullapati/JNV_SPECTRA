@@ -431,7 +431,7 @@ const updateAmounts = () => {
                   ))}
                           <tr className="bg-gray-50/60">
                             <td className="px-2 py-1">
-                              <Input className="h-8 border-0 shadow-none px-1 bg-transparent" placeholder="New item..."
+                              <Input className="h-8 border-0 shadow-none px-1 bg-transparent" placeholder="Enter new item"
                                 value={newService.name} onChange={(e) => setNewService({ ...newService, name: e.target.value })} />
                             </td>
                             <td className="px-2 py-1">
