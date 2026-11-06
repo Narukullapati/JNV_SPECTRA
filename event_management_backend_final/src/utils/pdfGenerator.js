@@ -354,6 +354,7 @@ class PDFGenerator {
     
       return {
        documentType: 'invoice',
+       orderId: orderData.id || orderData._id,
        quotationNumber: `INV-${new Date(orderData.created_at || Date.now()).getTime()}`,
        companyInfo: {
          name: 'JNV Events',
@@ -430,7 +431,7 @@ class PDFGenerator {
         .text('info@jnvspectra.com  |  +1 (941) 773-3879', LM + 70, 80);
 
       // QR code to online invoice (orderId recovered from quotationNumber suffix)
-      const orderIdForQr = (data.quotationNumber || '').replace('INV-', '');
+      const orderIdForQr = data.orderId || (data.quotationNumber || '').replace('INV-', '');
       const viewUrl = `https://admin.jnvspectra.com/invoice/${orderIdForQr}`;
       const qrBuf = await PDFGenerator.fetchQRCodeImage(viewUrl);
       if (qrBuf) {
