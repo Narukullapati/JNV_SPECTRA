@@ -535,7 +535,7 @@ const updateAmounts = () => {
                       <div className="p-3 border-l text-sm">
                         {row("Subtotal:", usd(sub))}
                         {row(`Tax (${Number(tPct.toFixed(2))}%):`, usd(tAmt))}
-                        {row("Final Amount:", usd(tot), true)}
+                        {row("Grand Total", usd(tot), true)}
                         {row("Deposit Required:", usd(dep))}
                         {row("Balance Due:", usd(bal))}
                       </div>

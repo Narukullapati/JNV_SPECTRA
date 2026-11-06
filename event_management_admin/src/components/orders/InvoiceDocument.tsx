@@ -146,7 +146,7 @@ export function InvoiceDocument({ order }: { order: any }) {
             <p>{fmt(taxAmount)}</p>
           </div>
           <div className="flex justify-between gap-6">
-            <p className="text-gray-800 font-semibold">Final Amount:</p>
+            <p className="text-gray-800 font-semibold">Grand Total:</p>
             <p className="font-bold">{fmt(order.total_amount)}</p>
           </div>
           <div className="flex justify-between gap-6">
