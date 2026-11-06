@@ -464,90 +464,76 @@ const updateAmounts = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                   control={form.control}
-                   name="order_details.tax"
-                   render={({ field }) => (
-                     <FormItem>
-                       <FormLabel>Tax (%)</FormLabel>
-                       <FormControl>
-                         <Input
-                           type="number"
-                           min="0"
-                           max="100"
-                           step="0.01"
-                           placeholder="Enter tax percentage (0-100)"
-                           value={field.value}
-                           onChange={handleTaxChange}
-                         />
-                       </FormControl>
-                       <FormDescription>Enter tax percentage (e.g., 5 for 5%)</FormDescription>
-                       <FormMessage />
-                     </FormItem>
-                   )}
-                 />
-
-                <FormField
-                  control={form.control}
-                  name="total_amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Total Amount</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0"
-                          step="0.01"
-                          {...field}
-                          disabled
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="deposit_amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Deposit Percentage</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0"
-                          max="100"
-                          step="1"
-                          value={field.value ? Math.round((field.value / form.getValues("total_amount")) * 100) : ""}
-                          onChange={handleDepositChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="balance_amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Balance Amount</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0"
-                          step="0.01"
-                          {...field}
-                          disabled
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="border rounded overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-2">
+                  <div className="p-3 space-y-3">
+                    <FormField
+                       control={form.control}
+                       name="order_details.tax"
+                       render={({ field }) => (
+                         <FormItem className="flex items-center gap-3">
+                           <FormLabel className="w-36 shrink-0">Tax (%)</FormLabel>
+                           <FormControl>
+                             <Input
+                               type="number"
+                               min="0"
+                               max="100"
+                               step="0.01"
+                               placeholder="0-100"
+                               value={field.value}
+                               onChange={handleTaxChange}
+                             />
+                           </FormControl>
+                           <FormMessage />
+                         </FormItem>
+                       )}
+                     />
+                    <FormField
+                      control={form.control}
+                      name="deposit_amount"
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormLabel className="w-36 shrink-0">Deposit (%)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              min="0"
+                              max="100"
+                              step="1"
+                              value={field.value ? Math.round((field.value / form.getValues("total_amount")) * 100) : ""}
+                              onChange={handleDepositChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  {(() => {
+                    const sub = form.watch("order_details.subtotal") || 0;
+                    const tPct = form.watch("order_details.tax") || 0;
+                    const tAmt = (tPct / 100) * sub;
+                    const tot = form.watch("total_amount") || 0;
+                    const dep = form.watch("deposit_amount") || 0;
+                    const bal = form.watch("balance_amount") || 0;
+                    const usd = (v: number) => "$" + (Number(v) || 0).toFixed(2);
+                    const row = (label: React.ReactNode, val: string, bold = false) => (
+                      <div className={`flex justify-between gap-6 py-0.5 border-b last:border-0 ${bold ? "font-semibold" : ""}`}>
+                        <span>{label}</span><span className={bold ? "font-bold" : ""}>{val}</span>
+                      </div>
+                    );
+                    return (
+                      <div className="p-3 border-l text-sm">
+                        {row("Subtotal:", usd(sub))}
+                        {row(`Tax (${Number(tPct.toFixed(2))}%):`, usd(tAmt))}
+                        {row("Final Amount:", usd(tot), true)}
+                        {row("Deposit Required:", usd(dep))}
+                        {row("Balance Due:", usd(bal))}
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
 
                 <FormField
                   control={form.control}
