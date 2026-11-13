@@ -428,7 +428,7 @@ class PDFGenerator {
       doc.fillColor(PURPLE).fontSize(20).font('Helvetica-Bold').text('JNV Spectra', LM + 70, 46);
       doc.fillColor(GRAY).fontSize(9).font('Helvetica')
         .text('Event Management & Rentals', LM + 70, 68)
-        .text('info@jnvspectra.com  |  +1 (941) 773-3879', LM + 70, 80);
+        .text('info@jnvspectra.com  |  +1 (352) 773-2872', LM + 70, 80);
 
       // QR code to online invoice (orderId recovered from quotationNumber suffix)
       const orderIdForQr = data.orderId || (data.quotationNumber || '').replace('INV-', '');
@@ -589,7 +589,7 @@ class PDFGenerator {
 
       const fy = doc.y + 20;
       doc.moveTo(LM, fy).lineTo(RM, fy).strokeColor('#dddddd').lineWidth(0.5).stroke();
-      doc.text('JNV Spectra - Event Management & Rentals - info@jnvspectra.com - +1 (941) 773-3879', LM, fy + 20, { align: 'center', width: 512 });
+      doc.text('JNV Spectra - Event Management & Rentals - info@jnvspectra.com - +1 (352) 773-2872', LM, fy + 20, { align: 'center', width: 512 });
 
       // Generate PDF buffer
       const pdfBuffer = await PDFGenerator.generatePDF(doc);

@@ -90,7 +90,7 @@ export function InvoiceDocument({ order }: { order: any }) {
           <div>
             <h2 className="text-xl font-bold text-[#4b1248]">JNV Spectra</h2>
             <p className="text-xs text-gray-500">Event Management &amp; Rentals</p>
-            <p className="text-xs text-gray-500">info@jnvspectra.com&nbsp;&nbsp;|&nbsp;&nbsp;+1 (941) 773-3879</p>
+            <p className="text-xs text-gray-500">info@jnvspectra.com&nbsp;&nbsp;|&nbsp;&nbsp;+1 (352) 773-2872</p>
           </div>
         </div>
         <div className="text-right">
@@ -224,7 +224,7 @@ export function InvoiceDocument({ order }: { order: any }) {
 
       <div className="mt-8 pt-4 border-t border-gray-300 text-center">
         <p className="text-xs text-gray-400">View this invoice online: <a href={viewUrl} className="text-[#4b1248] hover:underline">{viewUrl}</a></p>
-        <p className="text-[10px] text-gray-400 mt-1">JNV Spectra · Event Management &amp; Rentals · info@jnvspectra.com · +1 (941) 773-3879</p>
+        <p className="text-[10px] text-gray-400 mt-1">JNV Spectra · Event Management &amp; Rentals · info@jnvspectra.com · +1 (352) 773-2872</p>
       </div>
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>

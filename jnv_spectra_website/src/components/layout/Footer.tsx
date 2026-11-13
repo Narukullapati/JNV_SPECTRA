@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
           </div>
           <div className="mt-4 text-white text-[15px] space-y-1">
             <p><a href="mailto:info@jnvspectra.com" className="hover:underline">info@jnvspectra.com</a></p>
-            <p><a href="tel:+19417733879" className="hover:underline">+1 (941) 773-3879</a></p>
+            <p><a href="tel:+13527732872" className="hover:underline">+1 (352) 773-2872</a></p>
           </div>
         </div>
 

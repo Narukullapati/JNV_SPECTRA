@@ -266,7 +266,7 @@ const updateAmounts = () => {
               <div>
                 <h2 className="text-lg font-bold text-[#4b1248]">JNV Spectra</h2>
                 <p className="text-xs text-gray-500">Event Management &amp; Rentals</p>
-                <p className="text-xs text-gray-500">info@jnvspectra.com&nbsp;&nbsp;|&nbsp;&nbsp;+1 (941) 773-3879</p>
+                <p className="text-xs text-gray-500">info@jnvspectra.com&nbsp;&nbsp;|&nbsp;&nbsp;+1 (352) 773-2872</p>
               </div>
             </div>
             <div className="text-right">

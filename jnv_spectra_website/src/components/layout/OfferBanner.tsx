@@ -1,5 +1,5 @@
 const OFFER_TEXT =
-  "Festival & holiday season special offers on events & rentals — enquire now info@jnvspectra.com or +1 (941) 773-3879";
+  "Festival & holiday season special offers on events & rentals — enquire now info@jnvspectra.com or +1 (352) 773-2872";
 
 const OfferBanner = () => (
   <div className="w-full bg-[#f5c518] text-black flex items-stretch overflow-hidden relative z-[60]">
